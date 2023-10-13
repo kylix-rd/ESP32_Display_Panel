@@ -3,10 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP32_S3_USB_OTG_H
-#define ESP32_S3_USB_OTG_H
+#ifndef ESP_BOX_LITE_H
+#define ESP_BOX_LITE_H
 
-/* For more information about the board, please visit here: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-usb-otg/index.html */
+/* For more information about the board, please visit here: https://github.com/espressif/esp-box/tree/master */
 
 /*-------------------------------- LCD Related --------------------------------*/
 /* Set to 0 if not using LCD */
@@ -17,7 +17,7 @@
 #define ESP_PANEL_LCD_NAME          ST7789
 
 /* LCD resolution in pixels */
-#define ESP_PANEL_LCD_H_RES         (240)
+#define ESP_PANEL_LCD_H_RES         (320)
 #define ESP_PANEL_LCD_V_RES         (240)
 
 /* LCD Bus Settings */
@@ -47,29 +47,29 @@
 #define ESP_PANEL_LCD_SPI_TRANS_QUEUE_SZ    (10)
 #define ESP_PANEL_LCD_SPI_CMD_BITS          (8)
 #define ESP_PANEL_LCD_SPI_PARAM_BITS        (8)
-#define ESP_PANEL_LCD_SPI_IO_SCK            (6)
-#define ESP_PANEL_LCD_SPI_IO_MOSI           (7)
+#define ESP_PANEL_LCD_SPI_IO_SCK            (7)
+#define ESP_PANEL_LCD_SPI_IO_MOSI           (6)
 #define ESP_PANEL_LCD_SPI_IO_MISO           (-1)
 
 /* LCD Color Settings */
 /* LCD color depth in bits */
 #define ESP_PANEL_LCD_COLOR_BITS    (16)
 /*
- * LCD Color Space. Choose one of the following:
+ * LCD RGB Element Order. Choose one of the following:
  *      - 0: RGB
  *      - 1: BGR
  */
-#define ESP_PANEL_LCD_COLOR_SPACE   (0)
+#define ESP_PANEL_LCD_RGB_ORDER     (0)
 #define ESP_PANEL_LCD_INEVRT_COLOR  (1)
 
 /* LCD Transformation Flags */
-#define ESP_PANEL_LCD_SWAP_XY       (0)
+#define ESP_PANEL_LCD_SWAP_XY       (1)
 #define ESP_PANEL_LCD_MIRROR_X      (0)
-#define ESP_PANEL_LCD_MIRROR_Y      (0)
+#define ESP_PANEL_LCD_MIRROR_Y      (1)
 
 /* LCD Other Settings */
 /* IO num of RESET pin, set to -1 if not use */
-#define ESP_PANEL_LCD_IO_RST        (8)
+#define ESP_PANEL_LCD_IO_RST        (48)
 #define ESP_PANEL_LCD_RST_LEVEL     (0)
 
 /*-------------------------------- LCD Touch Related --------------------------------*/
@@ -80,10 +80,10 @@
 #define ESP_PANEL_USE_BL                    (1)
 
 /* IO num of backlight pin */
-#define ESP_PANEL_LCD_IO_BL                 (9)
+#define ESP_PANEL_LCD_IO_BL                 (45)
 
 /* If the backlight is on when high level, set to 1; otherwise to 0 */
-#define ESP_PANEL_LCD_BL_ON_LEVEL           (1)
+#define ESP_PANEL_LCD_BL_ON_LEVEL           (0)
 
 /* Set to 1 if use PWM for backlight brightness control. */
 #define ESP_PANEL_LCD_BL_USE_PWM            (1)
