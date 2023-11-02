@@ -43,7 +43,7 @@ lv_obj_set_style_bg_color(ui_ButtonRetWifi, lv_color_hex(0x3F72AF), LV_PART_MAIN
 lv_obj_set_style_bg_opa(ui_ButtonRetWifi, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_ImageRetWifi = lv_img_create(ui_ButtonRetWifi);
-lv_img_set_src(ui_ImageRetWifi, &ui_img_1129937811);
+lv_img_set_src(ui_ImageRetWifi, &ui_img_return_png);
 lv_obj_set_width( ui_ImageRetWifi, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_ImageRetWifi, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_ImageRetWifi, -2 );

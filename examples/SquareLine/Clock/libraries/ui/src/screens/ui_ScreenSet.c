@@ -68,7 +68,7 @@ lv_obj_set_style_bg_color(ui_ButtonRetClock, lv_color_hex(0x3F72AF), LV_PART_MAI
 lv_obj_set_style_bg_opa(ui_ButtonRetClock, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_ImageRetClock = lv_img_create(ui_ButtonRetClock);
-lv_img_set_src(ui_ImageRetClock, &ui_img_1129937811);
+lv_img_set_src(ui_ImageRetClock, &ui_img_return_png);
 lv_obj_set_width( ui_ImageRetClock, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_ImageRetClock, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_ImageRetClock, -2 );

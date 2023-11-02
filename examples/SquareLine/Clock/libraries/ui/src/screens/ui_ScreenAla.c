@@ -110,7 +110,7 @@ lv_obj_set_style_bg_color(ui_ButtonRetSet2, lv_color_hex(0x3F72AF), LV_PART_MAIN
 lv_obj_set_style_bg_opa(ui_ButtonRetSet2, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
 ui_ImageRetSet2 = lv_img_create(ui_ButtonRetSet2);
-lv_img_set_src(ui_ImageRetSet2, &ui_img_1129937811);
+lv_img_set_src(ui_ImageRetSet2, &ui_img_return_png);
 lv_obj_set_width( ui_ImageRetSet2, LV_SIZE_CONTENT);  /// 1
 lv_obj_set_height( ui_ImageRetSet2, LV_SIZE_CONTENT);   /// 1
 lv_obj_set_x( ui_ImageRetSet2, -2 );

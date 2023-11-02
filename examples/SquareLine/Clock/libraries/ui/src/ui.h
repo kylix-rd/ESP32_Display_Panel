@@ -96,15 +96,15 @@ extern lv_obj_t *ui_LabelHour2;
 extern lv_obj_t *ui____initial_actions0;
 
 LV_IMG_DECLARE( ui_img_settings_icon_png);   // assets/settings_icon.png
-LV_IMG_DECLARE( ui_img_610615781);   // assets/阴.png
-LV_IMG_DECLARE( ui_img_1210737378);   // assets/小雨.png
-LV_IMG_DECLARE( ui_img_1931249499);   // assets/晴.png
-LV_IMG_DECLARE( ui_img_1210739428);   // assets/小雪.png
+LV_IMG_DECLARE( ui_img_cloudy_png);   // assets/阴.png
+LV_IMG_DECLARE( ui_img_light_rain_png);   // assets/小雨.png
+LV_IMG_DECLARE( ui_img_sunny_png);   // assets/晴.png
+LV_IMG_DECLARE( ui_img_snow_png);   // assets/小雪.png
 LV_IMG_DECLARE( ui_img_wifi_png);   // assets/WIFI.png
 LV_IMG_DECLARE( ui_img_thunderstorm_png);   // assets/Thunderstorm.png
 LV_IMG_DECLARE( ui_img_atmosphere_png);   // assets/atmosphere.png
 LV_IMG_DECLARE( ui_img_drizzle_png);   // assets/drizzle.png
-LV_IMG_DECLARE( ui_img_1129937811);   // assets/返回键.png
+LV_IMG_DECLARE( ui_img_return_png);   // assets/返回键.png
 
 LV_FONT_DECLARE( ui_font_AliShuHeTi16sbpp4);
 LV_FONT_DECLARE( ui_font_FontNumber28bp4);
