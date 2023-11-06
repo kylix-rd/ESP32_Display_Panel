@@ -1,5 +1,5 @@
 /**
-* This example demonstrates a clock demo made with Squareline.
+* This example implements a clock demo made with Squareline.
 *
 * ## How to Use
 * Please note that this example currently only supports the ESP-S3-BOX, ESP-S3-BOX(beta), ESP-S3-BOX-3, ESP32_S3_KORVO and ESP32_S3_LCD_EV_BOARD.

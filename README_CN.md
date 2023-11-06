@@ -311,3 +311,37 @@ panel->getBacklight()->setBrightness(50);
 // Release the ESP_Panel object
 delete panel;
 ```
+
+### 移植 Squareline 工程
+
+利用 Squareline Studio 可以通过图像化编辑的方式快捷地设计出精美的 UI，如果想要在 Arduino IDE 中使用 Squareline 导出的 UI 源文件，可以参考以下步骤进行移植：
+
+1. 首先，在 Squareline Studio 中创建一个新的工程，进入 `Create` -> `Arduino` 一栏，选择 `Arduino with TFT-eSPI` 作为工程模板，然后在右侧的 `PROJECT SETTINGS` 一栏需要根据目标开发板的 LCD 属性进行配置，如 `Resolution` and `Color depth`，最后点击 `Create` 按钮创建工程。
+2. 对于已有的工程，也可以在导航栏中点击 `File` -> `Project Settings` 按钮进入工程设置，然后在 `BOARD PROPERTIES` 一栏配置 `Board Group` 为 `Arduino`，`Board` 为 `Arduino with TFT-eSPI`，并且根据目标开发板的 LCD 属性在 `DISPLAY PROPERTIES` 一栏进行配置，最后点击 `Save` 按钮保存工程设置。
+3. 完成 UI 设计并且配置好导出路径后，即可依次点击菜单栏中的 `Export` -> `Create Template Project` 和 `Export UI Files` 按钮导出工程及 UI 源文件，该工程目录的布局如下所示：
+
+    ```
+    Project
+        |-libraries
+            |-lv_conf.h
+            |-lvgl
+            |-readme.txt
+            |-TFT_eSPI
+            |-ui
+        |-README.md
+        |-ui
+    ```
+
+4. 最后，将工程目录下的 `libraries` 中的 `lv_conf.h`、`lvgl`(可选) 以及 `ui` 复制到 Arduino 存放库的目录下，最终的布局如下所示：
+
+    ```
+    Arduino
+        |-libraries
+            |-ESP32_Display_Panel
+            |-ESP_Panel_Conf.h
+            |-lv_conf.h
+            |-lvgl
+            |-ui
+            |-other_lib_1
+            |-other_lib_2
+    ```
