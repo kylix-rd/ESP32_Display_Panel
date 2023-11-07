@@ -101,11 +101,11 @@ The block diagram of ESP32_Display_Panel is shown in the figure below, it primar
 
 ## How to Use
 
-For information on how to use the library in the Arduino IDE, please refer to the documentation for [Arduino IDE v1.x.x](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) or [Arduino IDE v2.x.x](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library).
+For information on how to use the library in the Arduino IDE, please refer to the documentation for [Arduino IDE v1.x.x](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries) or [Arduino IDE v2.x.x](https://docs.arduino.cc/software/ide-v2/tutorials/ide-v2-installing-a-library). The path of Arduino libraries folder can be found or changed at `File` > `Preferences` > `Settings` > `Sketchbook location`.
 
 ### Examples
 
-Here are some examples of using ESP32_Display_Panel. To access them in the Arduino IDE, navigate to `File` -> `Examples` -> `ESP32_Display_Panel`. If there is no `ESP32_Display_Panel` option, please check if the library has been installed correctly and select an esp32 board first.
+Here are some examples of using ESP32_Display_Panel. To access them in the Arduino IDE, navigate to `File` > `Examples` > `ESP32_Display_Panel`. If there is no `ESP32_Display_Panel` option, please check if the library has been installed correctly and select an esp32 board first.
 
 #### Panel
 
@@ -133,7 +133,7 @@ The following provides a comprehensive guide on how to use ESP32_Display_Panel.
 
 ESP32_Display_Panel has its own configuration file called `ESP_Panel_Conf.h`. After installing ESP32_Display_Panel, follow these configuration steps:
 
-1. Navigate to the directory where Arduino libraries are installed.
+1. Navigate to the directory where Arduino libraries are installed (The path of libraries folder can be found or changed at `File` > `Preferences` > `Settings` > `Sketchbook location`).
 2. Navigate to the `ESP32_Display_Panel` folder, copy `ESP_Panel_Conf_Template.h` and place the copy outside the `ESP32_Display_Panel` folder at the same directory level. Then rename the copied file as `ESP_Panel_Conf.h`.
 3. Finally, the layout of the Arduino Libraries folder with `ESP_Panel_Conf.h` appear as follows:
 
@@ -325,25 +325,25 @@ The following codes show the usage of common APIs:
 ESP_Panel *panel = new ESP_Panel();
 
 // Initialize and start the ESP_Panel object
-panel->init();
-panel->begin();
+panel>init();
+panel>begin();
 
 // Get the LCD object and operate it
-panel->getLcd()->setCallback(callback, NULL);
-panel->getLcd()->drawBitmap(0, 0, width, height, color);
+panel>getLcd()>setCallback(callback, NULL);
+panel>getLcd()>drawBitmap(0, 0, width, height, color);
 
 // Get the LCD touch object and operate it
-panel->getLcdTouch()->readData();
-bool touched = panel->getLcdTouch()->getTouchState();
+panel>getLcdTouch()>readData();
+bool touched = panel>getLcdTouch()>getTouchState();
 if(touched) {
-    TouchPoint point = panel->getLcdTouch()->getPoint();
+    TouchPoint point = panel>getLcdTouch()>getPoint();
     Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);
 }
 
 // Get the backlight object and operate it
-panel->getBacklight()->on();
-panel->getBacklight()->off();
-panel->getBacklight()->setBrightness(50);
+panel>getBacklight()>on();
+panel>getBacklight()>off();
+panel>getBacklight()>setBrightness(50);
 
 // Release the ESP_Panel object
 delete panel;
@@ -381,7 +381,7 @@ Go to the `Tools` in Arduino IDE to configure the following settings:
 
 LVGL also has its own configuration file called `lv_conf.h`. After installing lvgl (v8.3.x), follow these configuration steps:
 
-1. Navigate to the directory where Arduino libraries are installed.
+1. Navigate to the directory where Arduino libraries are installed (The path of libraries folder can be found or changed at `File` > `Preferences` > `Settings` > `Sketchbook location`).
 2. Navigate to the `lvgl` folder, copy `lv_conf_template.h` and place the copy outside the `lvgl` folder at the same directory level. Then rename the copied file as `lv_conf.h`.
 3. Finally, the layout of the Arduino Libraries folder with `lv_conf.h` appear as follows:
 
@@ -404,7 +404,8 @@ LVGL also has its own configuration file called `lv_conf.h`. After installing lv
     #define LV_MEM_CUSTOM           1
     #define LV_MEMCPY_MEMSET_STD    1
     #define LV_TICK_CUSTOM          1
-    #define LV_ATTRIBUTE_FAST_MEM   IRAM_ATTR   // Get higher performance but take up more RAM
+    #define LV_ATTRIBUTE_FAST_MEM   IRAM_ATTR   // Get higher performance but take up more SRAM
+    #define LV_FONT_MONTSERRAT_N    1  // Enable all the internally used fonts (`N` should be replaced by the font size)
     ```
 
 6. For more information, please refer to [LVGL document](https://docs.lvgl.io/8.3/get-started/platforms/arduino.html).
@@ -413,11 +414,11 @@ LVGL also has its own configuration file called `lv_conf.h`. After installing lv
 
 It is convenient to design beautiful UI using Squareline Studio through graphical editing. To use UI source files exported from Squareline in the Arduino IDE, follow these steps:
 
-1. First, create a new project in Squareline Studio. Go to `Create` -> `Arduino`, select `Arduino with TFT-eSPI` as the project template. On the right side, configure project settings based on the LCD properties of the target development board, like `Resolution` and `Color depth`. Finally, click the `Create` button to create the project.
+1. First, create a new project in Squareline Studio. Go to `Create` > `Arduino`, select `Arduino with TFT-eSPI` as the project template. On the right side, configure project settings based on the LCD properties of the target development board, like `Resolution` and `Color depth`. Finally, click the `Create` button to create the project.
 
-2. For existing projects, please click on `File` -> `Project Settings` in the navigation bar. Set `Board Group` to `Arduino`, `Board` to `Arduino with TFT-eSPI`, and configure the `DISPLAY PROPERTIES` based on the target development board's LCD properties in the same section. Finally, click the `Save` button to save project settings.
+2. For existing projects, please click on `File` > `Project Settings` in the navigation bar. Set `Board Group` to `Arduino`, `Board` to `Arduino with TFT-eSPI`, and configure the `DISPLAY PROPERTIES` based on the target development board's LCD properties in the same section. Finally, click the `Save` button to save project settings.
 
-3. Once finished UI design and set the export path, click the navigation bar's `Export` -> `Create Template Project` and `Export UI Files` to export the project and UI source files. The layout of project directory should appear as follows:
+3. Once finished UI design and set the export path, click the navigation bar's `Export` > `Create Template Project` and `Export UI Files` to export the project and UI source files. The layout of project directory should appear as follows:
 
     ```
     Squareline Project
@@ -431,7 +432,7 @@ It is convenient to design beautiful UI using Squareline Studio through graphica
         |-ui
     ```
 
-4. Finally, copy the contents of the `libraries` in the project to the Arduino library directory, and the layout appear as follows:
+4. Finally, copy the `lv_conf.h`, `lvgl`, and `ui` from the `libraries` within the project directory to the Arduino libraries directory (The path of libraries folder can be found or changed at `File` > `Preferences` > `Settings` > `Sketchbook location`). If just want to use a locally installed `lvgl`, please skip copying `lvgl` and `lv_conf.h`, then refer [steps](#configure-lvgl) to configure LVGL. The final layout should appear as follows:
 
     ```
     Arduino
@@ -444,3 +445,5 @@ It is convenient to design beautiful UI using Squareline Studio through graphica
             |-other_lib_1
             |-other_lib_2
     ```
+
+5. Open `lv_conf.h` and set the configurations according to the requirements.

@@ -4,7 +4,7 @@
  * ## How to Use
  *
  * To use this example, please firstly install `ESP32_Display_Panel` (including its dependent libraries) and
- * `lvgl` (v8.3.x) library, then follow the steps to configure them:
+ * `lvgl` (v8.3.x) libraries, then follow the steps to configure them:
  *
  * 1. [Configure ESP32_Display_Panel](https://github.com/esp-arduino-libs/ESP32_Display_Panel#configure-esp32_display_panel)
  * 2. [Configure LVGL](https://github.com/esp-arduino-libs/ESP32_Display_Panel#configure-lvgl)

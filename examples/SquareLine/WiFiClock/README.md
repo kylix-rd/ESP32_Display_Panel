@@ -1,10 +1,17 @@
 # Squareline - Simple Wi-Fi Clock Example
 
-This example implements a simple Wi-Fi clock demo, which UI is created by Squareline Studio. It currently supports the boards including **ESP-S3-BOX**, **ESP-S3-BOX(beta)**, **ESP-S3-BOX-3**, **ESP32_S3_KORVO**, **ESP32_S3_LCD_EV_BOARD** and **ESP32_S3_LCD_EV_BOARD-2**.
+This example implements a simple Wi-Fi clock demo, which UI is created by Squareline Studio. And this example currently supports the following boards:
+
+* ESP-S3-BOX
+* ESP-S3-BOX(beta)
+* ESP-S3-BOX-3
+* ESP32_S3_KORVO
+* ESP32_S3_LCD_EV_BOARD
+* ESP32_S3_LCD_EV_BOARD-2
 
 ## How to Use
 
-To use this example, please first install the following dependent libraries in the Arduino IDE.
+To use this example, please firstly install `ESP32_Display_Panel` (including its dependent libraries) and the following libraries:
 
    * lvgl (v8.3.x)
    * NTPClient (v3.2.1)
@@ -12,129 +19,23 @@ To use this example, please first install the following dependent libraries in t
 
 Then follow the steps below to configure the example.
 
-### Configure ESP32_Display_Panel
+1. [Configure ESP32_Display_Panel](https://github.com/esp-arduino-libs/ESP32_Display_Panel#configure-esp32_display_panel)
+2. [Port the Squareline Project](https://github.com/esp-arduino-libs/ESP32_Display_Panel#port-the-squareline-project) (see its step `4`)
+3. [Configure LVGL](https://github.com/esp-arduino-libs/ESP32_Display_Panel#configure-lvgl)
+4. [Configure Board](https://github.com/esp-arduino-libs/ESP32_Display_Panel#configure-board)
 
-ESP32_Display_Panel has its own configuration file called `ESP_Panel_Conf.h`. After installing ESP32_Display_Panel, follow these configuration steps:
+## Configure Functions
 
-1. Navigate to the directory where Arduino libraries are installed.
+To obtain weather information after connecting to Wi-Fi, please follow these steps:
 
-2. Navigate to the `ESP32_Display_Panel` folder, copy `ESP_Panel_Conf_Template.h` and place the copy outside the `ESP32_Display_Panel` folder at the same directory level. Then rename the copied file as `ESP_Panel_Conf.h`.
+1. Register an account on [OpenWeather](https://openweathermap.org/) and obtain an **API KEY**.
+2. Fill the obtained API KEY in the macro definition `WEATHER_API_KEY`.
+3. Fill the name of the city for which need to obtain weather information (such as `Shanghai`) in the macro definition `WEATHER_CITY`.
 
-3. Finally, the layout of the Arduino Libraries folder with `ESP_Panel_Conf.h` appear as follows:
+To obtain time information after connecting to Wi-Fi, please follow these steps:
 
-   ```
-   Arduino
-       |-libraries
-           |-ESP32_Display_Panel
-           |-other_lib_1
-           |-other_lib_2
-           |-ESP_Panel_Conf.h
-   ```
-
-4. Please refer to [Supported Boards List](https://github.com/esp-arduino-libs/ESP32_Display_Panel#supported-boards--drivers) to check if the current board is compatible. If it is compatible, please navigate to the "For Supported Boards" section; Otherwise, navigate to the "For Unsupported Boards" section.
-
-#### For Supported Board
-
-1. Open `ESP_Panel_Conf.h` file. First, set the macro `ESP_PANEL_USE_SUPPORTED_BOARD` to `1` (default is `1`). Then, according to the name of your target development board, uncomment the macro definitions in the format `ESP_PANEL_BOARD_<NAME>` below,
-
-2. The following code takes *ESP32_S3_BOX* development board as an example:
-
-   ```c
-   ...
-   // #define ESP_PANEL_BOARD_ESP32_C3_LCDKIT
-   #define ESP_PANEL_BOARD_ESP32_S3_BOX
-   // #define ESP_PANEL_BOARD_ESP32_S3_BOX_LITE
-   ...
-   ```
-
-#### For Unsupported Board
-
-Please refer to the [document](https://github.com/esp-arduino-libs/ESP32_Display_Panel#for-unsupported-board) for the details.
-
-### Configure LVGL
-
-1. Navigate to the directory where Arduino libraries are installed.
-
-2. Navigate to the `lvgl` folder, copy `lv_conf_template.h` and place the copy outside the `lvgl` folder at the same directory level. Then rename the copied file as `lv_conf.h`.
-
-3. Finally, the layout of the Arduino Libraries folder with `lv_conf.h` appear as follows:
-
-   ```
-   Arduino
-       |-libraries
-           |-lv_conf.h
-           |-lvgl
-           |-other_lib_1
-           |-other_lib_2
-   ```
-
-4. Open `lv_conf.h` and change the first `#if 0` to `#if 1` to enable the content of the file.
-
-5. Set the following configurations:
-
-   ```c
-   #define LV_COLOR_DEPTH          16
-   #define LV_COLOR_16_SWAP        1   // This configuration is not for RGB LCD.
-                                       // Don't set it if using ESP32-S3-LCD-Ev-Board or ESP32-S3-LCD-Ev-Board-2
-   #define LV_MEM_CUSTOM           1
-   #define LV_MEMCPY_MEMSET_STD    1
-   #define LV_TICK_CUSTOM          1
-   #define LV_FONT_MONTSERRAT_12   1
-   #define LV_FONT_MONTSERRAT_16   1
-   #define LV_USE_DEMO_WIDGETS     1
-   #define LV_USE_DEMO_BENCHMARK   1
-   #define LV_USE_DEMO_STRESS      1
-   #define LV_USE_DEMO_MUSIC       1
-   #define LV_USE_LARGE_COORD      1
-   ```
-
-6. For more information, please refer to [LVGL document](https://docs.lvgl.io/8.3/get-started/platforms/arduino.html).
-
-### Port the UI folder generated by Squareline
-
-1. Navigate to the directory where Arduino libraries are installed.
-
-2. Navigate to the ESP32_Display_Panel folder, follow the path `examples ` ->  `Squareline ` ->  `Clock ` ->  `libraries ` ->  `ui ` to find the ui folder. Copy the ui folder and place the copy outside, at the same directory level as the ESP32_Display_Panel folder.
-
-3. Finally, the layout of the Arduino Libraries folder with `ui` folder appear as follows:
-
-   note: If you want to use the ui folder generated by your own Squareline, the placement location is the same.
-
-   ```
-   Arduino
-       |-libraries
-           |-ESP32_Display_Panel
-           |-ui
-           |-other_lib
-           |-ESP_Panel_Conf.h
-   ```
-
-### Configure Board
-
-Below are recommended configurations for developing GUI applications on various development boards. These settings can be adjusted based on specific requirements.
-
-Go to the `Tools` in Arduino IDE to configure the following settings:
-
-|    Supported Boards     |  Selected Board:   |  PSRAM:  | Flash Mode: | Flash Size: | USB CDC On Boot: |    Partition Scheme:    | Core Debug Level: |
-| :---------------------: | :----------------: | :------: | :---------: | :---------: | :--------------: | :---------------------: | :---------------: |
-|      ESP32-S3-Box       |    ESP32-S3-Box    |    -     |      -      |      -      |        -         |     16M Flash (3MB)     |       Info        |
-|   ESP32-S3-Box-3(beta)  | ESP32S3 Dev Module |   OPI    |  QIO 80MHz  |    16MB     |  **See Note 1**  |     16M Flash (3MB)     |       Info        |
-|     ESP32-S3-Box-3      | ESP32S3 Dev Module |   OPI    |  QIO 80MHz  |    16MB     |  **See Note 1**  |     16M Flash (3MB)     |       Info        |
-|    ESP32-S3-Korvo-2     | ESP32S3 Dev Module |   OPI    |  QIO 80MHz  |    16MB     |     Disabled     |     16M Flash (3MB)     |       Info        |
-|  ESP32-S3-LCD-EV-Board  | ESP32S3 Dev Module |   OPI    |  QIO 80MHz  |    16MB     |  **See Note 1**  |     16M Flash (3MB)     |       Info        |
-| ESP32-S3-LCD-EV-Board-2 | ESP32S3 Dev Module |   OPI    |  QIO 80MHz  |    16MB     |  **See Note 1**  |     16M Flash (3MB)     |       Info        |
-
-**Note:**
-
-   1. "USB CDC On Boot" should be enabled according to the using port:
-      * Disable it if using **UART port**, enable it if using **USB port**.
-      * If it is different in the previous flashing, should enable `Erase All Flash Before Sketch Upload` first, then disable it after flashing.
-
-### Configure Macro Definitions
-
-To retrieve weather information after connecting to Wi-Fi, please first register an OpenWeather account, then obtain an API KEY, and fill the API KEY in the macro definition `WEATHER_API_KEY`. Also, in the macro definition `WEATHER_CITY`, it should be filled in the name of the city for which you want to obtain weather information, such as `Shanghai`.
-
-To obtain time information after connecting to Wi-Fi, please fill in the NTP server URL in the macro definition `SERVER_IP`, such as `ntp6.aliyun.com`, and adjust the macro `TIME_OFFSET` and `TIME_UPDATE_INTERVAL` for time calibration.
+1. Fill in the NTP server URL in the macro definition `SERVER_IP`, for example, `ntp6.aliyun.com`.
+2. Adjust the macro `TIME_OFFSET` and `TIME_UPDATE_INTERVAL` for time calibration.
 
 ## Example Output
 

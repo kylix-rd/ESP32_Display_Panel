@@ -16,8 +16,6 @@ ui_ImgButtonScreenMain1 = lv_imgbtn_create(ui_ScreenMain);
 lv_imgbtn_set_src(ui_ImgButtonScreenMain1, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_lexin_1_png, NULL);
 lv_obj_set_height( ui_ImgButtonScreenMain1, 192);
 lv_obj_set_width( ui_ImgButtonScreenMain1, LV_SIZE_CONTENT);  /// 1
-lv_obj_set_x( ui_ImgButtonScreenMain1, -1 );
-lv_obj_set_y( ui_ImgButtonScreenMain1, -3 );
 lv_obj_set_align( ui_ImgButtonScreenMain1, LV_ALIGN_CENTER );
 lv_obj_add_flag( ui_ImgButtonScreenMain1, LV_OBJ_FLAG_HIDDEN );   /// Flags
 
@@ -25,8 +23,6 @@ ui_ImgButtonScreenMain2 = lv_imgbtn_create(ui_ScreenMain);
 lv_imgbtn_set_src(ui_ImgButtonScreenMain2, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_lexin_2_png, NULL);
 lv_obj_set_height( ui_ImgButtonScreenMain2, 194);
 lv_obj_set_width( ui_ImgButtonScreenMain2, LV_SIZE_CONTENT);  /// 1
-lv_obj_set_x( ui_ImgButtonScreenMain2, -9 );
-lv_obj_set_y( ui_ImgButtonScreenMain2, -10 );
 lv_obj_set_align( ui_ImgButtonScreenMain2, LV_ALIGN_CENTER );
 
 lv_obj_add_event_cb(ui_ImgButtonScreenMain1, ui_event_ImgButtonScreenMain1, LV_EVENT_ALL, NULL);
