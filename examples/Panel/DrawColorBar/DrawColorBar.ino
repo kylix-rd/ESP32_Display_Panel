@@ -30,7 +30,7 @@
 #include <ESP_Panel_Library.h>
 #include <ESP_IOExpander_Library.h>
 
-ESP_Panel *panel;
+ESP_Panel *panel = nullptr;
 
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
 bool lcd_trans_done_callback(void *user_ctx)
@@ -51,44 +51,14 @@ void setup()
 
     panel = new ESP_Panel();
 
-    /* There are some extral initialization for ESP32-S3-LCD-EV-Board */
-#ifdef ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD
+#if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
+    Serial.println("Initialize IO expander");
     /* Initialize IO expander */
     ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST_ID, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, ESP_PANEL_LCD_TOUCH_I2C_IO_SCL, ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
     expander->init();
     expander->begin();
-    /* Add into panel for 3-wire SPI */
+    /* Add into panel */
     panel->addIOExpander(expander);
-    /* For the newest version sub board, need to set `ESP_PANEL_LCD_RGB_IO_VSYNC` to high before initialize LCD */
-    pinMode(ESP_PANEL_LCD_RGB_IO_VSYNC, OUTPUT);
-    digitalWrite(ESP_PANEL_LCD_RGB_IO_VSYNC, HIGH);
-#endif
-
-    /* There are some extral initialization for ESP32-S3-Korvo-2 */
-#ifdef ESP_PANEL_BOARD_ESP32_S3_KORVO_2
-    /* Initialize IO expander */
-    ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST_ID, ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000, ESP_PANEL_LCD_TOUCH_I2C_IO_SCL, ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
-    expander->init();
-    expander->begin();
-    /* Reset LCD */
-    expander->pinMode(2, OUTPUT);
-    expander->digitalWrite(2, LOW);
-    usleep(20000);
-    expander->digitalWrite(2, LOW);
-    usleep(120000);
-    expander->digitalWrite(2, HIGH);
-    /* Turn on backlight */
-    expander->pinMode(1, OUTPUT);
-    expander->digitalWrite(1, HIGH);
-    /* Keep CS low */
-    expander->pinMode(3, OUTPUT);
-    expander->digitalWrite(3, LOW);
-#endif
-
-#ifdef ESP_PANEL_BOARD_ESP32_S3_BOX_3
-    pinMode(ESP_PANEL_LCD_TOUCH_IO_INT, OUTPUT);
-    digitalWrite(ESP_PANEL_LCD_TOUCH_IO_INT, LOW);
-    usleep(100);
 #endif
 
     Serial.println("Initialize panel");
