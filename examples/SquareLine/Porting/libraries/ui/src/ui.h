@@ -27,14 +27,14 @@ extern "C" {
 // SCREEN: ui_ScreenMain
 void ui_ScreenMain_screen_init(void);
 extern lv_obj_t *ui_ScreenMain;
-void ui_event_ImgButtonScreenMain1( lv_event_t * e);
-extern lv_obj_t *ui_ImgButtonScreenMain1;
-void ui_event_ImgButtonScreenMain2( lv_event_t * e);
-extern lv_obj_t *ui_ImgButtonScreenMain2;
+void ui_event_Image1ScreenMain( lv_event_t * e);
+extern lv_obj_t *ui_Image1ScreenMain;
+void ui_event_Image2ScreenMain( lv_event_t * e);
+extern lv_obj_t *ui_Image2ScreenMain;
 extern lv_obj_t *ui____initial_actions0;
 
-LV_IMG_DECLARE( ui_img_lexin_1_png);   // assets/img_lexin_1.png
-LV_IMG_DECLARE( ui_img_lexin_2_png);   // assets/img_lexin_2.png
+LV_IMG_DECLARE( ui_img_lexin_1_png);   // assets/lexin_1.png
+LV_IMG_DECLARE( ui_img_lexin_2_png);   // assets/lexin_2.png
 
 
 

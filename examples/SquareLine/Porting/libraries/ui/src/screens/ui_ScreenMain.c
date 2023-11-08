@@ -12,20 +12,23 @@ lv_obj_clear_flag( ui_ScreenMain, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 lv_obj_set_style_bg_color(ui_ScreenMain, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT );
 lv_obj_set_style_bg_opa(ui_ScreenMain, 255, LV_PART_MAIN| LV_STATE_DEFAULT);
 
-ui_ImgButtonScreenMain1 = lv_imgbtn_create(ui_ScreenMain);
-lv_imgbtn_set_src(ui_ImgButtonScreenMain1, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_lexin_1_png, NULL);
-lv_obj_set_height( ui_ImgButtonScreenMain1, 192);
-lv_obj_set_width( ui_ImgButtonScreenMain1, LV_SIZE_CONTENT);  /// 1
-lv_obj_set_align( ui_ImgButtonScreenMain1, LV_ALIGN_CENTER );
-lv_obj_add_flag( ui_ImgButtonScreenMain1, LV_OBJ_FLAG_HIDDEN );   /// Flags
+ui_Image1ScreenMain = lv_img_create(ui_ScreenMain);
+lv_img_set_src(ui_Image1ScreenMain, &ui_img_lexin_1_png);
+lv_obj_set_width( ui_Image1ScreenMain, LV_SIZE_CONTENT);  /// 1
+lv_obj_set_height( ui_Image1ScreenMain, LV_SIZE_CONTENT);   /// 1
+lv_obj_set_align( ui_Image1ScreenMain, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_Image1ScreenMain, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
+lv_obj_clear_flag( ui_Image1ScreenMain, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
-ui_ImgButtonScreenMain2 = lv_imgbtn_create(ui_ScreenMain);
-lv_imgbtn_set_src(ui_ImgButtonScreenMain2, LV_IMGBTN_STATE_RELEASED, NULL, &ui_img_lexin_2_png, NULL);
-lv_obj_set_height( ui_ImgButtonScreenMain2, 194);
-lv_obj_set_width( ui_ImgButtonScreenMain2, LV_SIZE_CONTENT);  /// 1
-lv_obj_set_align( ui_ImgButtonScreenMain2, LV_ALIGN_CENTER );
+ui_Image2ScreenMain = lv_img_create(ui_ScreenMain);
+lv_img_set_src(ui_Image2ScreenMain, &ui_img_lexin_2_png);
+lv_obj_set_width( ui_Image2ScreenMain, LV_SIZE_CONTENT);  /// 1
+lv_obj_set_height( ui_Image2ScreenMain, LV_SIZE_CONTENT);   /// 1
+lv_obj_set_align( ui_Image2ScreenMain, LV_ALIGN_CENTER );
+lv_obj_add_flag( ui_Image2ScreenMain, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_ADV_HITTEST );   /// Flags
+lv_obj_clear_flag( ui_Image2ScreenMain, LV_OBJ_FLAG_SCROLLABLE );    /// Flags
 
-lv_obj_add_event_cb(ui_ImgButtonScreenMain1, ui_event_ImgButtonScreenMain1, LV_EVENT_ALL, NULL);
-lv_obj_add_event_cb(ui_ImgButtonScreenMain2, ui_event_ImgButtonScreenMain2, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_Image1ScreenMain, ui_event_Image1ScreenMain, LV_EVENT_ALL, NULL);
+lv_obj_add_event_cb(ui_Image2ScreenMain, ui_event_Image2ScreenMain, LV_EVENT_ALL, NULL);
 
 }

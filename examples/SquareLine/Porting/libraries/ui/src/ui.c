@@ -12,12 +12,12 @@
 // SCREEN: ui_ScreenMain
 void ui_ScreenMain_screen_init(void);
 lv_obj_t *ui_ScreenMain;
-void ui_event_ImgButtonScreenMain1( lv_event_t * e);
-lv_obj_t *ui_ImgButtonScreenMain1;
-void ui_event_ImgButtonScreenMain2( lv_event_t * e);
-lv_obj_t *ui_ImgButtonScreenMain2;
+void ui_event_Image1ScreenMain( lv_event_t * e);
+lv_obj_t *ui_Image1ScreenMain;
+void ui_event_Image2ScreenMain( lv_event_t * e);
+lv_obj_t *ui_Image2ScreenMain;
 lv_obj_t *ui____initial_actions0;
-const lv_img_dsc_t *ui_imgset_img_lexin_[2] = {&ui_img_lexin_1_png, &ui_img_lexin_2_png};
+const lv_img_dsc_t *ui_imgset_lexin_[2] = {&ui_img_lexin_1_png, &ui_img_lexin_2_png};
 
 ///////////////////// TEST LVGL SETTINGS ////////////////////
 #if LV_COLOR_DEPTH != 16
@@ -30,18 +30,18 @@ const lv_img_dsc_t *ui_imgset_img_lexin_[2] = {&ui_img_lexin_1_png, &ui_img_lexi
 ///////////////////// ANIMATIONS ////////////////////
 
 ///////////////////// FUNCTIONS ////////////////////
-void ui_event_ImgButtonScreenMain1( lv_event_t * e) {
+void ui_event_Image1ScreenMain( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
-      _ui_flag_modify( ui_ImgButtonScreenMain2, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-      _ui_flag_modify( ui_ImgButtonScreenMain1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+      _ui_flag_modify( ui_Image1ScreenMain, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+      _ui_flag_modify( ui_Image2ScreenMain, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
 }
 }
-void ui_event_ImgButtonScreenMain2( lv_event_t * e) {
+void ui_event_Image2ScreenMain( lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);lv_obj_t * target = lv_event_get_target(e);
 if ( event_code == LV_EVENT_CLICKED) {
-      _ui_flag_modify( ui_ImgButtonScreenMain1, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
-      _ui_flag_modify( ui_ImgButtonScreenMain2, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
+      _ui_flag_modify( ui_Image1ScreenMain, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+      _ui_flag_modify( ui_Image2ScreenMain, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
 }
 }
 
