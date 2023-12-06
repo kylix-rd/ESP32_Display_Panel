@@ -5,9 +5,9 @@
  */
 
 #include "soc/soc_caps.h"
-#include "esp_idf_version.h"
 
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+
+#if SOC_LCD_RGB_SUPPORTED
 #include <stdlib.h>
 #include <string.h>
 

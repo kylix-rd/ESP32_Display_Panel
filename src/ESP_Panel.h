@@ -3,15 +3,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANEL_H
-#define ESP_PANEL_H
+#pragma once
 
 #include "ESP_IOExpander.h"
-
-#include "bus/all_supported_bus.h"
-#include "lcd/all_supported_lcd.h"
-#include "lcd_touch/all_supported_lcd_touch.h"
-#include "backlight/ESP_PanelBacklight.h"
+#include "ESP_PanelBacklight.h"
+#include "ESP_PanelBus.h"
+#include "ESP_PanelLcd.h"
 #include "ESP_Panel_Conf_Internal.h"
 
 #ifndef ESP_PANEL_CONF_IGNORE
@@ -38,7 +35,5 @@ private:
     ESP_PanelBacklight *backlight;
     ESP_IOExpander *expander;
 };
-
-#endif
 
 #endif

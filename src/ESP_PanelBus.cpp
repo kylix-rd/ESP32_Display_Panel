@@ -5,9 +5,7 @@
  */
 #include <stdlib.h>
 #include <string.h>
-
 #include "esp_lcd_panel_io.h"
-
 #include "private/CheckResult.h"
 #include "ESP_PanelBus.h"
 

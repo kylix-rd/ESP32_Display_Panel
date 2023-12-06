@@ -7,14 +7,14 @@
 #define ESP_PANELBUS_RGB_H
 
 #include "soc/soc_caps.h"
-#include "esp_idf_version.h"
 
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+
+#if SOC_LCD_RGB_SUPPORTED
 
 #include <stdint.h>
 
 #include "esp_lcd_panel_rgb.h"
-#include "esp_idf_version.h"
+
 #include "ESP_IOExpander.h"
 
 #include "base/esp_lcd_panel_io_additions.h"

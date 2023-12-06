@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANELBUS_H
-#define ESP_PANELBUS_H
+#pragma once
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -56,5 +55,3 @@ protected:
 private:
     friend class ESP_PanelLcd;
 };
-
-#endif

@@ -3,15 +3,25 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+#pragma once
 
-#ifndef ESP_PANEL_LIBRARY_H
-#define ESP_PANEL_LIBRARY_H
-
-#include "bus/all_supported_bus.h"
-#include "lcd/all_supported_lcd.h"
-#include "lcd_touch/all_supported_lcd_touch.h"
-#include "backlight/ESP_PanelBacklight.h"
 #include "ESP_Panel.h"
+#include "ESP_PanelBacklight.h"
+#include "ESP_PanelBus.h"
+#include "ESP_PanelLcd.h"
 #include "ESP_Panel_Conf_Internal.h"
 
-#endif
+/* LCD */
+#include "GC9503.h"
+#include "GC9A01.h"
+#include "ST7262.h"
+#include "ST7701.h"
+#include "ST7789.h"
+
+/* LCD Touch */
+#include "CST816S.h"
+#include "FT5x06.h"
+#include "GT1151.h"
+#include "GT911.h"
+#include "STMPE610.h"
+#include "TT21100.h"

@@ -3,17 +3,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANELLCD_H
-#define ESP_PANELLCD_H
+#pragma once
 
 #include <stdint.h>
-
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_rgb.h"
-
 #include "lcd/base/esp_lcd_custom_types.h"
-#include "../bus/ESP_PanelBus.h"
+#include "ESP_PanelBus.h"
 
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
 #define ESP_LCD_DEVICE_CONFIG_DEFAULT(rst_io, pixel_bits, vendor_cfg)   \
@@ -46,7 +43,7 @@
         .init_cmds_size = cmds_size,                            \
     }
 
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
 #define ESP_LCD_RGB_VENDOR_CONFIG_DEFAULT(cmds, cmds_size, rgb_cfg, enable_3wire_spi_share_pin)  \
     {                                                                   \
         .init_cmds = cmds,                                              \
@@ -75,7 +72,7 @@ public:
     void setColorBits(int bits_per_pixel);
     void setResetPin(int rst_io);
     void setInitCommands(const lcd_init_cmd_t init_cmd[], int init_cmd_size);
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     void enableAutoReleaseBus(void);
 #endif
 
@@ -108,10 +105,8 @@ protected:
     esp_lcd_panel_handle_t handle;
 
 private:
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     void generateRGBConfig(void);
     void attachRGBEventCallback(void);
 #endif
 };
-
-#endif

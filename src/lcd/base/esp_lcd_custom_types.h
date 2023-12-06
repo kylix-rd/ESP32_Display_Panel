@@ -6,14 +6,12 @@
 
 #pragma once
 
-#include "soc/soc_caps.h"
-#include "esp_idf_version.h"
 #include "esp_lcd_panel_rgb.h"
+#include "soc/soc_caps.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 /**
  * @brief LCD panel initialization commands.
  *
@@ -36,10 +34,10 @@ typedef struct {
                                                      *   The array should be declared as `static const` and positioned outside the function.
                                                      *   Please refer to `vendor_specific_init_default` in source file.
                                                      */
-    uint16_t init_cmds_size;                        /*<! Number of commands in above array */
+    unsigned int init_cmds_size;                    /*<! Number of commands in above array */
 
     /* Below configurations are only available for RGB interface */
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     const esp_lcd_rgb_panel_config_t *rgb_config;   /*!< RGB panel configuration. */
     struct {
         unsigned int auto_del_panel_io: 1;          /*<! Delete the panel IO instance automatically if set to 1. All `*_by_cmd` flags will be invalid.
@@ -53,9 +51,6 @@ typedef struct {
     } flags;
 #endif
 } lcd_vendor_config_t;
-
-#define ESP_LCD_VENDOR_CONFIG_
-
 #ifdef __cplusplus
 }
 #endif

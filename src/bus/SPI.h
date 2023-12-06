@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 #include "driver/spi_master.h"
-#include "esp_idf_version.h"
+
 #include "esp_intr_alloc.h"
 #include "esp_lcd_panel_io.h"
 

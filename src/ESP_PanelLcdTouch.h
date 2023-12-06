@@ -3,13 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANELLCDTOUCH_H
-#define ESP_PANELLCDTOUCH_H
+#pragma once
 
 #include <stdint.h>
-
-#include "lcd_touch/base/esp_lcd_touch.h"
-#include "../bus/ESP_PanelBus.h"
+#include "ESP_PanelBus.h"
 
 class TouchPoint {
 public:

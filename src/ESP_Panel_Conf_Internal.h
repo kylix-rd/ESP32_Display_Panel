@@ -3,8 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANEL_CONF_INTERNAL_H
-#define ESP_PANEL_CONF_INTERNAL_H
+#pragma once
 
 #include <stdint.h>
 
@@ -49,7 +48,7 @@
 
 #ifndef ESP_PANEL_CONF_IGNORE
 #include "soc/soc_caps.h"
-#include "esp_idf_version.h"
+
 
 #include "bus/ESP_PanelBus.h"
 
@@ -69,7 +68,7 @@
     #elif defined(ESP_PANEL_BOARD_ESP32_S3_BOX_3) || CONFIG_ESP_PANEL_BOARD_ESP32_S3_BOX_3
         #include "board/esp32_s3_box_3.h"
     #elif defined(ESP_PANEL_BOARD_ESP32_S3_BOX_3_BETA) || CONFIG_ESP_PANEL_BOARD_ESP32_S3_BOX_3_BETA
-        #include "board/esp32_s3_box_3_beta.h"
+        #include "board/ESP32_S3_BOX_3_BETA.h"
     #elif defined(ESP_PANEL_BOARD_ESP32_S3_BOX_LITE) || CONFIG_ESP_PANEL_BOARD_ESP32_S3_BOX_LITE
         #include "board/ESP32_S3_BOX_LITE.h"
     #elif defined(ESP_PANEL_BOARD_ESP32_S3_EYE) || CONFIG_ESP_PANEL_BOARD_ESP32_S3_EYE
@@ -994,5 +993,3 @@
 // *INDENT-OFF*
 
 #endif /* ESP_PANEL_CONF_IGNORE */
-
-#endif

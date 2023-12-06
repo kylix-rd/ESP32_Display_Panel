@@ -6,11 +6,10 @@
 #include "soc/soc_caps.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
-#include "esp_idf_version.h"
-#include "esp_lcd_panel_ops.h"
 
+#include "esp_lcd_panel_ops.h"
 #include "private/CheckResult.h"
-#include "../bus/all_supported_bus.h"
+#include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
 
 static const char *TAG = "ESP_PanelLcd";
@@ -37,7 +36,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, int color_bits, int rst_io, const 
     vendor_config(ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(init_cmd, init_cmd_size)),
     handle(NULL)
 {
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     generateRGBConfig();
 #endif
 }
@@ -48,7 +47,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus):
     vendor_config(ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(NULL, 0)),
     handle(NULL)
 {
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     generateRGBConfig();
 #endif
 }
@@ -82,7 +81,7 @@ void ESP_PanelLcd::setInitCommands(const lcd_init_cmd_t init_cmd[], int init_cmd
     vendor_config.init_cmds_size = init_cmd_size;
 }
 
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
 void ESP_PanelLcd::enableAutoReleaseBus(void)
 {
     // Only allow to set init commands before `begin()`.
@@ -94,7 +93,7 @@ void ESP_PanelLcd::enableAutoReleaseBus(void)
 void ESP_PanelLcd::begin(void)
 {
     CHECK_ERROR_RETURN(esp_lcd_panel_init(handle));
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
     attachRGBEventCallback();
 #endif
 }
@@ -223,7 +222,7 @@ err:
     return NULL;
 }
 
-#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+#if SOC_LCD_RGB_SUPPORTED
 void ESP_PanelLcd::generateRGBConfig(void)
 {
     if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
