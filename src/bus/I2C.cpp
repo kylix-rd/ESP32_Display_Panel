@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "I2C.h"
 
 static const char *TAG = "ESP_PanelBus_I2C";

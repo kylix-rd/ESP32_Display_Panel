@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "esp_lcd_panel_io.h"
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "ESP_PanelBus.h"
 
 #define PANEL_BUS_FLAGS(type, need_init)    \
@@ -31,17 +31,17 @@ ESP_PanelBus::ESP_PanelBus(int bus_type, bool host_need_init):
 {
 }
 
-void ESP_PanelBus::readParam(int lcd_cmd, void *param, int param_size)
+void ESP_PanelBus::readCommandParameter(int lcd_cmd, void *param, int param_size)
 {
     CHECK_ERROR_RETURN(esp_lcd_panel_io_rx_param(handle, lcd_cmd, param, param_size));
 }
 
-void ESP_PanelBus::writeParam(int lcd_cmd, const void *param, int param_size)
+void ESP_PanelBus::writeCommandParameter(int lcd_cmd, const void *param, int param_size)
 {
     CHECK_ERROR_RETURN(esp_lcd_panel_io_tx_param(handle, lcd_cmd, param, param_size));
 }
 
-void ESP_PanelBus::writeColor(int lcd_cmd, const void *color, int color_size)
+void ESP_PanelBus::writeCommandColor(int lcd_cmd, const void *color, int color_size)
 {
     CHECK_ERROR_RETURN(esp_lcd_panel_io_tx_param(handle, lcd_cmd, color, color_size));
 }
@@ -51,7 +51,7 @@ void ESP_PanelBus::del(void)
     CHECK_ERROR_RETURN(esp_lcd_panel_io_del(handle));
 }
 
-void ESP_PanelBus::attachTransmitFinishCallback(ESP_BusCallback_t callback, void *user_data)
+void ESP_PanelBus::attachTransmitFinishCallback(ESP_PanelBusCallback_t callback, void *user_data)
 {
     onTransmitFinishCallback = callback;
     callback_ctx.user_data = user_data;
@@ -81,7 +81,7 @@ void ESP_PanelBus::createTransmitFinishSemaphore(void)
 
 bool ESP_PanelBus::on_transmit_finish_callback(void *panel_io, void *edata, void *user_ctx)
 {
-    ESP_BusUserData_t *callback_ctx = (ESP_BusUserData_t *)user_ctx;
+    ESP_PanelBusCallbackData_t *callback_ctx = (ESP_PanelBusCallbackData_t *)user_ctx;
     ESP_PanelBus *bus = (ESP_PanelBus *)callback_ctx->bus;
     BaseType_t need_yield = pdFALSE;
 

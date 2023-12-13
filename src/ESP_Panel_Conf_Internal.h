@@ -49,7 +49,6 @@
 #ifndef ESP_PANEL_CONF_IGNORE
 #include "soc/soc_caps.h"
 
-
 #include "bus/ESP_PanelBus.h"
 
 #ifndef ESP_PANEL_USE_SUPPORTED_BOARD

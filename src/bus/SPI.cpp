@@ -8,7 +8,7 @@
 
 #include "esp_lcd_panel_io.h"
 
-#include "../private/CheckResult.h"
+#include "../ESP_PanelPrivate"
 #include "SPI.h"
 
 static const char *TAG = "ESP_PanelBus_SPI";

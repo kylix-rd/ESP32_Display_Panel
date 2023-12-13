@@ -63,7 +63,7 @@ public:
                  const lcd_init_cmd_t init_cmd[] = NULL, int init_cmd_size = 0);
     ESP_PanelLcd(ESP_PanelBus *bus);
 
-    void attachFrameEndCallback(ESP_BusCallback_t onFrameEndCallback, void *user_data = NULL);
+    void attachFrameEndCallback(ESP_PanelBusCallback_t onFrameEndCallback, void *user_data = NULL);
 
     /**
      * The below functions can be used to configure LCD device when not using `panel_config`.

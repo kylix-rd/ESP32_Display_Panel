@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "../private/CheckResult.h"
+#include "../ESP_PanelPrivate"
 #include "base/esp_lcd_st7789.h"
 #include "ST7789.h"
 

@@ -22,6 +22,13 @@
                                                                                                 __LINE__, __FUNCTION__
 #define ERROR_CHECK_LOGE(tag, format, ...)  printf(ERROR_LOG_FORMAT(format), ##__VA_ARGS__)
 
+#define CHECK_ERR_RET(x, ret, fmt, ...) do {           \
+        if ((x) != ESP_OK) {                  \
+            ERROR_CHECK_LOGE(fmt, ##__VA_ARGS__); \
+            return ret;                         \
+        }                                   \
+    } while(0)
+
 #define CHECK_NULL_RET(x, ret, fmt, ...) do {           \
         if ((x) == NULL) {                  \
             ERROR_CHECK_LOGE(fmt, ##__VA_ARGS__); \
@@ -40,6 +47,13 @@
         if ((x) == NULL) {                  \
             ERROR_CHECK_LOGE(fmt, ##__VA_ARGS__); \
             return;                         \
+        }                                   \
+    } while(0)
+
+#define CHECK_ERR_GOTO(x, goto_tag, fmt, ...) do {           \
+        if ((x) != ESP_OK) {                  \
+            ERROR_CHECK_LOGE(fmt, ##__VA_ARGS__); \
+            goto goto_tag;                  \
         }                                   \
     } while(0)
 

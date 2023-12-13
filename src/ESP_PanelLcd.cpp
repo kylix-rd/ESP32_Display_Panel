@@ -8,7 +8,7 @@
 #include "freertos/semphr.h"
 
 #include "esp_lcd_panel_ops.h"
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
 
@@ -52,7 +52,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus):
 #endif
 }
 
-void ESP_PanelLcd::attachFrameEndCallback(ESP_BusCallback_t onFrameEndCallback, void *user_data)
+void ESP_PanelLcd::attachFrameEndCallback(ESP_PanelBusCallback_t onFrameEndCallback, void *user_data)
 {
     CHECK_NULL_RETURN(bus);
     bus->attachTransmitFinishCallback(onFrameEndCallback, user_data);

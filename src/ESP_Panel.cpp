@@ -5,10 +5,9 @@
  */
 #include <iostream>
 #include <stdint.h>
-
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "ESP_Panel_Conf_Internal.h"
 #include "ESP_Panel.h"
 

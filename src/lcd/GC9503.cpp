@@ -18,7 +18,7 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_log.h"
 
-#include "../private/CheckResult.h"
+#include "../ESP_PanelPrivate"
 #include "../bus/RGB.h"
 #include "GC9503.h"
 

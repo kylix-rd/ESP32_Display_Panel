@@ -5,7 +5,7 @@
  */
 #include "driver/gpio.h"
 
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "ESP_PanelLcdTouch.h"
 
 static const char *TAG = "LcdTouch";

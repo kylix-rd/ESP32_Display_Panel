@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "private/CheckResult.h"
+#include "ESP_PanelPrivate"
 #include "ESP_PanelBacklight.h"
 
 #define BACKLIGHT_CONFIG_DEFAULT(io_num, on_level)  \
