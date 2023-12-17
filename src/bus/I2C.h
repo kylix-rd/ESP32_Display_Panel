@@ -3,16 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANELBUS_I2C_H
-#define ESP_PANELBUS_I2C_H
+#pragma once
 
 #include <stdint.h>
-
 #include "esp_lcd_panel_io.h"
-
+#include "ESP_PanelHost.h"
 #include "ESP_PanelBus.h"
 
-#define I2C_HOST_ID_DEFAULT         (I2C_NUM_0)
 #define I2C_PANEL_IO_CONFIG_DEFAULT(address, cb)                \
     {                                                           \
         .dev_addr = address,                                    \
