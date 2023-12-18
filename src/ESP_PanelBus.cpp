@@ -25,7 +25,7 @@ static const char *TAG = "ESP_PanelBus";
 
 ESP_PanelBus::ESP_PanelBus(int bus_type, bool host_need_init):
     onTransmitFinishCallback(NULL),
-    callback_ctx(PANEL_BUS_CALLBACK_CTX()),
+    callback_data(PANEL_BUS_CALLBACK_CTX()),
     flags(PANEL_BUS_FLAGS(bus_type, host_need_init)),
     sem_transmit_finish(NULL)
 {
@@ -54,7 +54,7 @@ void ESP_PanelBus::del(void)
 void ESP_PanelBus::attachTransmitFinishCallback(ESP_PanelBusCallback_t callback, void *user_data)
 {
     onTransmitFinishCallback = callback;
-    callback_ctx.user_data = user_data;
+    callback_data.user_data = user_data;
 }
 
 esp_lcd_panel_io_handle_t ESP_PanelBus::getHandle(void)
@@ -81,8 +81,8 @@ void ESP_PanelBus::createTransmitFinishSemaphore(void)
 
 bool ESP_PanelBus::on_transmit_finish_callback(void *panel_io, void *edata, void *user_ctx)
 {
-    ESP_PanelBusCallbackData_t *callback_ctx = (ESP_PanelBusCallbackData_t *)user_ctx;
-    ESP_PanelBus *bus = (ESP_PanelBus *)callback_ctx->bus;
+    ESP_PanelBusCallbackData_t *callback_data = (ESP_PanelBusCallbackData_t *)user_ctx;
+    ESP_PanelBus *bus = (ESP_PanelBus *)callback_data->bus;
     BaseType_t need_yield = pdFALSE;
 
     if (bus->sem_transmit_finish) {
@@ -90,7 +90,7 @@ bool ESP_PanelBus::on_transmit_finish_callback(void *panel_io, void *edata, void
     }
 
     if (bus->onTransmitFinishCallback) {
-        return bus->onTransmitFinishCallback(callback_ctx->user_data);
+        return bus->onTransmitFinishCallback(callback_data->user_data);
     }
     return (need_yield == pdTRUE);
 }

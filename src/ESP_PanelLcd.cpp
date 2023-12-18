@@ -249,6 +249,6 @@ void ESP_PanelLcd::attachRGBEventCallback(void)
     } else {
         event_cb.on_bounce_frame_finish = (esp_lcd_rgb_panel_bounce_buf_finish_cb_t)bus->on_transmit_finish_callback;
     }
-    CHECK_ERROR_RETURN(esp_lcd_rgb_panel_register_event_callbacks(handle, &event_cb, &bus->callback_ctx));
+    CHECK_ERROR_RETURN(esp_lcd_rgb_panel_register_event_callbacks(handle, &event_cb, &bus->callback_data));
 }
 #endif

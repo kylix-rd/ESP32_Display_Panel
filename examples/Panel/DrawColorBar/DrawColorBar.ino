@@ -74,7 +74,7 @@ void setup()
 //     for (int j = 0; j < bits_per_piexl; j++) {
 //         for (int i = 0; i < line_per_bar * ESP_PANEL_LCD_H_RES; i++) {
 //             for (int k = 0; k < bytes_per_piexl; k++) {
-// #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+// #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
 //             color[i * bytes_per_piexl + k] = SPI_SWAP_DATA_TX(BIT(j), bits_per_piexl) >> (k * 8);
 // #else
 //             color[i * bytes_per_piexl + k] = BIT(j) >> (k * 8);

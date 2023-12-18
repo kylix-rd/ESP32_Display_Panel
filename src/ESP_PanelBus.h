@@ -12,11 +12,6 @@
 
 typedef std::function<bool(void *user_data)> ESP_PanelBusCallback_t;
 
-typedef struct {
-    void *bus;
-    void *user_data;
-} ESP_PanelBusCallbackData_t;
-
 class ESP_PanelBus {
 public:
     ESP_PanelBus(int bus_type, bool host_need_init);
@@ -34,9 +29,14 @@ public:
     int getType(void);
 
 protected:
+    typedef struct {
+        void *bus;
+        void *user_data;
+    } ESP_PanelBusCallbackData_t;
+
     esp_lcd_panel_io_handle_t handle;
     ESP_PanelBusCallback_t onTransmitFinishCallback;
-    ESP_PanelBusCallbackData_t callback_ctx;
+    ESP_PanelBusCallbackData_t callback_data;
     struct {
         uint32_t bus_type: 3;
         uint32_t host_need_init: 1;

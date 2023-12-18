@@ -6,13 +6,10 @@
 
 #include "soc/soc_caps.h"
 
-
 #if SOC_LCD_RGB_SUPPORTED
 #include <stdlib.h>
 #include <string.h>
-
 #include "esp_lcd_panel_io.h"
-
 #include "ESP_PanelPrivate"
 #include "RGB.h"
 

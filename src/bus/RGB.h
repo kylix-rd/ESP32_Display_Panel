@@ -3,20 +3,15 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANELBUS_RGB_H
-#define ESP_PANELBUS_RGB_H
+
+#pragma once
 
 #include "soc/soc_caps.h"
 
-
 #if SOC_LCD_RGB_SUPPORTED
-
-#include <stdint.h>
-
+#include <cstdint>
 #include "esp_lcd_panel_rgb.h"
-
 #include "ESP_IOExpander.h"
-
 #include "base/esp_lcd_panel_io_additions.h"
 #include "ESP_PanelBus.h"
 
@@ -71,7 +66,7 @@
             .cs_io_type = IO_TYPE_GPIO,                     \
             .cs_gpio_num = cs_io,                           \
             .scl_io_type = IO_TYPE_GPIO,                    \
-            .scl_gpio_num = scl_io,                         \
+            .scl_gpio_num = sck_io,                         \
             .sda_io_type = IO_TYPE_GPIO,                    \
             .sda_gpio_num = sda_io,                         \
             .io_expander = NULL,                            \
@@ -92,13 +87,12 @@
 class ESP_PanelBus_RGB: public ESP_PanelBus {
 public:
     /* For 3-wire SPI + RGB  */
-    ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t *spi_config, const esp_lcd_rgb_panel_config_t *rgb_config,
-                     int host_id = -1);
+    ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t *io_config,
+                     const esp_lcd_rgb_panel_config_t *rgb_config, int host_id = -1);
     /* For RGB only */
     ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t *rgb_config, int host_id = -1);
-
     /* For 3-wire SPI + 16-bit RGB  */
-    ESP_PanelBus_RGB(uint16_t width, uint16_t height, int cs_io, int scl_io, int sda_io, int hsync_io, int vsync_io,
+    ESP_PanelBus_RGB(uint16_t width, uint16_t height, int cs_io, int sck_io, int sda_io, int hsync_io, int vsync_io,
                      int pclk_io, int d0_io, int d1_io, int d2_io, int d3_io, int d4_io, int d5_io, int d6_io,
                      int d7_io, int d8_io, int d9_io, int d10_io, int d11_io, int d12_io, int d13_io, int d14_io,
                      int d15_io, int de_io = -1, int disp_io = -1);
@@ -106,9 +100,8 @@ public:
     ESP_PanelBus_RGB(uint16_t width, uint16_t height, int hsync_io, int vsync_io, int pclk_io, int d0_io, int d1_io,
                      int d2_io, int d3_io, int d4_io, int d5_io, int d6_io, int d7_io, int d8_io, int d9_io, int d10_io,
                      int d11_io, int d12_io, int d13_io, int d14_io, int d15_io, int de_io = -1, int disp_io = -1);
-
     /* For 3-wire SPI + 8-bit  */
-    ESP_PanelBus_RGB(uint16_t width, uint16_t height, int cs_io, int scl_io, int sda_io, int hsync_io, int vsync_io,
+    ESP_PanelBus_RGB(uint16_t width, uint16_t height, int cs_io, int sck_io, int sda_io, int hsync_io, int vsync_io,
                      int pclk_io, int d0_io, int d1_io, int d2_io, int d3_io, int d4_io, int d5_io, int d6_io,
                      int d7_io, int de_io = -1, int disp_io = -1);
     /* For 8-bit RGB only */

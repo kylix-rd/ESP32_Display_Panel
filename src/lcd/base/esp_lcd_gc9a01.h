@@ -57,7 +57,7 @@ esp_err_t esp_lcd_new_panel_gc9a01(const esp_lcd_panel_io_handle_t io, const esp
  * @param[in] cb_ctx Callback function context
  *
  */
-#define GC9A01_PANEL_IO_SPI_CONFIG(cs, dc, callback, callback_ctx)  \
+#define GC9A01_PANEL_IO_SPI_CONFIG(cs, dc, callback, callback_data)  \
     {                                                               \
         .cs_gpio_num = cs,                                          \
         .dc_gpio_num = dc,                                          \
@@ -65,7 +65,7 @@ esp_err_t esp_lcd_new_panel_gc9a01(const esp_lcd_panel_io_handle_t io, const esp
         .pclk_hz = 80 * 1000 * 1000,                                \
         .trans_queue_depth = 10,                                    \
         .on_color_trans_done = callback,                            \
-        .user_ctx = callback_ctx,                                   \
+        .user_ctx = callback_data,                                   \
         .lcd_cmd_bits = 8,                                          \
         .lcd_param_bits = 8,                                        \
     }

@@ -150,10 +150,10 @@
         #endif
     #endif
     /* LCD bus parameters. */
-    #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
+    #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
         #define ESP_PANEL_LCD_BUS_NAME      I2C
         #error "LCD I2C bus is not available and will be implemented in the future."
-    #elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+    #elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
         #define ESP_PANEL_LCD_BUS_NAME      SPI
 
         #ifndef ESP_PANEL_LCD_BUS_HOST_ID
@@ -758,7 +758,7 @@
         #endif
     #endif
     /* LCD bus parameters. */
-    #if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
+    #if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
         #define ESP_PANEL_LCD_TOUCH_BUS_NAME    I2C
 
         #ifndef ESP_PANEL_LCD_TOUCH_BUS_HOST_ID
@@ -812,7 +812,7 @@
                 #endif
             #endif
         #endif /* ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST */
-    #elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+    #elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
         #define ESP_PANEL_LCD_TOUCH_BUS_NAME    SPI
 
         #ifndef ESP_PANEL_LCD_TOUCH_BUS_HOST_ID

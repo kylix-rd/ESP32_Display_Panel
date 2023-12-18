@@ -58,11 +58,11 @@ void ESP_Panel::init(void)
 {
     /* LCD-related configuration */
 #if ESP_PANEL_USE_LCD
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
 
 #error "The function is not implemented and will be implemented in the future."
 
-#elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+#elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
     // SPI bus
 #if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
     spi_bus_config_t lcd_bus_host_config = {
@@ -211,7 +211,7 @@ void ESP_Panel::init(void)
 
     /* LCD_Touch-related configuration */
 #if ESP_PANEL_USE_LCD_TOUCH
-#if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
+#if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
     // I2C bus
 #if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
     i2c_config_t lcd_touch_host_config = {
@@ -229,7 +229,7 @@ void ESP_Panel::init(void)
 
     // I2C panel IO
     esp_lcd_panel_io_i2c_config_t lcd_touch_panel_io_config = LCD_TOUCH_PANEL_IO_I2C_CONFIG(ESP_PANEL_LCD_TOUCH_NAME);
-#elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+#elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
     // SPI bus configuration
 #if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
     spi_bus_config_t lcd_touch_host_config = {

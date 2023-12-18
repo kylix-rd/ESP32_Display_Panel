@@ -94,7 +94,7 @@ TEST_CASE("test draw lcd", "[panel][lcd]")
     uint16_t *color = (uint16_t *)calloc(1, line_per_bar * ESP_PANEL_LCD_H_RES * ESP_PANEL_LCD_COLOR_BITS / 8);
     for (int j = 0; j < ESP_PANEL_LCD_COLOR_BITS; j++) {
         for (int i = 0; i < line_per_bar * ESP_PANEL_LCD_H_RES; i++) {
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
             color[i] = SPI_SWAP_DATA_TX(1ULL << j, ESP_PANEL_LCD_COLOR_BITS);
 #else
             color[i] = 1ULL << j;
