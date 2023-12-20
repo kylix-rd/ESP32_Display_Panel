@@ -95,6 +95,9 @@ public:
 
     int getColorBits(void);
     int getColorBytes(void);
+#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+    void *getRgbBufferByIndex(int index);
+#endif
     esp_lcd_panel_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);
 

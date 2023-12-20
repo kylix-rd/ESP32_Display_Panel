@@ -205,6 +205,27 @@ err:
     return -1;
 }
 
+#if SOC_LCD_RGB_SUPPORTED && (ESP_IDF_VERSION > ESP_IDF_VERSION_VAL(5, 0, 0))
+void *ESP_PanelLcd::getRgbBufferByIndex(int index)
+{
+    void *buffer[3] = { NULL };
+    const esp_lcd_rgb_panel_config_t *rgb_config = NULL;
+
+    CHECK_NULL_GOTO(bus, err);
+    CHECK_NULL_GOTO(handle, err);
+
+    rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig();
+    CHECK_FALSE_GOTO(index < rgb_config->num_fbs, err);
+
+    CHECK_ERROR_GOTO(esp_lcd_rgb_panel_get_frame_buffer(handle, rgb_config->num_fbs, &buffer[0], &buffer[1], &buffer[2]), err);
+
+    return buffer[index];
+
+err:
+    return NULL;
+}
+#endif
+
 esp_lcd_panel_handle_t ESP_PanelLcd::getHandle(void)
 {
     CHECK_NULL_GOTO(handle, err);
