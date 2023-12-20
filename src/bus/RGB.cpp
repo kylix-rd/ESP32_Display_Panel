@@ -170,7 +170,7 @@ void ESP_PanelBus_RGB::setRgbBounceBufferSize(int size_in_pixel)
     rgb_config.bounce_buffer_size_px = size_in_pixel;
 }
 
-const esp_lcd_rgb_panel_config_t *ESP_PanelBus_RGB::rgbConfig()
+const esp_lcd_rgb_panel_config_t *ESP_PanelBus_RGB::getRgbConfig()
 {
     return &rgb_config;
 }

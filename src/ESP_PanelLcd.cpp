@@ -42,7 +42,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io,
 #if SOC_LCD_RGB_SUPPORTED
      /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
     case ESP_PANEL_BUS_TYPE_RGB:
-        vendor_config.rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
+        vendor_config.rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig();
         break;
 #endif
     default:
@@ -68,7 +68,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &
 #if SOC_LCD_RGB_SUPPORTED
     /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
     if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
-        const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
+        const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig();
         vendor_config.rgb_config = rgb_config;
     }
 #endif
@@ -100,7 +100,6 @@ void ESP_PanelLcd::setInitCommands(const esp_lcd_panel_vendor_init_cmd_t init_cm
 #if SOC_LCD_RGB_SUPPORTED
 void ESP_PanelLcd::enableAutoReleaseBus(void)
 {
-    // Only allow to set init commands before `begin()`.
     CHECK_FALSE_RETURN(handle == NULL);
     vendor_config.flags.auto_del_panel_io = 1;
 }
@@ -130,7 +129,7 @@ bool ESP_PanelLcd::begin(void)
     }
 #if SOC_LCD_RGB_SUPPORTED
     else {
-        const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
+        const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig();
         esp_lcd_rgb_panel_event_callbacks_t rgb_event_cb = { NULL };
         if (rgb_config->bounce_buffer_size_px == 0) {
             // When bounce buffer is disabled, use `on_vsync` callback to notify draw bitmap finish
@@ -255,7 +254,7 @@ uint8_t ESP_PanelLcd::getPixelColorBits(void)
     CHECK_NULL_GOTO(bus, err);
 
     if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
-        return static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig()->bits_per_pixel;
+        return static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig()->bits_per_pixel;
     } else  {
         return panel_config.bits_per_pixel;
     }
@@ -263,6 +262,27 @@ uint8_t ESP_PanelLcd::getPixelColorBits(void)
 err:
     return -1;
 }
+
+#if SOC_LCD_RGB_SUPPORTED
+void *ESP_PanelLcd::getRgbBufferByIndex(int index)
+{
+    void *buffer[3] = { NULL };
+    const esp_lcd_rgb_panel_config_t *rgb_config = NULL;
+
+    CHECK_NULL_GOTO(bus, err);
+    CHECK_NULL_GOTO(handle, err);
+
+    rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->getRgbConfig();
+    CHECK_FALSE_GOTO(index < rgb_config->num_fbs, err);
+
+    CHECK_ERROR_GOTO(esp_lcd_rgb_panel_get_frame_buffer(handle, rgb_config->num_fbs, &buffer[0], &buffer[1], &buffer[2]), err);
+
+    return buffer[index];
+
+err:
+    return NULL;
+}
+#endif
 
 esp_lcd_panel_handle_t ESP_PanelLcd::getHandle(void)
 {

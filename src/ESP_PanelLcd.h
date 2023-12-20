@@ -79,6 +79,10 @@ public:
     void drawColorBar(int width, int height);
 
     uint8_t getPixelColorBits(void);
+#if SOC_LCD_RGB_SUPPORTED
+    void *getRgbBufferByIndex(int index);
+#endif
+
     esp_lcd_panel_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);
 

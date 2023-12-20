@@ -179,7 +179,7 @@ public:
     void setRgbFrameBufferCount(int num);
     void setRgbBounceBufferSize(int size_in_pixel);
 
-    const esp_lcd_rgb_panel_config_t *rgbConfig();
+    const esp_lcd_rgb_panel_config_t *getRgbConfig();
 
     bool begin(void) override;
 
