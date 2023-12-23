@@ -79,9 +79,16 @@ ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t &rgb_config,
 
 ESP_PanelBus_RGB::~ESP_PanelBus_RGB()
 {
-    if (handle && host_need_init) {
-        del();
+    if (handle == NULL) {
+        ESP_LOGD(TAG, "Panel IO is not initialized");
+        return;
     }
+
+    if (!del()) {
+        ESP_LOGE(TAG, "Delete panel io failed");
+    }
+
+    ESP_LOGD(TAG, "Destory");
 }
 
 void ESP_PanelBus_RGB::configSpiLine(bool cs_use_expaneer, bool scl_use_expander, bool sda_use_expander,
@@ -162,10 +169,13 @@ const esp_lcd_rgb_panel_config_t *ESP_PanelBus_RGB::rgbConfig()
     return &rgb_config;
 }
 
-void ESP_PanelBus_RGB::begin(void)
+bool ESP_PanelBus_RGB::begin(void)
 {
+    ENABLE_TAG_PRINT_DEBUG_LOG();
+
     if (host_need_init) {
-        CHECK_ERROR_RETURN(esp_lcd_new_panel_io_3wire_spi(&spi_config, &handle));
+        CHECK_ERR_RET(esp_lcd_new_panel_io_3wire_spi(&spi_config, &handle), false, "Create panel io failed");
+        ESP_LOGD(TAG, "Create panel io @%p", handle);
     }
 }
 

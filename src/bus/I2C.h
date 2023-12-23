@@ -37,7 +37,7 @@ public:
                      i2c_port_t host_id = ESP_PANEL_BUS_I2C_HOST_ID_DEFAULT);
     ~ESP_PanelBus_I2C() override;
 
-    void begin(void) override;
+    bool begin(void) override;
 
 private:
     i2c_port_t host_id;

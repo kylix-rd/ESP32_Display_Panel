@@ -43,19 +43,39 @@ ESP_PanelBus_I2C::ESP_PanelBus_I2C(const esp_lcd_panel_io_i2c_config_t io_config
 
 ESP_PanelBus_I2C::~ESP_PanelBus_I2C()
 {
-    if (handle != NULL) {
-        del();
-        if (host_need_init) {
-            i2c_driver_delete(host_id);
+    if (handle == NULL) {
+        ESP_LOGD(TAG, "Bus is not initialized");
+        return;
+    }
+
+    if (!del()) {
+        ESP_LOGE(TAG, "Delete panel io failed");
+    }
+
+    if (host_need_init) {
+        if (i2c_driver_delete(host_id) != ESP_OK) {
+            ESP_LOGE(TAG, "Delete host[%d] driver failed", (int)host_id);
+        } else {
+            ESP_LOGD(TAG, "Delete host[%d] driver", (int)host_id);
         }
     }
+
+    ESP_LOGD(TAG, "Destory");
 }
 
-void ESP_PanelBus_I2C::begin(void)
+bool ESP_PanelBus_I2C::begin(void)
 {
+    ENABLE_TAG_PRINT_DEBUG_LOG();
+
     if (host_need_init) {
-        CHECK_ERROR_RETURN(i2c_param_config(host_id, &host_config));
-        CHECK_ERROR_RETURN(i2c_driver_install(host_id, host_config.mode, 0, 0, 0));
+        CHECK_ERR_RET(i2c_param_config(host_id, &host_config), false, "Configure host[%d] failed", (int)host_id);
+        CHECK_ERR_RET(i2c_driver_install(host_id, host_config.mode, 0, 0, 0), false, "Install host[%d] failed",
+                      (int)host_id);
+        ESP_LOGD(TAG, "Init host[%d]", (int)host_id);
     }
-    CHECK_ERROR_RETURN(esp_lcd_new_panel_io_i2c((esp_lcd_i2c_bus_handle_t)host_id, &io_config, &handle));
+
+    CHECK_ERR_RET(esp_lcd_new_panel_io_i2c((esp_lcd_i2c_bus_handle_t)host_id, &io_config, &handle), false, "Create panel io failed");
+    ESP_LOGD(TAG, "Create panel io @%p", handle);
+
+    return true;
 }

@@ -180,7 +180,7 @@ public:
 
     const esp_lcd_rgb_panel_config_t *rgbConfig();
 
-    void begin(void) override;
+    bool begin(void) override;
 
 private:
     esp_lcd_rgb_panel_config_t rgb_config;

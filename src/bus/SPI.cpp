@@ -45,18 +45,39 @@ ESP_PanelBus_SPI::ESP_PanelBus_SPI(const esp_lcd_panel_io_spi_config_t &io_confi
 
 ESP_PanelBus_SPI::~ESP_PanelBus_SPI()
 {
-    if (handle != NULL) {
-        del();
-        if (host_need_init) {
-            spi_bus_free(host_id);
+    if (handle == NULL) {
+        ESP_LOGD(TAG, "Bus is not initialized");
+        return;
+    }
+
+    if (!del()) {
+        ESP_LOGE(TAG, "Delete panel io failed");
+    }
+
+    if (host_need_init) {
+        if (spi_bus_free(host_id) != ESP_OK) {
+            ESP_LOGE(TAG, "Delete host[%d] driver failed", (int)host_id);
+        } else {
+            ESP_LOGD(TAG, "Delete host[%d] driver", (int)host_id);
         }
     }
+
+    ESP_LOGD(TAG, "Destory");
 }
 
-void ESP_PanelBus_SPI::begin(void)
+bool ESP_PanelBus_SPI::begin(void)
 {
+    ENABLE_TAG_PRINT_DEBUG_LOG();
+
     if (host_need_init) {
-        CHECK_ERROR_RETURN(spi_bus_initialize(host_id, &host_config, SPI_DMA_CH_AUTO));
+        CHECK_ERR_RET(spi_bus_initialize(host_id, &host_config, SPI_DMA_CH_AUTO), false,
+                      "Initializeost Host[%d] failed", (int)host_id);
+        ESP_LOGD(TAG, "Init host[%d]", (int)host_id);
     }
-    CHECK_ERROR_RETURN(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)host_id, &io_config, &handle));
+
+    CHECK_ERR_RET(esp_lcd_new_panel_io_spi((esp_lcd_spi_bus_handle_t)host_id, &io_config, &handle), false,
+                  "Create panel io failed");
+    ESP_LOGD(TAG, "Create panel io @%p", handle);
+
+    return true;
 }

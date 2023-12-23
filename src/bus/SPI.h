@@ -43,7 +43,7 @@ public:
                      spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
     ~ESP_PanelBus_SPI() override;
 
-    void begin(void) override;
+    bool begin(void) override;
 
 private:
     spi_host_device_t host_id;

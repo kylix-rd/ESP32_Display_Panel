@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #pragma once
 
 #include "esp_lcd_types.h"
@@ -18,11 +19,12 @@ public:
     ESP_PanelBus(uint8_t host_type, bool host_need_init);
     virtual ~ESP_PanelBus() = default;
 
-    virtual void begin(void) = 0;
-    void del(void);
-    void readCommandParameter(int lcd_cmd, void *param, int param_size);
-    void writeCommandParameter(int lcd_cmd, const void *param, int param_size);
-    void writeCommandColor(int lcd_cmd, const void *color, int color_size);
+    void init(void);
+    virtual bool begin(void) = 0;
+    bool del(void);
+    bool readCommandParameter(int lcd_cmd, void *param, int param_size);
+    bool writeCommandParameter(int lcd_cmd, const void *param, int param_size);
+    bool writeCommandColor(int lcd_cmd, const void *color, int color_size);
 
     uint8_t getType(void);
     esp_lcd_panel_io_handle_t getHandle(void);

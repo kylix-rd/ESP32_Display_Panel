@@ -18,11 +18,12 @@ ESP_PanelHost::ESP_PanelHost()
 
 ESP_PanelHost::~ESP_PanelHost()
 {
+    ESP_LOGD(TAG, "Destory");
 }
 
 void ESP_PanelHost::init()
 {
-    ENABLE_TAG_PRINT_DEBUG_LOG(TAG);
+    ENABLE_TAG_PRINT_DEBUG_LOG();
 }
 
 bool ESP_PanelHost::addHostI2C(const i2c_config_t &host_config, i2c_port_t host_id)
