@@ -132,7 +132,7 @@ void ESP_PanelLcdTouch::mirrorY(bool en)
     CHECK_ERROR_RETURN(esp_lcd_touch_set_mirror_y(handle, en));
 }
 
-esp_lcd_touch_handle_t ESP_PanelLcdTouch::getHandle(void)
+esp_lcd_touch_handle_t ESP_PanelLcdTouch::handle(void)
 {
     CHECK_NULL_GOTO(handle, err);
     return handle;

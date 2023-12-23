@@ -48,21 +48,15 @@ ESP_Panel::~ESP_Panel(void)
     del();
 }
 
-void ESP_Panel::addIOExpander(ESP_IOExpander *expander)
-{
-    CHECK_NULL_RETURN(expander);
-    this->expander = expander;
-}
-
 void ESP_Panel::init(void)
 {
     /* LCD-related configuration */
 #if ESP_PANEL_USE_LCD
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
 
 #error "The function is not implemented and will be implemented in the future."
 
-#elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
+#elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
     // SPI bus
 #if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
     spi_bus_config_t lcd_bus_host_config = {
@@ -122,10 +116,10 @@ void ESP_Panel::init(void)
         .scl_gpio_num = BIT64( ESP_PANEL_LCD_3WIRE_SPI_IO_SCL),
         .sda_io_type = (panel_io_type_t)ESP_PANEL_LCD_3WIRE_SPI_SDA_USE_EXPNADER,
         .sda_gpio_num = BIT64(ESP_PANEL_LCD_3WIRE_SPI_IO_SDA),
-        .io_expander = expander->getHandle(),
+        .io_expander = expander->handle(),
     };
     esp_lcd_panel_io_3wire_spi_config_t lcd_bus_host_config = LCD_PANEL_IO_3WIRE_SPI_CONFIG(ESP_PANEL_LCD_NAME,
-                                                                line_config, ESP_PANEL_LCD_3WIRE_SPI_SCL_ACTIVE_EDGE);
+            line_config, ESP_PANEL_LCD_3WIRE_SPI_SCL_ACTIVE_EDGE);
 #endif /* ESP_PANEL_LCD_BUS_SKIP_INIT_HOST */
 
     // RGB panel
@@ -181,7 +175,7 @@ void ESP_Panel::init(void)
 #endif /* ESP_PANEL_LCD_BUS_TYPE */
 
     // Panel vendor config
-    lcd_vendor_config_t lcd_vendor_config = {
+    esp_lcd_panel_vendor_config_t lcd_vendor_config = {
         .init_cmds = ESP_PANEL_LCD_INIT_CMD,
         .init_cmds_size = ESP_PANEL_LCD_INIT_CMD_SIZE,
 #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB && !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
@@ -194,24 +188,24 @@ void ESP_Panel::init(void)
 
     // Panel device config
     esp_lcd_panel_dev_config_t lcd_config = {
-            .reset_gpio_num = ESP_PANEL_LCD_IO_RST,
+        .reset_gpio_num = ESP_PANEL_LCD_IO_RST,
 #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-            .color_space = (esp_lcd_color_space_t)ESP_PANEL_LCD_RGB_ORDER,
+        .color_space = (esp_lcd_color_space_t)ESP_PANEL_LCD_RGB_ORDER,
 #else
-            .rgb_ele_order = (lcd_rgb_element_order_t)ESP_PANEL_LCD_RGB_ORDER,
-            .data_endian = LCD_RGB_DATA_ENDIAN_BIG,
+        .rgb_ele_order = (lcd_rgb_element_order_t)ESP_PANEL_LCD_RGB_ORDER,
+        .data_endian = LCD_RGB_DATA_ENDIAN_BIG,
 #endif
-            .bits_per_pixel = ESP_PANEL_LCD_COLOR_BITS,
-            .flags = {
-                .reset_active_high = ESP_PANEL_LCD_RST_LEVEL,
-            },
-            .vendor_config = &lcd_vendor_config,
+        .bits_per_pixel = ESP_PANEL_LCD_COLOR_BITS,
+        .flags = {
+            .reset_active_high = ESP_PANEL_LCD_RST_LEVEL,
+        },
+        .vendor_config = &lcd_vendor_config,
     };
 #endif /* ESP_PANEL_USE_LCD */
 
     /* LCD_Touch-related configuration */
 #if ESP_PANEL_USE_LCD_TOUCH
-#if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_I2C
+#if ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_I2C
     // I2C bus
 #if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
     i2c_config_t lcd_touch_host_config = {
@@ -229,7 +223,7 @@ void ESP_Panel::init(void)
 
     // I2C panel IO
     esp_lcd_panel_io_i2c_config_t lcd_touch_panel_io_config = LCD_TOUCH_PANEL_IO_I2C_CONFIG(ESP_PANEL_LCD_TOUCH_NAME);
-#elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
+#elif ESP_PANEL_LCD_TOUCH_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
     // SPI bus configuration
 #if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
     spi_bus_config_t lcd_touch_host_config = {
@@ -244,7 +238,7 @@ void ESP_Panel::init(void)
 
     // SPI panel IO
     esp_lcd_panel_io_spi_config_t lcd_touch_panel_io_config = LCD_TOUCH_PANEL_IO_SPI_CONFIG(ESP_PANEL_LCD_TOUCH_NAME,
-                                                                                            ESP_PANEL_LCD_TOUCH_SPI_IO_CS);
+            ESP_PANEL_LCD_TOUCH_SPI_IO_CS);
 #endif /* ESP_PANEL_LCD_TOUCH_BUS_TYPE */
 
     // Panel device
@@ -306,10 +300,10 @@ void ESP_Panel::init(void)
 #if ESP_PANEL_USE_LCD_TOUCH
 #if ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
     lcd_touch_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, &lcd_touch_panel_io_config,
-                                             ESP_PANEL_LCD_TOUCH_BUS_HOST);
+            ESP_PANEL_LCD_TOUCH_BUS_HOST);
 #else
     lcd_touch_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, &lcd_touch_host_config,
-                                             &lcd_touch_panel_io_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
+            &lcd_touch_panel_io_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
 #endif /* ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST */
     CHECK_NULL_GOTO(lcd_touch_bus, err);
 
@@ -323,7 +317,10 @@ void ESP_Panel::init(void)
     backlight = new ESP_PanelBacklight(&bl_config);
     CHECK_NULL_GOTO(backlight, err);
 #endif /* ESP_PANEL_LCD_IO_BL */
+}
 
+void ESP_Panel::begin(void)
+{
     runExtraBoardInit();
 
     if (lcd_bus) {
@@ -340,16 +337,6 @@ void ESP_Panel::init(void)
     }
     return;
 
-err:
-    delete lcd_bus;
-    delete lcd;
-    delete lcd_touch_bus;
-    delete lcd_touch;
-    delete backlight;
-}
-
-void ESP_Panel::begin(void)
-{
     if (lcd) {
         lcd->reset();
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
@@ -368,6 +355,13 @@ void ESP_Panel::begin(void)
     if (backlight) {
         backlight->on();
     }
+
+err:
+    delete lcd_bus;
+    delete lcd;
+    delete lcd_touch_bus;
+    delete lcd_touch;
+    delete backlight;
 }
 
 void ESP_Panel::del(void)
@@ -388,7 +382,7 @@ void ESP_Panel::del(void)
     }
 }
 
-ESP_PanelLcd *ESP_Panel::getLcd(void)
+ESP_PanelLcd *ESP_Panel::lcd(void)
 {
     CHECK_NULL_GOTO(lcd, err);
     return lcd;
@@ -397,7 +391,7 @@ err:
     return NULL;
 }
 
-ESP_PanelLcdTouch *ESP_Panel::getLcdTouch(void)
+ESP_PanelLcdTouch *ESP_Panel::touch(void)
 {
     CHECK_NULL_GOTO(lcd_touch, err);
     return lcd_touch;
@@ -406,7 +400,7 @@ err:
     return NULL;
 }
 
-ESP_PanelBacklight *ESP_Panel::getBacklight(void)
+ESP_PanelBacklight *ESP_Panel::backlight(void)
 {
     CHECK_NULL_GOTO(backlight, err);
     return backlight;

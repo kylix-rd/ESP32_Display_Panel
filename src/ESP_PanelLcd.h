@@ -3,79 +3,61 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #pragma once
 
-#include <stdint.h>
+#include <functional>
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_rgb.h"
 #include "lcd/base/esp_lcd_custom_types.h"
 #include "ESP_PanelBus.h"
 
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-#define ESP_LCD_DEVICE_CONFIG_DEFAULT(rst_io, pixel_bits, vendor_cfg)   \
-    {                                                               \
-        .reset_gpio_num = rst_io,                                   \
-        .color_space = ESP_LCD_COLOR_SPACE_RGB,                     \
-        .bits_per_pixel = pixel_bits,                               \
-        .flags = {                                                  \
-            .reset_active_high = 0,                                 \
-        },                                                          \
-        .vendor_config = vendor_cfg,                                \
-    }
-#else
-#define ESP_LCD_DEVICE_CONFIG_DEFAULT(rst_io, pixel_bits, vendor_cfg)   \
-    {                                                               \
-        .reset_gpio_num = rst_io,                                   \
-        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,                 \
-        .data_endian = LCD_RGB_DATA_ENDIAN_BIG,                     \
-        .bits_per_pixel = pixel_bits,                               \
-        .flags = {                                                  \
-            .reset_active_high = 0,                                 \
-        },                                                          \
-        .vendor_config = vendor_cfg,                                \
+#define ESP_LCD_DEVICE_CONFIG_DEFAULT(rst_io, color_bits, vendor_cfg) \
+    {                                                                 \
+        .reset_gpio_num = rst_io,                                     \
+        .rgb_ele_order = LCD_RGB_ELEMENT_ORDER_RGB,                   \
+        .data_endian = LCD_RGB_DATA_ENDIAN_BIG,                       \
+        .bits_per_pixel = color_bits,                                 \
+        .flags = {                                                    \
+            .reset_active_high = 0,                                   \
+        },                                                            \
+        .vendor_config = vendor_cfg,                                  \
     }
 #endif
 
-#define ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(cmds, cmds_size)   \
-    {                                                           \
-        .init_cmds = cmds,                                      \
-        .init_cmds_size = cmds_size,                            \
-    }
-
 #if SOC_LCD_RGB_SUPPORTED
-#define ESP_LCD_RGB_VENDOR_CONFIG_DEFAULT(cmds, cmds_size, rgb_cfg, enable_3wire_spi_share_pin)  \
+#define ESP_LCD_RGB_VENDOR_CONFIG_DEFAULT(cmds, cmds_size, rgb_cfg, is_sharing_pin)  \
     {                                                                   \
         .init_cmds = cmds,                                              \
         .init_cmds_size = cmds_size,                                    \
         .rgb_config = rgb_cfg,                                          \
         .flags = {                                                      \
-            .auto_del_panel_io = enable_3wire_spi_share_pin,            \
+            .auto_del_panel_io = is_sharing_pin,            \
         },                                                              \
     }
 #endif
 
 class ESP_PanelLcd {
 public:
-    ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t *panel_config);
+    ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits = 16, int rst_io = -1, const esp_lcd_panel_init_cmd_t init_cmd[] = NULL,
+                 uint16_t init_cmd_size = 0);
     ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &panel_config);
-    ESP_PanelLcd(ESP_PanelBus *bus, int color_bits, int rst_io = -1,
-                 const lcd_init_cmd_t init_cmd[] = NULL, int init_cmd_size = 0);
-    ESP_PanelLcd(ESP_PanelBus *bus);
-
-    void attachFrameEndCallback(ESP_PanelBusCallback_t onFrameEndCallback, void *user_data = NULL);
+    virtual ~ESP_PanelLcd() = default;
 
     /**
      * The below functions can be used to configure LCD device when not using `panel_config`.
-     * The below functions should be called before `begin()`.
+     * These functions should be called before `init()`.
+     *
      */
     void setColorBits(int bits_per_pixel);
     void setResetPin(int rst_io);
-    void setInitCommands(const lcd_init_cmd_t init_cmd[], int init_cmd_size);
+    void setInitCommands(const esp_lcd_panel_init_cmd_t init_cmd[], int init_cmd_size);
 #if SOC_LCD_RGB_SUPPORTED
     void enableAutoReleaseBus(void);
 #endif
 
+    virtual void init(void) = 0;
     void begin(void);
     void reset(void);
     void del(void);
@@ -89,24 +71,27 @@ public:
     void displayOn(void);
     void displayOff(void);
     void drawColorBar(int width, int height);
+    void attachDrawBitmapFinishCallback(std::function<bool (void *)> callback, void *user_data = NULL);
 
     int getColorBits(void);
     int getColorBytes(void);
-    esp_lcd_panel_handle_t getHandle(void);
-    ESP_PanelBus *getBus(void);
-
-    virtual void init(void) = 0;
-    virtual ~ESP_PanelLcd() = default;
+    esp_lcd_panel_handle_t handle(void);
 
 protected:
     ESP_PanelBus *bus;
     esp_lcd_panel_dev_config_t panel_config;
-    lcd_vendor_config_t vendor_config;
+    esp_lcd_panel_vendor_config_t vendor_config;
     esp_lcd_panel_handle_t handle;
 
 private:
-#if SOC_LCD_RGB_SUPPORTED
-    void generateRGBConfig(void);
-    void attachRGBEventCallback(void);
-#endif
+    static bool onDrawBitmapFinish(void *panel_io, void *edata, void *user_ctx);
+
+    std::function<bool (void *)> onDrawBitmapFinishCallback;
+    SemaphoreHandle_t sem_draw_bitmap_finish;
+
+    typedef struct {
+        void *lcd_ptr;
+        void *user_data;
+    } ESP_PanelLcdCallbackData_t;
+    ESP_PanelLcdCallbackData_t callback_data;
 };

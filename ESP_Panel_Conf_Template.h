@@ -12,7 +12,7 @@
 
 #if ESP_PANEL_USE_SUPPORTED_BOARD
 /*
- * Supported Boards.
+ * Supported Boards:
  *  - ESP32-C3-LCDkit: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-lcdkit/index.html
  *  - ESP32-S3-Box: https://github.com/espressif/esp-box/tree/master
  *  - ESP32-S3-Box-3: https://github.com/espressif/esp-box/tree/master
@@ -25,6 +25,7 @@
  *  - ESP32-S3-USB-OTG: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-usb-otg/index.html
  *
  * Uncomment one of the following macros to select an supported development board.
+ *
  */
 // #define ESP_PANEL_BOARD_ESP32_C3_LCDKIT
 // #define ESP_PANEL_BOARD_ESP32_S3_BOX

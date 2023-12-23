@@ -38,7 +38,7 @@ ESP_PanelLcdTouch_GT911::~ESP_PanelLcdTouch_GT911()
 
 void ESP_PanelLcdTouch_GT911::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_gt911(bus->getHandle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_gt911(bus->handle(), &config, &handle));
 }
 
 /*******************************************************************************

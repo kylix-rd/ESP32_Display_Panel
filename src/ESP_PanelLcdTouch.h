@@ -35,7 +35,7 @@ public:
     void swapAxes(bool en);
     void mirrorX(bool en);
     void mirrorY(bool en);
-    esp_lcd_touch_handle_t getHandle(void);
+    esp_lcd_touch_handle_t handle(void);
     ESP_PanelBus *getBus(void);
 
     virtual void begin(void) = 0;

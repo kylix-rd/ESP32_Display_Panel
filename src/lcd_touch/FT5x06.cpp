@@ -88,7 +88,7 @@ ESP_PanelLcdTouch_FT5x06::~ESP_PanelLcdTouch_FT5x06()
 
 void ESP_PanelLcdTouch_FT5x06::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_ft5x06(bus->getHandle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_ft5x06(bus->handle(), &config, &handle));
 }
 
 /*******************************************************************************

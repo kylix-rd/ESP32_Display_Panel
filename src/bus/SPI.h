@@ -35,16 +35,16 @@
 
 class ESP_PanelBus_SPI: public ESP_PanelBus {
 public:
-    ESP_PanelBus_SPI(const spi_bus_config_t *host_config, const esp_lcd_panel_io_spi_config_t *io_config,
-                                                            spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
-    ESP_PanelBus_SPI(const esp_lcd_panel_io_spi_config_t *io_config,
-                                                            spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
     ESP_PanelBus_SPI(int sck_io, int sda_io, int cs_io, int dc_io,
-                                                            spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
+                     spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
     ESP_PanelBus_SPI(int cs_io, int dc_io, spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
+    ESP_PanelBus_SPI(const spi_bus_config_t *host_config, const esp_lcd_panel_io_spi_config_t *io_config,
+                     spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
+    ESP_PanelBus_SPI(const esp_lcd_panel_io_spi_config_t *io_config,
+                     spi_host_device_t host_id = ESP_PANEL_HOST_SPI_ID_DEFAULT);
     ~ESP_PanelBus_SPI() override;
 
-    void init(void) override;
+    void begin(void) override;
 
 private:
     spi_host_device_t host_id;

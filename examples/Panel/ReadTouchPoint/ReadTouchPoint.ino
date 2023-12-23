@@ -66,11 +66,11 @@ void setup()
 void loop()
 {
 #if ESP_PANEL_USE_LCD_TOUCH
-    panel->getLcdTouch()->readData();
+    panel->touch()->readData();
 
-    bool touched = panel->getLcdTouch()->getTouchState();
+    bool touched = panel->touch()->getTouchState();
     if(touched) {
-        TouchPoint point = panel->getLcdTouch()->getPoint();
+        TouchPoint point = panel->touch()->getPoint();
         Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);
     }
 #endif

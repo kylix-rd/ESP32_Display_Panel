@@ -53,7 +53,7 @@ ESP_PanelLcd_ST7701 *lcd = nullptr;
  * should consult the LCD supplier for initialization sequence code.
  *
  */
-const lcd_init_cmd_t example_init_cmd[] = {
+const esp_lcd_panel_init_cmd_t example_init_cmd[] = {
 //  {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t []){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},
     {0xEF, (uint8_t []){0x08}, 1, 0},
@@ -130,7 +130,7 @@ void setup()
     lcd = new ESP_PanelLcd_ST7701(lcd_bus, TEST_LCD_BIT_PER_PIXEL, TEST_LCD_IO_RST);
     lcd->enableAutoReleaseBus();    // This function is used for the case that the SPI shares pins with RGB,
                                     // and the bus will be released after calling `begin()`
-    lcd->setInitCommands(example_init_cmd, sizeof(example_init_cmd) / sizeof(lcd_init_cmd_t));
+    lcd->setInitCommands(example_init_cmd, sizeof(example_init_cmd) / sizeof(esp_lcd_panel_init_cmd_t));
                                     // This function is used for replace default vendor-specific init commands
     lcd->init();
     lcd->reset();

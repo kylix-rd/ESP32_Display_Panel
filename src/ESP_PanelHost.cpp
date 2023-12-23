@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #include "ESP_PanelPrivate.h"
 #include "ESP_PanelHost.h"
 
@@ -10,12 +11,10 @@ using namespace std;
 
 ESP_PanelHost::ESP_PanelHost()
 {
-
 }
 
 ESP_PanelHost::~ESP_PanelHost()
 {
-
 }
 
 bool ESP_PanelHost::addHostI2C(const i2c_config_t *host_config, i2c_port_t host_id)
@@ -83,7 +82,7 @@ bool ESP_PanelHost::begin(void)
         for (auto &it : _i2c_host_config_map) {
             CHECK_ERR_RET(i2c_param_config(it.first, &it.second), false, "I2C[%d] config param failed", it.first);
             CHECK_ERR_RET(i2c_driver_install(it.first, it.second.mode, 0, 0, 0), false, "I2C[%d] install driver failed",
-                                                                                                            it.first);
+                          it.first);
         }
     }
 
@@ -91,7 +90,7 @@ bool ESP_PanelHost::begin(void)
     if (_spi_host_config_map.size() > 0) {
         for (auto &it : _spi_host_config_map) {
             CHECK_ERR_RET(spi_bus_initialize(it.first, &it.second, SPI_DMA_CH_AUTO), false, "SPI[%d] initialize failed",
-                                                                                                            it.first);
+                          it.first);
         }
     }
 

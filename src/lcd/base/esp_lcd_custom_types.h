@@ -12,6 +12,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /**
  * @brief LCD panel initialization commands.
  *
@@ -21,7 +22,7 @@ typedef struct {
     const void *data;       /*<! Buffer that holds the command specific data */
     size_t data_bytes;      /*<! Size of `data` in memory, in bytes */
     unsigned int delay_ms;  /*<! Delay in milliseconds after this command */
-} lcd_init_cmd_t;
+} esp_lcd_panel_init_cmd_t;
 
 /**
  * @brief LCD panel vendor configuration.
@@ -30,7 +31,7 @@ typedef struct {
  *
  */
 typedef struct {
-    const lcd_init_cmd_t *init_cmds;                /*!< Pointer to initialization commands array. Set to NULL if using default commands.
+    const esp_lcd_panel_init_cmd_t *init_cmds;      /*!< Pointer to initialization commands array. Set to NULL if using default commands.
                                                      *   The array should be declared as `static const` and positioned outside the function.
                                                      *   Please refer to `vendor_specific_init_default` in source file.
                                                      */
@@ -50,7 +51,8 @@ typedef struct {
                                                      */
     } flags;
 #endif
-} lcd_vendor_config_t;
+} esp_lcd_panel_vendor_config_t;
+
 #ifdef __cplusplus
 }
 #endif

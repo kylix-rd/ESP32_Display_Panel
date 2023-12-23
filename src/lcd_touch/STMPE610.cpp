@@ -74,7 +74,7 @@ ESP_PanelLcdTouch_STMPE610::~ESP_PanelLcdTouch_STMPE610()
 
 void ESP_PanelLcdTouch_STMPE610::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_spi_stmpe610(bus->getHandle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_spi_stmpe610(bus->handle(), &config, &handle));
 }
 
 /*******************************************************************************

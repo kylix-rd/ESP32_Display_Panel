@@ -19,7 +19,7 @@ public:
     ESP_PanelLcd_ST7701(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &panel_config):
         ESP_PanelLcd(bus, panel_config) { };
     ESP_PanelLcd_ST7701(ESP_PanelBus *bus, int bits_per_pixel, int rst_io = -1,
-                        const lcd_init_cmd_t init_cmd[] = NULL, int init_cmd_size = 0):
+                        const esp_lcd_panel_init_cmd_t init_cmd[] = NULL, int init_cmd_size = 0):
         ESP_PanelLcd(bus, bits_per_pixel, rst_io, init_cmd, init_cmd_size) { };
     ~ESP_PanelLcd_ST7701() override;
 

@@ -329,21 +329,21 @@ panel>init();
 panel>begin();
 
 // Get the LCD object and operate it
-panel->getLcd()->attachFrameEndCallback(callback, NULL);
-panel->getLcd()->drawBitmap(0, 0, width, height, color);
+panel->lcd()->attachFrameEndCallback(callback, NULL);
+panel->lcd()->drawBitmap(0, 0, width, height, color);
 
 // Get the LCD touch object and operate it
-panel>getLcdTouch()>readData();
-bool touched = panel>getLcdTouch()>getTouchState();
+panel>touch()>readData();
+bool touched = panel>touch()>getTouchState();
 if(touched) {
-    TouchPoint point = panel>getLcdTouch()>getPoint();
+    TouchPoint point = panel>touch()>getPoint();
     Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);
 }
 
 // Get the backlight object and operate it
-panel>getBacklight()>on();
-panel>getBacklight()>off();
-panel>getBacklight()>setBrightness(50);
+panel>backlight()>on();
+panel>backlight()>off();
+panel>backlight()>setBrightness(50);
 
 // Release the ESP_Panel object
 delete panel;

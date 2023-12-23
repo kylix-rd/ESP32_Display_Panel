@@ -3,18 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #pragma once
 
 #include <map>
 #include "driver/i2c.h"
 #include "driver/spi_master.h"
 #include "sdkconfig.h"
-
-#define ESP_PANEL_HOST_TYPE_I2C      (0)
-#define ESP_PANEL_HOST_TYPE_SPI      (1)
-#define ESP_PANEL_HOST_TYPE_I80      (2)
-#define ESP_PANEL_HOST_TYPE_RGB      (3)
-#define ESP_PANEL_HOST_TYPE_QSPI     (4)
 
 /**
  * I2C Host Default Configuration

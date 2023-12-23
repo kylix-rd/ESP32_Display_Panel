@@ -12,7 +12,7 @@ class ESP_PanelLcd_ST7789: public ESP_PanelLcd {
 public:
     ESP_PanelLcd_ST7789(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t *panel_config): ESP_PanelLcd(bus, panel_config) { };
     ESP_PanelLcd_ST7789(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &panel_config): ESP_PanelLcd(bus, panel_config) { };
-    ESP_PanelLcd_ST7789(ESP_PanelBus *bus, int bits_per_pixel = 16, int rst_io = -1, lcd_init_cmd_t init_cmd[] = NULL,
+    ESP_PanelLcd_ST7789(ESP_PanelBus *bus, int bits_per_pixel = 16, int rst_io = -1, esp_lcd_panel_init_cmd_t init_cmd[] = NULL,
                         int init_cmd_size = 0):
         ESP_PanelLcd(bus, bits_per_pixel, rst_io, init_cmd, init_cmd_size) { };
     ESP_PanelLcd_ST7789(ESP_PanelBus *bus): ESP_PanelLcd(bus) { };

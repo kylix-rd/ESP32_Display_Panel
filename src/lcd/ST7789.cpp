@@ -19,5 +19,5 @@ ESP_PanelLcd_ST7789::~ESP_PanelLcd_ST7789()
 void ESP_PanelLcd_ST7789::init(void)
 {
     CHECK_NULL_RETURN(bus);
-    CHECK_ERROR_RETURN(esp_lcd_new_panel_st7789(bus->getHandle(), &panel_config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_new_panel_st7789(bus->handle(), &panel_config, &handle));
 }

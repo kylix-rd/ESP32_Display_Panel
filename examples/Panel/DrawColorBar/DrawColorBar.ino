@@ -67,21 +67,21 @@ void setup()
 
 //     Serial.println("Draw color bar from top to bottom, the order is B - G - R");
 //     int bits_per_piexl = 4;
-//     int bytes_per_piexl = panel->getLcd()->getColorBytes();
+//     int bytes_per_piexl = panel->lcd()->getColorBytes();
 //     int line_per_bar = ESP_PANEL_LCD_V_RES / bits_per_piexl;
 //     uint8_t *color = (uint8_t *)calloc(1, line_per_bar * ESP_PANEL_LCD_H_RES * bytes_per_piexl);
 //     assert(color);
 //     for (int j = 0; j < bits_per_piexl; j++) {
 //         for (int i = 0; i < line_per_bar * ESP_PANEL_LCD_H_RES; i++) {
 //             for (int k = 0; k < bytes_per_piexl; k++) {
-// #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_HOST_TYPE_SPI
+// #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
 //             color[i * bytes_per_piexl + k] = SPI_SWAP_DATA_TX(BIT(j), bits_per_piexl) >> (k * 8);
 // #else
 //             color[i * bytes_per_piexl + k] = BIT(j) >> (k * 8);
 // #endif
 //             }
 //         }
-//         panel->getLcd()->drawBitmapWaitUntilFinish(0, j * line_per_bar, ESP_PANEL_LCD_H_RES, (j + 1) * line_per_bar, color);
+//         panel->lcd()->drawBitmapWaitUntilFinish(0, j * line_per_bar, ESP_PANEL_LCD_H_RES, (j + 1) * line_per_bar, color);
 //     }
 //     free(color);
 

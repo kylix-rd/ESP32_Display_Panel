@@ -48,14 +48,14 @@ SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
 /* Display flushing */
 void lvgl_port_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
-    panel->getLcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
+    panel->lcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
     lv_disp_flush_ready(disp);
 }
 #else
 /* Display flushing */
 void lvgl_port_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
-    panel->getLcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
+    panel->lcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
 }
 
 bool notify_lvgl_flush_ready(void *user_ctx)
@@ -70,13 +70,13 @@ bool notify_lvgl_flush_ready(void *user_ctx)
 /* Read the touchpad */
 void lvgl_port_tp_read(lv_indev_drv_t * indev, lv_indev_data_t * data)
 {
-    panel->getLcdTouch()->readData();
+    panel->touch()->readData();
 
-    bool touched = panel->getLcdTouch()->getTouchState();
+    bool touched = panel->touch()->getTouchState();
     if(!touched) {
         data->state = LV_INDEV_STATE_REL;
     } else {
-        TouchPoint point = panel->getLcdTouch()->getPoint();
+        TouchPoint point = panel->touch()->getPoint();
 
         data->state = LV_INDEV_STATE_PR;
         /*Set the coordinates*/
@@ -181,7 +181,7 @@ void setup()
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
     /* Register a function to notify LVGL when the panel is ready to flush */
     /* This is useful for refreshing the screen using DMA transfers */
-    panel->getLcd()->setCallback(notify_lvgl_flush_ready, &disp_drv);
+    panel->lcd()->setCallback(notify_lvgl_flush_ready, &disp_drv);
 #endif
     /* Start panel */
     panel->begin();
