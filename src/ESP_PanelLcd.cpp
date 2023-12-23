@@ -45,8 +45,15 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &
     bus(bus),
     panel_config(panel_config),
     vendor_config(ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(NULL, 0)),
-    handle(NULL)
+    handle(NULL),
+    onDrawBitmapFinishCallback(NULL),
+    sem_draw_bitmap_finish(NULL),
+    callback_data(CALLBACK_DATA_DEFAULT())
 {
+    if (panel_config.vendor_config != NULL) {
+        vendor_config = *(esp_lcd_panel_vendor_config_t *)panel_config.vendor_config;
+    }
+    this->panel_config.vendor_config = &vendor_config;
 }
 
 void ESP_PanelLcd::setColorBits(int bits_per_pixel)
@@ -83,12 +90,13 @@ void ESP_PanelLcd::enableAutoReleaseBus(void)
 
 void ESP_PanelLcd::begin(void)
 {
+    CHECK_NULL_RETURN(handle);
     CHECK_ERROR_RETURN(esp_lcd_panel_init(handle));
 
-#if !SOC_LCD_RGB_SUPPORTED
-    sem_draw_bitmap_finish = xSemaphoreCreateBinary();
-    CHECK_NULL_RETURN(sem_draw_bitmap_finish);
-#endif
+    if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
+        sem_draw_bitmap_finish = xSemaphoreCreateBinary();
+        CHECK_NULL_RETURN(sem_draw_bitmap_finish);
+    }
 
     if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
         esp_lcd_panel_io_callbacks_t io_cb = {
@@ -172,8 +180,8 @@ void ESP_PanelLcd::displayOff(void)
 
 void ESP_PanelLcd::drawColorBar(int width, int height)
 {
-    int bits_per_piexl = getColorBits();
-    int bytes_per_piexl = getColorBytes();
+    int bits_per_piexl = getPixelColorBits();
+    int bytes_per_piexl = bits_per_piexl / 8;
     int line_per_bar = height / bits_per_piexl;
     uint8_t *color = (uint8_t *)calloc(1, line_per_bar * width * bytes_per_piexl);
     CHECK_NULL_RETURN(color);
@@ -199,7 +207,7 @@ void ESP_PanelLcd::attachDrawBitmapFinishCallback(std::function<bool (void *)> c
     callback_data.user_data = user_data;
 }
 
-int ESP_PanelLcd::getColorBits(void)
+uint8_t ESP_PanelLcd::getPixelColorBits(void)
 {
     CHECK_NULL_GOTO(bus, err);
 
@@ -213,24 +221,9 @@ err:
     return -1;
 }
 
-int ESP_PanelLcd::getColorBytes(void)
-{
-    int color_bits = getColorBits();
-    CHECK_FALSE_GOTO(color_bits > 0, err);
-
-    return color_bits / 8;
-
-err:
-    return -1;
-}
-
 esp_lcd_panel_handle_t ESP_PanelLcd::getHandle(void)
 {
-    CHECK_NULL_GOTO(handle, err);
     return handle;
-
-err:
-    return NULL;
 }
 
 ESP_PanelBus *ESP_PanelLcd::getBus(void)
@@ -241,15 +234,22 @@ ESP_PanelBus *ESP_PanelLcd::getBus(void)
 bool ESP_PanelLcd::onDrawBitmapFinish(void *panel_io, void *edata, void *user_ctx)
 {
     ESP_PanelLcdCallbackData_t *callback_data = (ESP_PanelLcdCallbackData_t *)user_ctx;
-    ESP_PanelLcd *lcd_ptr = (ESP_PanelLcd *)callback_data->lcd_ptr;
-    BaseType_t need_yield = pdFALSE;
+    if (callback_data == NULL) {
+        return false;
+    }
 
-    if (lcd_ptr->sem_draw_bitmap_finish) {
+    ESP_PanelLcd *lcd_ptr = (ESP_PanelLcd *)callback_data->lcd_ptr;
+    if (lcd_ptr == NULL) {
+        return false;
+    }
+
+    BaseType_t need_yield = pdFALSE;
+    if (lcd_ptr->sem_draw_bitmap_finish != NULL) {
         xSemaphoreGiveFromISR(lcd_ptr->sem_draw_bitmap_finish, &need_yield);
     }
-
-    if (lcd_ptr->onDrawBitmapFinishCallback) {
-        return lcd_ptr->onDrawBitmapFinishCallback(callback_data->user_data);
+    if (lcd_ptr->onDrawBitmapFinishCallback != NULL) {
+        need_yield = lcd_ptr->onDrawBitmapFinishCallback(callback_data->user_data) ? pdTRUE : need_yield;
     }
+
     return (need_yield == pdTRUE);
 }

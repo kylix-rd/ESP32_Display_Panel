@@ -34,9 +34,6 @@ static const char *TAG = "ESP_Panel";
  * Macros for creating bus and device
  *
  */
-#define _CREATE_BUS_INIT_HOST(name, host_config, io_config, host_id) ESP_PanelBus_##name(host_config, io_config, host_id)
-#define CREATE_BUS_INIT_HOST(name, host_config, io_config, host_id)  _CREATE_BUS_INIT_HOST(name, host_config, io_config, host_id)
-
 #define _CREATE_BUS_SKIP_HOST(name, io_config, host_id) ESP_PanelBus_##name(io_config, host_id)
 #define CREATE_BUS_SKIP_HOST(name, io_config, host_id)  _CREATE_BUS_SKIP_HOST(name, io_config, host_id)
 
@@ -45,6 +42,13 @@ static const char *TAG = "ESP_Panel";
 
 #define _CREATE_LCD_TOUCH(name, bus, cfg) ESP_PanelLcdTouch_##name(bus, cfg)
 #define CREATE_LCD_TOUCH(name, bus, cfg)  _CREATE_LCD_TOUCH(name, bus, cfg)
+
+/**
+ * Macros for adding host
+ *
+ */
+#define _ADD_HOST(name, host, config, id) host.addHost##name(config, id)
+#define ADD_HOST(name, host, config, id)  _ADD_HOST(name, host, config, id)
 
 ESP_Panel::ESP_Panel(void):
     lcd(NULL),
@@ -278,18 +282,17 @@ void ESP_Panel::init(void)
     };
 #endif /* ESP_PANEL_USE_BL */
 
+    ESP_PanelHost host;
     ESP_PanelBus *lcd_bus = NULL;
     ESP_PanelBus *lcd_touch_bus = NULL;
 
     // Create LCD bus
 #if ESP_PANEL_USE_LCD
-#if ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, &lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
-#else
-    lcd_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_bus_host_config, lcd_panel_io_config,
-                                       ESP_PANEL_LCD_BUS_HOST);
+#if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+    ADD_HOST(ESP_PANEL_LCD_BUS_NAME, host, lcd_bus_host_config, ESP_PANEL_LCD_BUS_HOST);
+#endif
+    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
     CHECK_NULL_GOTO(lcd_bus, err);
-#endif /* ESP_PANEL_LCD_BUS_SKIP_INIT_HOST */
 
     // Create and initialize LCD
     lcd = new CREATE_LCD(ESP_PANEL_LCD_NAME, lcd_bus, lcd_config);
@@ -298,13 +301,11 @@ void ESP_Panel::init(void)
 
     // Create LCD Touch bus
 #if ESP_PANEL_USE_LCD_TOUCH
-#if ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
-    lcd_touch_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, &lcd_touch_panel_io_config,
-            ESP_PANEL_LCD_TOUCH_BUS_HOST);
-#else
-    lcd_touch_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, lcd_touch_host_config,
-            lcd_touch_panel_io_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
+#if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
+    ADD_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, host, lcd_touch_host_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
 #endif /* ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST */
+    lcd_touch_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, lcd_touch_panel_io_config,
+            ESP_PANEL_LCD_TOUCH_BUS_HOST);
     CHECK_NULL_GOTO(lcd_touch_bus, err);
 
     // Create LCD Touch
@@ -317,6 +318,10 @@ void ESP_Panel::init(void)
     backlight = new ESP_PanelBacklight(bl_config);
     CHECK_NULL_GOTO(backlight, err);
 #endif /* ESP_PANEL_LCD_IO_BL */
+
+    host.begin();
+
+    return;
 
 err:
     delete lcd_bus;
@@ -342,7 +347,6 @@ void ESP_Panel::begin(void)
     if (backlight) {
         backlight->init();
     }
-    return;
 
     if (lcd) {
         lcd->reset();

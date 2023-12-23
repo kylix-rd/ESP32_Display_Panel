@@ -37,6 +37,7 @@ void setup()
     Serial.begin(115200); /* prepare for possible serial debug */
     Serial.println("Hello Arduino!");
     Serial.println("I am ESP32_Display_Panel.");
+    delay(2000);
 
     panel = new ESP_Panel();
 
@@ -61,6 +62,9 @@ void setup()
     Serial.println("Initialize panel");
     /* Initialize bus and device of panel */
     panel->init();
+
+    panel->getLcd()->setInitCommands(NULL, 0);
+
     /* Start panel */
     panel->begin();
 
@@ -72,6 +76,6 @@ void setup()
 
 void loop()
 {
-    Serial.println("Loop");
+    Serial.println("IDLE loop");
     delay(1000);
 }

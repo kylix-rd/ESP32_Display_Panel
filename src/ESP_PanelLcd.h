@@ -68,8 +68,7 @@ public:
     void drawColorBar(int width, int height);
     void attachDrawBitmapFinishCallback(std::function<bool (void *)> callback, void *user_data = NULL);
 
-    int getColorBits(void);
-    int getColorBytes(void);
+    uint8_t getPixelColorBits(void);
     esp_lcd_panel_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);
 
