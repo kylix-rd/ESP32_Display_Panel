@@ -19,6 +19,7 @@
 /* LCD */
 #include "lcd/GC9503.h"
 #include "lcd/GC9A01.h"
+#include "lcd/ILI9341.h"
 // #include "lcd/ST7262.h"
 #include "lcd/ST7701.h"
 // #include "lcd/ST7789.h"

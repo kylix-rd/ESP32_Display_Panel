@@ -63,17 +63,17 @@ ESP_PanelBus_RGB::ESP_PanelBus_RGB(uint16_t width, uint16_t height, int hsync_io
 {
 }
 
-ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t *spi_config,
-                                   const esp_lcd_rgb_panel_config_t *rgb_config, int host_id):
+ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t &spi_config,
+                                   const esp_lcd_rgb_panel_config_t &rgb_config, int host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_RGB, true),
-    rgb_config(*rgb_config),
-    spi_config(*spi_config)
+    rgb_config(rgb_config),
+    spi_config(spi_config)
 {
 }
 
-ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t *rgb_config, int host_id):
+ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t &rgb_config, int host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_RGB, false),
-    rgb_config(*rgb_config)
+    rgb_config(rgb_config)
 {
 }
 

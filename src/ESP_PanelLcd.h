@@ -71,6 +71,7 @@ public:
     int getColorBits(void);
     int getColorBytes(void);
     esp_lcd_panel_handle_t getHandle(void);
+    ESP_PanelBus *getBus(void);
 
 protected:
     ESP_PanelBus *bus;

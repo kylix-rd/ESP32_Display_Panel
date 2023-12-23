@@ -25,19 +25,19 @@ ESP_PanelBus_I2C::ESP_PanelBus_I2C(uint8_t address, i2c_port_t host_id):
 {
 }
 
-ESP_PanelBus_I2C::ESP_PanelBus_I2C(const i2c_config_t *host_config, const esp_lcd_panel_io_i2c_config_t *io_config,
+ESP_PanelBus_I2C::ESP_PanelBus_I2C(const i2c_config_t host_config, const esp_lcd_panel_io_i2c_config_t io_config,
                                    i2c_port_t host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_I2C, true),
     host_id(host_id),
-    host_config(*host_config),
-    io_config(*io_config)
+    host_config(host_config),
+    io_config(io_config)
 {
 }
 
-ESP_PanelBus_I2C::ESP_PanelBus_I2C(const esp_lcd_panel_io_i2c_config_t *io_config, i2c_port_t host_id):
+ESP_PanelBus_I2C::ESP_PanelBus_I2C(const esp_lcd_panel_io_i2c_config_t io_config, i2c_port_t host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_I2C, false),
     host_id(host_id),
-    io_config(*io_config)
+    io_config(io_config)
 {
 }
 

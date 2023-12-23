@@ -22,9 +22,10 @@ public:
     void begin(void);
     void del(void);
 
-    ESP_PanelLcd *lcd(void);
-    ESP_PanelLcdTouch *touch(void);
-    ESP_PanelBacklight *backlight(void);
+    ESP_PanelLcd *getLcd(void);
+    ESP_PanelLcdTouch *getLcdTouch(void);
+    ESP_PanelBacklight *getBacklight(void);
+    ESP_IOExpander *getExpander(void);
 
 private:
     void runExtraBoardInit(void);

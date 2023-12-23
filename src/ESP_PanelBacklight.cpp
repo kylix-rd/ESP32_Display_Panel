@@ -23,8 +23,8 @@
 
 static const char *TAG = "ESP_PanelBacklight";
 
-ESP_PanelBacklight::ESP_PanelBacklight(const ESP_PanelBacklightConfig_t *config):
-    config(*config),
+ESP_PanelBacklight::ESP_PanelBacklight(const ESP_PanelBacklightConfig_t &config):
+    config(config),
     is_initialized(false)
 {
 }

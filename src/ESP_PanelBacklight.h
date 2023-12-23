@@ -25,7 +25,7 @@ typedef struct {
 
 class ESP_PanelBacklight {
 public:
-    ESP_PanelBacklight(const ESP_PanelBacklightConfig_t *config);
+    ESP_PanelBacklight(const ESP_PanelBacklightConfig_t &ionfig);
     ESP_PanelBacklight(int io_num, int light_on_level);
     ~ESP_PanelBacklight();
 

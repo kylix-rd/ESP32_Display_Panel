@@ -31,9 +31,9 @@ class ESP_PanelBus_I2C: public ESP_PanelBus {
 public:
     ESP_PanelBus_I2C(uint8_t address, int scl_io, int sda_io, i2c_port_t host_id = ESP_PANEL_BUS_I2C_HOST_ID_DEFAULT);
     ESP_PanelBus_I2C(uint8_t address, i2c_port_t host_id = ESP_PANEL_BUS_I2C_HOST_ID_DEFAULT);
-    ESP_PanelBus_I2C(const i2c_config_t *host_config, const esp_lcd_panel_io_i2c_config_t *io_config,
+    ESP_PanelBus_I2C(const i2c_config_t host_config, const esp_lcd_panel_io_i2c_config_t io_config,
                      i2c_port_t host_id = ESP_PANEL_BUS_I2C_HOST_ID_DEFAULT);
-    ESP_PanelBus_I2C(const esp_lcd_panel_io_i2c_config_t *io_config,
+    ESP_PanelBus_I2C(const esp_lcd_panel_io_i2c_config_t io_config,
                      i2c_port_t host_id = ESP_PANEL_BUS_I2C_HOST_ID_DEFAULT);
     ~ESP_PanelBus_I2C() override;
 

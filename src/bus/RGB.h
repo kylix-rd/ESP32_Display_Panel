@@ -160,10 +160,10 @@ public:
     ESP_PanelBus_RGB(uint16_t width, uint16_t height, int hsync_io, int vsync_io, int pclk_io, int d0_io, int d1_io,
                      int d2_io, int d3_io, int d4_io, int d5_io, int d6_io, int d7_io, int de_io = -1, int disp_io = -1);
     /* For 3-wire SPI + RGB  */
-    ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t *io_config,
-                     const esp_lcd_rgb_panel_config_t *rgb_config, int host_id = -1);
+    ESP_PanelBus_RGB(const esp_lcd_panel_io_3wire_spi_config_t &io_config,
+                     const esp_lcd_rgb_panel_config_t &rgb_config, int host_id = -1);
     /* For RGB only */
-    ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t *rgb_config, int host_id = -1);
+    ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t &rgb_config, int host_id = -1);
     ~ESP_PanelBus_RGB() override;
 
     void configSpiLine(bool cs_use_expaneer, bool scl_use_expander, bool sda_use_expander, ESP_IOExpander *io_expander);

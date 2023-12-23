@@ -3,8 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#ifndef ESP_PANEL_CONF_H
-#define ESP_PANEL_CONF_H
+
+#pragma once
 
 // *INDENT-OFF*
 /* Set to 0 if use a custom board */

@@ -24,19 +24,20 @@ public:
 
 class ESP_PanelLcdTouch {
 public:
-    ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t *config);
+    ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config);
     ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height);
     virtual ~ESP_PanelLcdTouch() = default;
 
     void del(void);
     void readData(void);
-    bool getTouchState(void);
+    bool getLcdTouchState(void);
     TouchPoint getPoint(uint8_t n = 0);
     bool getButtonState(uint8_t n = 0);
     void swapAxes(bool en);
     void mirrorX(bool en);
     void mirrorY(bool en);
     esp_lcd_touch_handle_t getHandle(void);
+    ESP_PanelBus *getBus(void);
 
     virtual void begin(void) = 0;
 

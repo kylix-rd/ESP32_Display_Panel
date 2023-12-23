@@ -26,70 +26,52 @@
  * ```
  */
 
-#include <unistd.h>
 #include <Arduino.h>
 #include <ESP_Panel_Library.h>
-// #include <ESP_IOExpander_Library.h>
+#include <ESP_IOExpander_Library.h>
 
 ESP_Panel *panel = nullptr;
 
 void setup()
 {
-//     Serial.begin(115200); /* prepare for possible serial debug */
-//     Serial.println("Hello Arduino!");
-//     Serial.println("I am ESP32_Display_Panel.");
+    Serial.begin(115200); /* prepare for possible serial debug */
+    Serial.println("Hello Arduino!");
+    Serial.println("I am ESP32_Display_Panel.");
 
-//     panel = new ESP_Panel();
+    panel = new ESP_Panel();
 
-// #if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
-//     /**
-//      * These development boards require the use of an IO expander to configure the screen,
-//      * so it needs to be initialized in advance and registered with the panel for use.
-//      *
-//      */
-//     Serial.println("Initialize IO expander");
-//     /* Initialize IO expander */
-//     ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST,
-//                                                                ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000,
-//                                                                ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
-//                                                                ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
-//     expander->init();
-//     expander->begin();
-//     /* Add into panel */
-//     panel->addIOExpander(expander);
-// #endif
+#if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
+    /**
+     * These development boards require the use of an IO expander to configure the screen,
+     * so it needs to be initialized in advance and registered with the panel for use.
+     *
+     */
+    Serial.println("Initialize IO expander");
+    /* Initialize IO expander */
+    ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST,
+                                                               ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000,
+                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
+                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
+    expander->init();
+    expander->begin();
+    /* Add into panel */
+    panel->addIOExpander(expander);
+#endif
 
-//     Serial.println("Initialize panel");
-//     /* Initialize bus and device of panel */
-//     panel->init();
-//     /* Start panel */
-//     panel->begin();
+    Serial.println("Initialize panel");
+    /* Initialize bus and device of panel */
+    panel->init();
+    /* Start panel */
+    panel->begin();
 
-//     Serial.println("Draw color bar from top to bottom, the order is B - G - R");
-//     int bits_per_piexl = 4;
-//     int bytes_per_piexl = panel->lcd()->getColorBytes();
-//     int line_per_bar = ESP_PANEL_LCD_V_RES / bits_per_piexl;
-//     uint8_t *color = (uint8_t *)calloc(1, line_per_bar * ESP_PANEL_LCD_H_RES * bytes_per_piexl);
-//     assert(color);
-//     for (int j = 0; j < bits_per_piexl; j++) {
-//         for (int i = 0; i < line_per_bar * ESP_PANEL_LCD_H_RES; i++) {
-//             for (int k = 0; k < bytes_per_piexl; k++) {
-// #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_SPI
-//             color[i * bytes_per_piexl + k] = SPI_SWAP_DATA_TX(BIT(j), bits_per_piexl) >> (k * 8);
-// #else
-//             color[i * bytes_per_piexl + k] = BIT(j) >> (k * 8);
-// #endif
-//             }
-//         }
-//         panel->lcd()->drawBitmapWaitUntilFinish(0, j * line_per_bar, ESP_PANEL_LCD_H_RES, (j + 1) * line_per_bar, color);
-//     }
-//     free(color);
+    Serial.println("Draw color bar from top to bottom, the order is B - G - R");
+    panel->getLcd()->drawColorBar(ESP_PANEL_LCD_H_RES, ESP_PANEL_LCD_V_RES);
 
-//     Serial.println("Setup done");
+    Serial.println("Setup done");
 }
 
 void loop()
 {
-    // Serial.println("Loop");
-    // sleep(1);
+    Serial.println("Loop");
+    delay(1000);
 }

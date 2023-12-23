@@ -11,9 +11,9 @@
 
 static const char *TAG = "ESP_PanelBus";
 
-ESP_PanelBus::ESP_PanelBus(ESP_PanelBusType_t host_type, bool host_need_init):
+ESP_PanelBus::ESP_PanelBus(uint8_t host_type, bool host_need_init):
     host_need_init(host_need_init),
-    host_type((ESP_PanelBusType_t)host_type),
+    host_type((uint8_t)host_type),
     handle(NULL)
 {
 }
@@ -43,7 +43,7 @@ esp_lcd_panel_io_handle_t ESP_PanelBus::getHandle(void)
     return handle;
 }
 
-ESP_PanelBusType_t ESP_PanelBus::getHostType(void)
+uint8_t ESP_PanelBus::getType(void)
 {
     return host_type;
 }

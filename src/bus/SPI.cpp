@@ -27,19 +27,19 @@ ESP_PanelBus_SPI::ESP_PanelBus_SPI(int cs_io, int dc_io, spi_host_device_t host_
 {
 }
 
-ESP_PanelBus_SPI::ESP_PanelBus_SPI(const spi_bus_config_t *host_config, const esp_lcd_panel_io_spi_config_t *io_config,
+ESP_PanelBus_SPI::ESP_PanelBus_SPI(const spi_bus_config_t &host_config, const esp_lcd_panel_io_spi_config_t &io_config,
                                    spi_host_device_t host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_SPI, true),
     host_id(host_id),
-    host_config(*host_config),
-    io_config(*io_config)
+    host_config(host_config),
+    io_config(io_config)
 {
 }
 
-ESP_PanelBus_SPI::ESP_PanelBus_SPI(const esp_lcd_panel_io_spi_config_t *io_config, spi_host_device_t host_id):
+ESP_PanelBus_SPI::ESP_PanelBus_SPI(const esp_lcd_panel_io_spi_config_t &io_config, spi_host_device_t host_id):
     ESP_PanelBus(ESP_PANEL_BUS_TYPE_SPI, false),
     host_id(host_id),
-    io_config(*io_config)
+    io_config(io_config)
 {
 }
 

@@ -34,7 +34,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io,
     callback_data(CALLBACK_DATA_DEFAULT())
 {
 #if SOC_LCD_RGB_SUPPORTED
-    if (bus->getHostType() == ESP_PANEL_BUS_TYPE_RGB) {
+    if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
         const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
         vendor_config.rgb_config = rgb_config;
     }
@@ -90,7 +90,7 @@ void ESP_PanelLcd::begin(void)
     CHECK_NULL_RETURN(sem_draw_bitmap_finish);
 #endif
 
-    if (bus->getHostType() != ESP_PANEL_BUS_TYPE_RGB) {
+    if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
         esp_lcd_panel_io_callbacks_t io_cb = {
             .on_color_trans_done = (esp_lcd_panel_io_color_trans_done_cb_t)onDrawBitmapFinish,
         };
@@ -129,7 +129,7 @@ void ESP_PanelLcd::drawBitmap(int x_start, int y_start, int x_end, int y_end, co
 void ESP_PanelLcd::drawBitmapWaitUntilFinish(int x_start, int y_start, int x_end, int y_end, const void *color_data,
         int timeout_ms)
 {
-    if (bus->getHostType() == ESP_PANEL_BUS_TYPE_RGB) {
+    if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
         drawBitmap(x_start, y_start, x_end, y_end, color_data);
         return;
     }
@@ -181,7 +181,7 @@ void ESP_PanelLcd::drawColorBar(int width, int height)
     for (int j = 0; j < bits_per_piexl; j++) {
         for (int i = 0; i < line_per_bar * width; i++) {
             for (int k = 0; k < bytes_per_piexl; k++) {
-                if (bus->getHostType() != ESP_PANEL_BUS_TYPE_RGB) {
+                if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
                     color[i * bytes_per_piexl + k] = SPI_SWAP_DATA_TX(BIT(j), bits_per_piexl) >> (k * 8);
                 } else {
                     color[i * bytes_per_piexl + k] = BIT(j) >> (k * 8);
@@ -203,7 +203,7 @@ int ESP_PanelLcd::getColorBits(void)
 {
     CHECK_NULL_GOTO(bus, err);
 
-    if (bus->getHostType() == ESP_PANEL_BUS_TYPE_RGB) {
+    if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
         return static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig()->bits_per_pixel;
     } else  {
         return panel_config.bits_per_pixel;
@@ -231,6 +231,11 @@ esp_lcd_panel_handle_t ESP_PanelLcd::getHandle(void)
 
 err:
     return NULL;
+}
+
+ESP_PanelBus *ESP_PanelLcd::getBus(void)
+{
+    return bus;
 }
 
 bool ESP_PanelLcd::onDrawBitmapFinish(void *panel_io, void *edata, void *user_ctx)

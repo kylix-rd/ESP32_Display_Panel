@@ -84,7 +84,7 @@ TEST_CASE("test draw lcd", "[panel][lcd]")
     TEST_ASSERT_NOT_NULL(sem_lcd_trans_done);
     /* Register a function to notify when the panel is ready to refresh */
     /* This is useful for refreshing the screen using DMA transfers */
-    panel->lcd()->attachFrameEndCallback(lcd_trans_done_callback, sem_lcd_trans_done);
+    panel->getLcd()->attachFrameEndCallback(lcd_trans_done_callback, sem_lcd_trans_done);
 #endif
     /* Start panel */
     panel->begin();
@@ -100,7 +100,7 @@ TEST_CASE("test draw lcd", "[panel][lcd]")
             color[i] = 1ULL << j;
 #endif
         }
-        panel->lcd()->drawBitmap(0, j * line_per_bar, ESP_PANEL_LCD_H_RES, (j + 1) * line_per_bar, color);
+        panel->getLcd()->drawBitmap(0, j * line_per_bar, ESP_PANEL_LCD_H_RES, (j + 1) * line_per_bar, color);
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
         xSemaphoreTake(sem_lcd_trans_done, portMAX_DELAY);
 #endif
@@ -161,10 +161,10 @@ TEST_CASE("test read touch", "[panel][touch]")
     ESP_LOGI(TAG, "Read touch point in 3s");
     int cnt = 0;
     while (cnt++ < 100) {
-        panel->touch()->readData();
-        bool touched = panel->touch()->getTouchState();
+        panel->getLcdTouch()->readData();
+        bool touched = panel->getLcdTouch()->getLcdTouchState();
         if (touched) {
-            TouchPoint point = panel->touch()->getPoint();
+            TouchPoint point = panel->getLcdTouch()->getPoint();
             ESP_LOGI(TAG, "Touch point: x %d, y %d\n", point.x, point.y);
         }
         vTaskDelay(pdMS_TO_TICKS(30));
