@@ -17,6 +17,8 @@
 #include "esp_log.h"
 #include "esp_check.h"
 
+#include "esp_lcd_custom_types.h"
+
 #include "esp_lcd_gc9a01.h"
 
 static const char *TAG = "gc9a01";
@@ -41,7 +43,7 @@ typedef struct {
     uint8_t fb_bits_per_pixel;
     uint8_t madctl_val; // save current value of LCD_CMD_MADCTL register
     uint8_t colmod_val; // save current value of LCD_CMD_COLMOD register
-    const gc9a01_lcd_init_cmd_t *init_cmds;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
 } gc9a01_panel_t;
 
@@ -106,8 +108,8 @@ esp_err_t esp_lcd_new_panel_gc9a01(const esp_lcd_panel_io_handle_t io, const esp
     gc9a01->reset_gpio_num = panel_dev_config->reset_gpio_num;
     gc9a01->reset_level = panel_dev_config->flags.reset_active_high;
     if (panel_dev_config->vendor_config) {
-        gc9a01->init_cmds = ((gc9a01_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
-        gc9a01->init_cmds_size = ((gc9a01_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
+        gc9a01->init_cmds = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
+        gc9a01->init_cmds_size = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
     }
     gc9a01->base.del = panel_gc9a01_del;
     gc9a01->base.reset = panel_gc9a01_reset;
@@ -171,7 +173,7 @@ static esp_err_t panel_gc9a01_reset(esp_lcd_panel_t *panel)
     return ESP_OK;
 }
 
-static const gc9a01_lcd_init_cmd_t vendor_specific_init_default[] = {
+static const esp_lcd_panel_vendor_init_cmd_t vendor_specific_init_default[] = {
 //  {cmd, { data }, data_size, delay_ms}
     // Enable Inter Register
     {0xfe, (uint8_t []){0x00}, 0, 0},
@@ -234,14 +236,14 @@ static esp_err_t panel_gc9a01_init(esp_lcd_panel_t *panel)
         gc9a01->colmod_val,
     }, 1), TAG, "send command failed");
 
-    const gc9a01_lcd_init_cmd_t *init_cmds = NULL;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     if (gc9a01->init_cmds) {
         init_cmds = gc9a01->init_cmds;
         init_cmds_size = gc9a01->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(gc9a01_lcd_init_cmd_t);
+        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_lcd_panel_vendor_init_cmd_t);
     }
 
     bool is_cmd_overwritten = false;

@@ -8,15 +8,9 @@
 #include "freertos/semphr.h"
 
 #include "esp_lcd_panel_ops.h"
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
-
-#define ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(cmds, cmds_size)   \
-    {                                                           \
-        .init_cmds = cmds,                                      \
-        .init_cmds_size = cmds_size,                            \
-    }
 
 #define CALLBACK_DATA_DEFAULT()             \
     {                                       \
@@ -26,9 +20,9 @@
 
 static const char *TAG = "ESP_PanelLcd";
 
-ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io, const esp_lcd_panel_init_cmd_t init_cmd[],
-                           uint16_t init_cmd_size):
-    bus(bus),
+ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io,
+                           const esp_lcd_panel_vendor_init_cmd_t init_cmd[], uint16_t init_cmd_size);
+bus(bus),
     panel_config(ESP_LCD_DEVICE_CONFIG_DEFAULT(rst_io, color_bits, &vendor_config)),
     vendor_config(ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(init_cmd, init_cmd_size)),
     handle(NULL),
@@ -72,7 +66,7 @@ void ESP_PanelLcd::setResetPin(int rst_io)
     panel_config.reset_gpio_num = rst_io;
 }
 
-void ESP_PanelLcd::setInitCommands(const esp_lcd_panel_init_cmd_t init_cmd[], int init_cmd_size)
+void ESP_PanelLcd::setInitCommands(const esp_lcd_panel_vendor_init_cmd_t init_cmd[], int init_cmd_size)
 {
     // Only allow to set init commands before `begin()`.
     CHECK_FALSE_RETURN(handle == NULL);
@@ -230,7 +224,7 @@ err:
     return -1;
 }
 
-esp_lcd_panel_handle_t ESP_PanelLcd::handle(void)
+esp_lcd_panel_handle_t ESP_PanelLcd::getHandle(void)
 {
     CHECK_NULL_GOTO(handle, err);
     return handle;

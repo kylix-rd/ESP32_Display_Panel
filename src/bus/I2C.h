@@ -3,9 +3,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #pragma once
 
-#include <stdint.h>
 #include "esp_lcd_panel_io.h"
 #include "driver/i2c.h"
 #include "ESP_PanelHost.h"
@@ -44,5 +44,3 @@ private:
     i2c_config_t host_config;
     esp_lcd_panel_io_i2c_config_t io_config;
 };
-
-#endif

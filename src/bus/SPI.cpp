@@ -3,10 +3,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #include <stdlib.h>
 #include <string.h>
 #include "esp_intr_alloc.h"
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "SPI.h"
 
 static const char *TAG = "ESP_PanelBus_SPI";

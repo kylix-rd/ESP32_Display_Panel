@@ -17,7 +17,7 @@
 #include "esp_bit_defs.h"
 #include "base/esp_lcd_touch.h"
 
-#include "../ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "TT21100.h"
 
 static const char *TAG = "TT21100";
@@ -35,7 +35,7 @@ ESP_PanelLcdTouch_TT21100::~ESP_PanelLcdTouch_TT21100()
 
 void ESP_PanelLcdTouch_TT21100::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_tt21100(bus->handle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_tt21100(bus->getHandle(), &config, &handle));
 }
 
 /*******************************************************************************

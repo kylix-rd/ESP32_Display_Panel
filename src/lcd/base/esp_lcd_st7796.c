@@ -17,6 +17,8 @@
 #include "esp_log.h"
 #include "esp_check.h"
 
+#include "esp_lcd_custom_types.h"
+
 #include "esp_lcd_st7796.h"
 
 static const char *TAG = "st7796";
@@ -41,7 +43,7 @@ typedef struct {
     uint8_t fb_bits_per_pixel;
     uint8_t madctl_val; // save current value of LCD_CMD_MADCTL register
     uint8_t colmod_val; // save current value of LCD_CMD_COLMOD register
-    const st7796_lcd_init_cmd_t *init_cmds;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
 } st7796_panel_t;
 
@@ -110,8 +112,8 @@ esp_err_t esp_lcd_new_panel_st7796(const esp_lcd_panel_io_handle_t io, const esp
     st7796->reset_gpio_num = panel_dev_config->reset_gpio_num;
     st7796->reset_level = panel_dev_config->flags.reset_active_high;
     if (panel_dev_config->vendor_config) {
-        st7796->init_cmds = ((st7796_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
-        st7796->init_cmds_size = ((st7796_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
+        st7796->init_cmds = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
+        st7796->init_cmds_size = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
     }
     st7796->base.del = panel_st7796_del;
     st7796->base.reset = panel_st7796_reset;
@@ -179,9 +181,9 @@ typedef struct {
     uint8_t cmd;
     uint8_t data[16];
     uint8_t data_bytes; // Length of data in above data array; 0xFF = end of cmds.
-} esp_lcd_panel_init_cmd_t;
+} esp_lcd_panel_vendor_init_cmd_t;
 
-static const st7796_lcd_init_cmd_t vendor_specific_init_default[] = {
+static const esp_lcd_panel_vendor_init_cmd_t vendor_specific_init_default[] = {
 //  {cmd, { data }, data_size, delay_ms}
     {0xf0, (uint8_t []){0xc3}, 1, 0},
     {0xf0, (uint8_t []){0x96}, 1, 0},
@@ -212,14 +214,14 @@ static esp_err_t panel_st7796_init(esp_lcd_panel_t *panel)
         st7796->colmod_val,
     }, 1), TAG, "send command failed");
 
-    const st7796_lcd_init_cmd_t *init_cmds = NULL;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     if (st7796->init_cmds) {
         init_cmds = st7796->init_cmds;
         init_cmds_size = st7796->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(st7796_lcd_init_cmd_t);
+        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_lcd_panel_vendor_init_cmd_t);
     }
 
     bool is_cmd_overwritten = false;

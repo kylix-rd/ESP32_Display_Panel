@@ -24,24 +24,17 @@
         },                                                            \
         .vendor_config = vendor_cfg,                                  \
     }
-#endif
 
-#if SOC_LCD_RGB_SUPPORTED
-#define ESP_LCD_RGB_VENDOR_CONFIG_DEFAULT(cmds, cmds_size, rgb_cfg, is_sharing_pin)  \
-    {                                                                   \
-        .init_cmds = cmds,                                              \
-        .init_cmds_size = cmds_size,                                    \
-        .rgb_config = rgb_cfg,                                          \
-        .flags = {                                                      \
-            .auto_del_panel_io = is_sharing_pin,            \
-        },                                                              \
+#define ESP_LCD_COMMON_VENDOR_CONFIG_DEFAULT(cmds, cmds_size)   \
+    {                                                           \
+        .init_cmds = cmds,                                      \
+        .init_cmds_size = cmds_size,                            \
     }
-#endif
 
 class ESP_PanelLcd {
 public:
-    ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits = 16, int rst_io = -1, const esp_lcd_panel_init_cmd_t init_cmd[] = NULL,
-                 uint16_t init_cmd_size = 0);
+    ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io, const esp_lcd_panel_vendor_init_cmd_t init_cmd[],
+                 uint16_t init_cmd_size);
     ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &panel_config);
     virtual ~ESP_PanelLcd() = default;
 
@@ -52,7 +45,7 @@ public:
      */
     void setColorBits(int bits_per_pixel);
     void setResetPin(int rst_io);
-    void setInitCommands(const esp_lcd_panel_init_cmd_t init_cmd[], int init_cmd_size);
+    void setInitCommands(const esp_lcd_panel_vendor_init_cmd_t init_cmd[], int init_cmd_size);
 #if SOC_LCD_RGB_SUPPORTED
     void enableAutoReleaseBus(void);
 #endif
@@ -75,13 +68,13 @@ public:
 
     int getColorBits(void);
     int getColorBytes(void);
-    esp_lcd_panel_handle_t handle(void);
+    esp_lcd_panel_handle_t getHandle(void);
 
 protected:
     ESP_PanelBus *bus;
     esp_lcd_panel_dev_config_t panel_config;
     esp_lcd_panel_vendor_config_t vendor_config;
-    esp_lcd_panel_handle_t handle;
+    esp_lcd_panel_handle_t panel_handle;
 
 private:
     static bool onDrawBitmapFinish(void *panel_io, void *edata, void *user_ctx);

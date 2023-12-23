@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "esp_lcd_panel_io.h"
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "RGB.h"
 
 static const char *TAG = "ESP_PanelBus_RGB";

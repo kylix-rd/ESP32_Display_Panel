@@ -15,6 +15,8 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_log.h"
 
+#include "esp_lcd_custom_types.h"
+
 #include "esp_lcd_gc9503.h"
 
 #define GC9503_CMD_MADCTL           (0xB1)      // Memory data access control
@@ -28,7 +30,7 @@ typedef struct {
     int reset_gpio_num;
     uint8_t madctl_val; // Save current value of GC9503_CMD_MADCTL register
     uint8_t colmod_val; // Save current value of LCD_CMD_COLMOD register
-    const gc9503_lcd_init_cmd_t *init_cmds;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
     struct {
         unsigned int mirror_by_cmd: 1;
@@ -58,7 +60,7 @@ esp_err_t esp_lcd_new_panel_gc9503(const esp_lcd_panel_io_handle_t io, const esp
                                    esp_lcd_panel_handle_t *ret_panel)
 {
     ESP_RETURN_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, TAG, "invalid arguments");
-    gc9503_vendor_config_t *vendor_config = (gc9503_vendor_config_t *)panel_dev_config->vendor_config;
+    esp_lcd_panel_vendor_config_t *vendor_config = (esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config;
     ESP_RETURN_ON_FALSE(vendor_config && vendor_config->rgb_config, ESP_ERR_INVALID_ARG, TAG, "`verndor_config` and `rgb_config` are necessary");
     ESP_RETURN_ON_FALSE(!vendor_config->flags.auto_del_panel_io || !vendor_config->flags.mirror_by_cmd,
                         ESP_ERR_INVALID_ARG, TAG, "`mirror_by_cmd` and `auto_del_panel_io` cannot work together");
@@ -169,7 +171,7 @@ err:
 }
 
 // *INDENT-OFF*
-static const gc9503_lcd_init_cmd_t vendor_specific_init_default[] = {
+static const esp_lcd_panel_vendor_init_cmd_t vendor_specific_init_default[] = {
 //  {cmd, { data }, data_size, delay_ms}
     {0xf0, (uint8_t []){0x55, 0xaa, 0x52, 0x08, 0x00}, 5, 0},
     {0xf6, (uint8_t []){0x5a, 0x87}, 2, 0},
@@ -249,14 +251,14 @@ static esp_err_t panel_gc9503_send_init_cmds(gc9503_panel_t *gc9503)
 
     // Vendor specific initialization, it can be different between manufacturers
     // should consult the LCD supplier for initialization sequence code
-    const gc9503_lcd_init_cmd_t *init_cmds = NULL;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     if (gc9503->init_cmds) {
         init_cmds = gc9503->init_cmds;
         init_cmds_size = gc9503->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(gc9503_lcd_init_cmd_t);
+        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_lcd_panel_vendor_init_cmd_t);
     }
 
     bool is_cmd_overwritten = false;

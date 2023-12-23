@@ -18,7 +18,7 @@
 #include "esp_lcd_panel_io.h"
 #include "base/esp_lcd_touch.h"
 
-#include "../ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "GT1151.h"
 
 static const char *TAG = "gt1151";
@@ -42,7 +42,7 @@ ESP_PanelLcdTouch_GT1151::~ESP_PanelLcdTouch_GT1151()
 
 void ESP_PanelLcdTouch_GT1151::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_gt1151(bus->handle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_gt1151(bus->getHandle(), &config, &handle));
 }
 
 static esp_err_t read_data(esp_lcd_touch_handle_t tp);

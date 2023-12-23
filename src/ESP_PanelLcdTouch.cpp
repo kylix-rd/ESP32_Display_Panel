@@ -5,7 +5,7 @@
  */
 #include "driver/gpio.h"
 
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "ESP_PanelLcdTouch.h"
 
 static const char *TAG = "LcdTouch";
@@ -56,7 +56,7 @@ bool TouchPoint::operator!=(TouchPoint p)
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t *config):
     bus(bus),
     config(*config),
-    handle(NULL),
+    getHandle(NULL),
     touch_state(false)
 {
 }
@@ -64,7 +64,7 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_conf
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height):
     bus(bus),
     config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height)),
-    handle(NULL),
+    getHandle(NULL),
     touch_state(false)
 {
 }
@@ -132,7 +132,7 @@ void ESP_PanelLcdTouch::mirrorY(bool en)
     CHECK_ERROR_RETURN(esp_lcd_touch_set_mirror_y(handle, en));
 }
 
-esp_lcd_touch_handle_t ESP_PanelLcdTouch::handle(void)
+esp_lcd_touch_handle_t ESP_PanelLcdTouch::getHandle(void)
 {
     CHECK_NULL_GOTO(handle, err);
     return handle;

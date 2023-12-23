@@ -17,7 +17,7 @@
 #include "esp_lcd_panel_io.h"
 #include "base/esp_lcd_touch.h"
 
-#include "../ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "CST816S.h"
 
 #define POINT_NUM_MAX       (1)
@@ -38,7 +38,7 @@ ESP_PanelLcdTouch_CST816S::~ESP_PanelLcdTouch_CST816S()
 
 void ESP_PanelLcdTouch_CST816S::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_cst816s(bus->handle(), &config, &handle));
+    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_cst816s(bus->getHandle(), &config, &handle));
 }
 
 static esp_err_t read_data(esp_lcd_touch_handle_t tp);

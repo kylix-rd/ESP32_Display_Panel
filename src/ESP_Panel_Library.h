@@ -11,17 +11,22 @@
 #include "ESP_PanelLcd.h"
 #include "ESP_Panel_Conf_Internal.h"
 
+/* Bus */
+#include "bus/I2C.h"
+#include "bus/SPI.h"
+#include "bus/RGB.h"
+
 /* LCD */
-#include "GC9503.h"
-#include "GC9A01.h"
-#include "ST7262.h"
-#include "ST7701.h"
-#include "ST7789.h"
+#include "lcd/GC9503.h"
+#include "lcd/GC9A01.h"
+// #include "lcd/ST7262.h"
+#include "lcd/ST7701.h"
+// #include "lcd/ST7789.h"
 
 /* LCD Touch */
-#include "CST816S.h"
-#include "FT5x06.h"
-#include "GT1151.h"
-#include "GT911.h"
-#include "STMPE610.h"
-#include "TT21100.h"
+#include "lcd_touch/CST816S.h"
+#include "lcd_touch/FT5x06.h"
+#include "lcd_touch/GT1151.h"
+#include "lcd_touch/GT911.h"
+#include "lcd_touch/STMPE610.h"
+#include "lcd_touch/TT21100.h"

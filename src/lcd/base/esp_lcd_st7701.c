@@ -15,6 +15,8 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_log.h"
 
+#include "esp_lcd_custom_types.h"
+
 #include "esp_lcd_st7701.h"
 
 #define ST7701_CMD_SDIR     (0xC7)
@@ -32,7 +34,7 @@ typedef struct {
     int reset_gpio_num;
     uint8_t madctl_val; // Save current value of LCD_CMD_MADCTL register
     uint8_t colmod_val; // Save current value of LCD_CMD_COLMOD register
-    const st7701_lcd_init_cmd_t *init_cmds;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
     struct {
         unsigned int mirror_by_cmd: 1;
@@ -62,7 +64,7 @@ esp_err_t esp_lcd_new_panel_st7701(const esp_lcd_panel_io_handle_t io, const esp
                                    esp_lcd_panel_handle_t *ret_panel)
 {
     ESP_RETURN_ON_FALSE(io && panel_dev_config && ret_panel, ESP_ERR_INVALID_ARG, TAG, "invalid arguments");
-    st7701_vendor_config_t *vendor_config = (st7701_vendor_config_t *)panel_dev_config->vendor_config;
+    esp_lcd_panel_vendor_config_t *vendor_config = (esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config;
     ESP_RETURN_ON_FALSE(vendor_config && vendor_config->rgb_config, ESP_ERR_INVALID_ARG, TAG, "`verndor_config` and `rgb_config` are necessary");
     ESP_RETURN_ON_FALSE(!vendor_config->flags.auto_del_panel_io || !vendor_config->flags.mirror_by_cmd,
                         ESP_ERR_INVALID_ARG, TAG, "`mirror_by_cmd` and `auto_del_panel_io` cannot work together");
@@ -172,7 +174,7 @@ err:
     return ret;
 }
 
-static const st7701_lcd_init_cmd_t vendor_specific_init_default[] = {
+static const esp_lcd_panel_vendor_init_cmd_t vendor_specific_init_default[] = {
 //  {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t []){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},
     {0xEF, (uint8_t []){0x08}, 1, 0},
@@ -214,7 +216,7 @@ static const st7701_lcd_init_cmd_t vendor_specific_init_default[] = {
 static esp_err_t panel_st7701_send_init_cmds(st7701_panel_t *st7701)
 {
     esp_lcd_panel_io_handle_t io = st7701->io;
-    const st7701_lcd_init_cmd_t *init_cmds = NULL;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     bool is_command2_disable = true;
     bool is_cmd_overwritten = false;
@@ -237,7 +239,7 @@ static esp_err_t panel_st7701_send_init_cmds(st7701_panel_t *st7701)
         init_cmds_size = st7701->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(st7701_lcd_init_cmd_t);
+        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_lcd_panel_vendor_init_cmd_t);
     }
 
     for (int i = 0; i < init_cmds_size; i++) {

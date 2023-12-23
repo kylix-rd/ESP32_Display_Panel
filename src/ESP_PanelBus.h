@@ -27,7 +27,7 @@ public:
     void writeCommandColor(int lcd_cmd, const void *color, int color_size);
 
     ESP_PanelBusType_t type(void);
-    esp_lcd_panel_io_handle_t handle(void);
+    esp_lcd_panel_io_handle_t getHandle(void);
 
 protected:
     bool host_need_init;

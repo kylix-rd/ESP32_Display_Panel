@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "esp_lcd_panel_io.h"
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "ESP_PanelBus.h"
 
 static const char *TAG = "ESP_PanelBus";
@@ -38,7 +38,7 @@ void ESP_PanelBus::del(void)
     CHECK_ERROR_RETURN(esp_lcd_panel_io_del(handle));
 }
 
-esp_lcd_panel_io_handle_t ESP_PanelBus::handle(void)
+esp_lcd_panel_io_handle_t ESP_PanelBus::getHandle(void)
 {
     return handle;
 }

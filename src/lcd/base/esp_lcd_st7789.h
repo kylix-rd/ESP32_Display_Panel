@@ -1,11 +1,11 @@
 /*
- * SPDX-FileCopyrightText: 2022-2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2021-2023 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
  * @file
- * @brief ESP LCD: ILI9341
+ * @brief ESP LCD: ST7789
  */
 
 #pragma once
@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 /**
- * @brief Create LCD panel for model ILI9341
+ * @brief Create LCD panel for model ST7789
  *
  * @note  Vendor specific initialization can be different between manufacturers, should consult the LCD supplier for initialization sequence code.
  *
@@ -29,7 +29,7 @@ extern "C" {
  *          - ESP_ERR_NO_MEM        if out of memory
  *          - ESP_OK                on success
  */
-esp_err_t esp_lcd_new_panel_ili9341(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t *panel_dev_config, esp_lcd_panel_handle_t *ret_panel);
+esp_err_t esp_lcd_new_panel_st7789(const esp_lcd_panel_io_handle_t io, const esp_lcd_panel_dev_config_t *panel_dev_config, esp_lcd_panel_handle_t *ret_panel);
 
 /**
  * @brief LCD panel bus configuration structure
@@ -39,7 +39,7 @@ esp_err_t esp_lcd_new_panel_ili9341(const esp_lcd_panel_io_handle_t io, const es
  * @param[in] max_trans_sz Maximum transfer size in bytes
  *
  */
-#define ILI9341_PANEL_BUS_SPI_CONFIG(sclk, mosi, max_trans_sz)  \
+#define GC9A01_PANEL_BUS_SPI_CONFIG(sclk, mosi, max_trans_sz)   \
     {                                                           \
         .sclk_io_num = sclk,                                    \
         .mosi_io_num = mosi,                                    \
@@ -58,12 +58,12 @@ esp_err_t esp_lcd_new_panel_ili9341(const esp_lcd_panel_io_handle_t io, const es
  * @param[in] cb_ctx Callback function context
  *
  */
-#define ILI9341_PANEL_IO_SPI_CONFIG(cs, dc, callback, callback_ctx) \
+#define GC9A01_PANEL_IO_SPI_CONFIG(cs, dc, callback, callback_ctx)  \
     {                                                               \
         .cs_gpio_num = cs,                                          \
         .dc_gpio_num = dc,                                          \
         .spi_mode = 0,                                              \
-        .pclk_hz = 40 * 1000 * 1000,                                \
+        .pclk_hz = 80 * 1000 * 1000,                                \
         .trans_queue_depth = 10,                                    \
         .on_color_trans_done = callback,                            \
         .user_ctx = callback_ctx,                                   \

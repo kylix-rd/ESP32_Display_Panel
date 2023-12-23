@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include <stdint.h>
 #include "driver/spi_master.h"
 #include "esp_lcd_panel_io.h"
 #include "ESP_PanelHost.h"
@@ -51,5 +50,3 @@ private:
     spi_bus_config_t host_config;
     esp_lcd_panel_io_spi_config_t io_config;
 };
-
-#endif

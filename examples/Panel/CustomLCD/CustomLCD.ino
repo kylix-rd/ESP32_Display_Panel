@@ -1,9 +1,8 @@
-#include <unistd.h>
 #include <Arduino.h>
 #include <ESP_IOExpander_Library.h>
 #include <ESP_Panel_Library.h>
 
-#define USE_IO_EXPANDER             (0)
+#define USE_IO_EXPANDER             (1)
 
 #define TEST_LCD_H_RES              (480)
 #define TEST_LCD_V_RES              (480)
@@ -53,7 +52,7 @@ ESP_PanelLcd_ST7701 *lcd = nullptr;
  * should consult the LCD supplier for initialization sequence code.
  *
  */
-const esp_lcd_panel_init_cmd_t example_init_cmd[] = {
+const esp_lcd_panel_vendor_init_cmd_t example_init_cmd[] = {
 //  {cmd, { data }, data_size, delay_ms}
     {0xFF, (uint8_t []){0x77, 0x01, 0x00, 0x00, 0x13}, 5, 0},
     {0xEF, (uint8_t []){0x08}, 1, 0},
@@ -119,19 +118,15 @@ void setup()
                                         TEST_LCD_IO_RGB_DATA14, TEST_LCD_IO_RGB_DATA15, TEST_LCD_IO_RGB_DE,
                                         TEST_LCD_IO_RGB_DISP);
 #if USE_IO_EXPANDER
-    lcd_bus->enableSpiCsUseExpander();
-    lcd_bus->addIOExpander(expander);
+    lcd_bus->configSpiLine(true, false, false, expander);
 #endif
-    lcd_bus->setRgbResolution(TEST_LCD_H_RES, TEST_LCD_V_RES);
-    lcd_bus->setRgbColorBits(TEST_RGB_BIT_PER_PIXEL);
-    lcd_bus->init();
+    lcd_bus->begin();
 
     Serial.println("Create LCD");
-    lcd = new ESP_PanelLcd_ST7701(lcd_bus, TEST_LCD_BIT_PER_PIXEL, TEST_LCD_IO_RST);
+    lcd = new ESP_PanelLcd_ST7701(lcd_bus, TEST_LCD_BIT_PER_PIXEL, TEST_LCD_IO_RST, example_init_cmd,
+                                  sizeof(example_init_cmd) / sizeof(esp_lcd_panel_vendor_init_cmd_t));
     lcd->enableAutoReleaseBus();    // This function is used for the case that the SPI shares pins with RGB,
                                     // and the bus will be released after calling `begin()`
-    lcd->setInitCommands(example_init_cmd, sizeof(example_init_cmd) / sizeof(esp_lcd_panel_init_cmd_t));
-                                    // This function is used for replace default vendor-specific init commands
     lcd->init();
     lcd->reset();
     lcd->begin();
@@ -145,5 +140,5 @@ void setup()
 void loop()
 {
     Serial.println("Loop");
-    sleep(1);
+    delay(1000);
 }

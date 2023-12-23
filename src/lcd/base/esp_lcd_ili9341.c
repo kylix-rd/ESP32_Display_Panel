@@ -17,6 +17,8 @@
 #include "esp_log.h"
 #include "esp_check.h"
 
+#include "esp_lcd_custom_types.h"
+
 #include "esp_lcd_ili9341.h"
 
 static const char *TAG = "ili9341";
@@ -41,7 +43,7 @@ typedef struct {
     uint8_t fb_bits_per_pixel;
     uint8_t madctl_val; // save current value of LCD_CMD_MADCTL register
     uint8_t colmod_val; // save current value of LCD_CMD_COLMOD register
-    const ili9341_lcd_init_cmd_t *init_cmds;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds;
     uint16_t init_cmds_size;
 } ili9341_panel_t;
 
@@ -106,8 +108,8 @@ esp_err_t esp_lcd_new_panel_ili9341(const esp_lcd_panel_io_handle_t io, const es
     ili9341->reset_gpio_num = panel_dev_config->reset_gpio_num;
     ili9341->reset_level = panel_dev_config->flags.reset_active_high;
     if (panel_dev_config->vendor_config) {
-        ili9341->init_cmds = ((ili9341_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
-        ili9341->init_cmds_size = ((ili9341_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
+        ili9341->init_cmds = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds;
+        ili9341->init_cmds_size = ((esp_lcd_panel_vendor_config_t *)panel_dev_config->vendor_config)->init_cmds_size;
     }
     ili9341->base.del = panel_ili9341_del;
     ili9341->base.reset = panel_ili9341_reset;
@@ -175,9 +177,9 @@ typedef struct {
     uint8_t cmd;
     uint8_t data[16];
     uint8_t data_bytes; // Length of data in above data array; 0xFF = end of cmds.
-} esp_lcd_panel_init_cmd_t;
+} esp_lcd_panel_vendor_init_cmd_t;
 
-static const ili9341_lcd_init_cmd_t vendor_specific_init_default[] = {
+static const esp_lcd_panel_vendor_init_cmd_t vendor_specific_init_default[] = {
 //  {cmd, { data }, data_size, delay_ms}
     /* Power contorl B, power control = 0, DC_ENA = 1 */
     {0xCF, (uint8_t []){0x00, 0xAA, 0XE0}, 3, 0},
@@ -240,14 +242,14 @@ static esp_err_t panel_ili9341_init(esp_lcd_panel_t *panel)
         ili9341->colmod_val,
     }, 1), TAG, "send command failed");
 
-    const ili9341_lcd_init_cmd_t *init_cmds = NULL;
+    const esp_lcd_panel_vendor_init_cmd_t *init_cmds = NULL;
     uint16_t init_cmds_size = 0;
     if (ili9341->init_cmds) {
         init_cmds = ili9341->init_cmds;
         init_cmds_size = ili9341->init_cmds_size;
     } else {
         init_cmds = vendor_specific_init_default;
-        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(ili9341_lcd_init_cmd_t);
+        init_cmds_size = sizeof(vendor_specific_init_default) / sizeof(esp_lcd_panel_vendor_init_cmd_t);
     }
 
     bool is_cmd_overwritten = false;

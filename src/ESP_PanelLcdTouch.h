@@ -3,9 +3,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #pragma once
 
-#include <stdint.h>
+#include "lcd_touch/base/esp_lcd_touch.h"
 #include "ESP_PanelBus.h"
 
 class TouchPoint {
@@ -35,7 +36,7 @@ public:
     void swapAxes(bool en);
     void mirrorX(bool en);
     void mirrorY(bool en);
-    esp_lcd_touch_handle_t handle(void);
+    esp_lcd_touch_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);
 
     virtual void begin(void) = 0;
@@ -52,5 +53,3 @@ private:
     uint16_t y[LCD_TOUCH_MAX_POINTS];
     uint16_t z[LCD_TOUCH_MAX_POINTS];
 };
-
-#endif

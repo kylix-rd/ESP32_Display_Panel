@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "ESP_PanelPrivate"
+#include "ESP_PanelPrivate.h"
 #include "ESP_Panel_Conf_Internal.h"
 #include "ESP_Panel.h"
 
@@ -116,7 +116,7 @@ void ESP_Panel::init(void)
         .scl_gpio_num = BIT64( ESP_PANEL_LCD_3WIRE_SPI_IO_SCL),
         .sda_io_type = (panel_io_type_t)ESP_PANEL_LCD_3WIRE_SPI_SDA_USE_EXPNADER,
         .sda_gpio_num = BIT64(ESP_PANEL_LCD_3WIRE_SPI_IO_SDA),
-        .io_expander = expander->handle(),
+        .io_expander = expander->getHandle(),
     };
     esp_lcd_panel_io_3wire_spi_config_t lcd_bus_host_config = LCD_PANEL_IO_3WIRE_SPI_CONFIG(ESP_PANEL_LCD_NAME,
             line_config, ESP_PANEL_LCD_3WIRE_SPI_SCL_ACTIVE_EDGE);

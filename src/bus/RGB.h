@@ -10,7 +10,6 @@
 
 /* For now, only ESP32-S3 supports RGB interface */
 #if SOC_LCD_RGB_SUPPORTED
-#include <cstdint>
 #include "esp_lcd_panel_rgb.h"
 #include "ESP_IOExpander.h"
 #include "base/esp_lcd_panel_io_additions.h"
@@ -189,5 +188,3 @@ private:
 };
 
 #endif /* SOC_LCD_RGB_SUPPORTED */
-
-#endif
