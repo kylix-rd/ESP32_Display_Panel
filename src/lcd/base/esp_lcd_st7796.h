@@ -17,6 +17,9 @@
 extern "C" {
 #endif
 
+#define ESP_LCD_ST7796_VER_MAJOR    (1)
+#define ESP_LCD_ST7796_VER_MINOR    (2)
+#define ESP_LCD_ST7796_VER_PATCH    (2)
 /**
  * @brief Create LCD panel for model ST7796
  *

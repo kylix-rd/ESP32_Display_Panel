@@ -32,16 +32,15 @@
  * SPI Host Default Configuration
  *
  */
-/* Refer to `hal/spi_ll.h` in ESP-IDF */
+/* Refer to `hal/spi_ll.h` in SDK (ESP-IDF) */
 #ifdef CONFIG_IDF_TARGET_ESP32
-#define SPI_MAX_TRANSFER_SIZE            ((1ULL << 24) >> 3)
+#define SPI_MAX_TRANSFER_SIZE   ((1 << 24) >> 3)
 #elif CONFIG_IDF_TARGET_ESP32S2
-#define SPI_MAX_TRANSFER_SIZE            ((1ULL << 23) >> 3)
-#elif CONFIG_IDF_TARGET_ESP32S3
-#define SPI_MAX_TRANSFER_SIZE            ((1ULL << 18) >> 3)
-#elif CONFIG_IDF_TARGET_ESP32C3
-#define SPI_MAX_TRANSFER_SIZE            ((1ULL << 18) >> 3)
+#define SPI_MAX_TRANSFER_SIZE   ((1 << 23) >> 3)
+#elif CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
+#define SPI_MAX_TRANSFER_SIZE   ((1 << 18) >> 3)
 #endif
+
 #define ESP_PANEL_HOST_SPI_CONFIG_DEFAULT(sck_io, sda_io)       \
     {                                                           \
         .mosi_io_num = sda_io,                                  \
@@ -63,13 +62,13 @@ public:
     ESP_PanelHost();
     ~ESP_PanelHost();
 
-    bool addHostI2C(const i2c_config_t *host_config, i2c_port_t host_id);
+    bool addHostI2C(const i2c_config_t &host_config, i2c_port_t host_id);
     bool addHostI2C(int scl_io, int sda_io, i2c_port_t host_id);
 
-    bool addHostSPI(const spi_bus_config_t *host_config, spi_host_device_t host_id);
+    bool addHostSPI(const spi_bus_config_t &host_config, spi_host_device_t host_id);
     bool addHostSPI(int sck_io, int sda_io, spi_host_device_t host_id);
 
-    void begin(void);
+    bool begin(void);
 
 private:
     std::map<i2c_port_t, i2c_config_t> _i2c_host_config_map;

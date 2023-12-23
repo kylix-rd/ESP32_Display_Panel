@@ -19,6 +19,10 @@
 extern "C" {
 #endif
 
+#define ESP_LCD_GC9503_VER_MAJOR    (3)
+#define ESP_LCD_GC9503_VER_MINOR    (0)
+#define ESP_LCD_GC9503_VER_PATCH    (1)
+
 /**
  * @brief Create LCD panel for model GC9503
  *

@@ -8,6 +8,7 @@
 #include "soc/soc_caps.h"
 
 #if SOC_LCD_RGB_SUPPORTED
+#include "ESP_PanelLcd.h"
 #include "base/esp_lcd_custom_types.h"
 
 class ESP_PanelLcd_ST7701: public ESP_PanelLcd {

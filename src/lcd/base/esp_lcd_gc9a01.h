@@ -16,6 +16,10 @@
 extern "C" {
 #endif
 
+#define ESP_LCD_GC9A01_VER_MAJOR    (2)
+#define ESP_LCD_GC9A01_VER_MINOR    (0)
+#define ESP_LCD_GC9A01_VER_PATCH    (0)
+
 /**
  * @brief Create LCD panel for model GC9A01
  *

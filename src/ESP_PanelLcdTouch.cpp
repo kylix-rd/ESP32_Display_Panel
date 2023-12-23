@@ -56,7 +56,7 @@ bool TouchPoint::operator!=(TouchPoint p)
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t *config):
     bus(bus),
     config(*config),
-    getHandle(NULL),
+    handle(NULL),
     touch_state(false)
 {
 }
@@ -64,7 +64,7 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_conf
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height):
     bus(bus),
     config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height)),
-    getHandle(NULL),
+    handle(NULL),
     touch_state(false)
 {
 }
@@ -136,15 +136,6 @@ esp_lcd_touch_handle_t ESP_PanelLcdTouch::getHandle(void)
 {
     CHECK_NULL_GOTO(handle, err);
     return handle;
-
-err:
-    return NULL;
-}
-
-ESP_PanelBus *ESP_PanelLcdTouch::getBus(void)
-{
-    CHECK_NULL_GOTO(bus, err);
-    return bus;
 
 err:
     return NULL;

@@ -79,7 +79,7 @@ ESP_PanelBus_RGB::ESP_PanelBus_RGB(const esp_lcd_rgb_panel_config_t *rgb_config,
 
 ESP_PanelBus_RGB::~ESP_PanelBus_RGB()
 {
-    if (handle && flags.host_need_init) {
+    if (handle && host_need_init) {
         del();
     }
 }
@@ -100,22 +100,6 @@ void ESP_PanelBus_RGB::configSpiLine(bool cs_use_expaneer, bool scl_use_expander
         CHECK_NULL_RETURN(io_expander);
         spi_config.line_config.io_expander = io_expander->getHandle();
     }
-}
-
-void ESP_PanelBus_RGB::enableSpiCsUseExpander(void)
-{
-}
-
-void ESP_PanelBus_RGB::enableSpiSclUseExpander(void)
-{
-}
-
-void ESP_PanelBus_RGB::enableSpiSdaUseExpander(void)
-{
-}
-
-void ESP_PanelBus_RGB::addIOExpander(ESP_IOExpander *io_expander)
-{
 }
 
 void ESP_PanelBus_RGB::setRgbPclkFrequency(int hz)
@@ -180,7 +164,7 @@ const esp_lcd_rgb_panel_config_t *ESP_PanelBus_RGB::rgbConfig()
 
 void ESP_PanelBus_RGB::begin(void)
 {
-    if (flags.host_need_init) {
+    if (host_need_init) {
         CHECK_ERROR_RETURN(esp_lcd_new_panel_io_3wire_spi(&spi_config, &handle));
     }
 }

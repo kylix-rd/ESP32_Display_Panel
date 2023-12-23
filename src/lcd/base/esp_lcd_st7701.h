@@ -15,6 +15,10 @@
 extern "C" {
 #endif
 
+#define ESP_LCD_ST7701_VER_MAJOR    (1)
+#define ESP_LCD_ST7701_VER_MINOR    (0)
+#define ESP_LCD_ST7701_VER_PATCH    (0)
+
 /**
  * @brief Create LCD panel for model ST7701
  *

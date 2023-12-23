@@ -10,26 +10,26 @@
 #include "ESP_PanelHost.h"
 #include "ESP_PanelBus.h"
 
-#define ESP_PANEL_HOST_SPI_ID_DEFAULT                          (SPI2_HOST)
-#define SPI_PANEL_IO_CONFIG_DEFAULT(cs_io, dc_io, callback, callback_data)       \
-    {                                                           \
-        .cs_gpio_num = cs_io,                                   \
-        .dc_gpio_num = dc_io,                                   \
-        .spi_mode = 0,                                          \
-        .pclk_hz = SPI_MASTER_FREQ_40M,                         \
-        .trans_queue_depth = 10,                                \
-        .on_color_trans_done = (esp_lcd_panel_io_color_trans_done_cb_t)callback, \
-        .user_ctx = (void *)callback_data,                      \
-        .lcd_cmd_bits = 8,                                      \
-        .lcd_param_bits = 8,                                    \
-        .flags = {                                              \
-            .dc_low_on_data = 0,                                \
-            .octal_mode = 0,                                    \
-            .quad_mode = 0,                                     \
-            .sio_mode = 0,                                      \
-            .lsb_first = 0,                                     \
-            .cs_high_active = 0,                                \
-        },                                                      \
+#define ESP_PANEL_HOST_SPI_ID_DEFAULT (SPI2_HOST)
+#define SPI_PANEL_IO_CONFIG_DEFAULT(cs_io, dc_io) \
+    {                                       \
+        .cs_gpio_num = cs_io,               \
+        .dc_gpio_num = dc_io,               \
+        .spi_mode = 0,                      \
+        .pclk_hz = SPI_MASTER_FREQ_40M,     \
+        .trans_queue_depth = 10,            \
+        .on_color_trans_done = NULL,        \
+        .user_ctx = NULL,                   \
+        .lcd_cmd_bits = 8,                  \
+        .lcd_param_bits = 8,                \
+        .flags = {                          \
+            .dc_low_on_data = 0,            \
+            .octal_mode = 0,                \
+            .quad_mode = 0,                 \
+            .sio_mode = 0,                  \
+            .lsb_first = 0,                 \
+            .cs_high_active = 0,            \
+        },                                  \
     }
 
 class ESP_PanelBus_SPI: public ESP_PanelBus {

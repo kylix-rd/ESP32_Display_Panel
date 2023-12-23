@@ -43,7 +43,7 @@ esp_lcd_panel_io_handle_t ESP_PanelBus::getHandle(void)
     return handle;
 }
 
-int ESP_PanelBus::type(void)
+ESP_PanelBusType_t ESP_PanelBus::getHostType(void)
 {
     return host_type;
 }

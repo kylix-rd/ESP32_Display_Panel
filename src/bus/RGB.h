@@ -50,7 +50,7 @@
                                        d10_io, d11_io, d12_io, d13_io, d14_io, d15_io, de_io, disp_io) \
     {                                                                                   \
         .clk_src = LCD_CLK_SRC_DEFAULT,                                                 \
-        .timings = RGB_TIMING_CONFIG_DEFAULT(width, height),                            \
+        .timings = RGB_16BIT_TIMING_CONFIG_DEFAULT(width, height),                      \
         .data_width = 16,                                                               \
         .bits_per_pixel = 16,                                                           \
         .num_fbs = 1,                                                                   \
@@ -97,7 +97,7 @@
                                       d2_io, d3_io, d4_io, d5_io, d6_io, d7_io, de_io, disp_io) \
     {                                                                       \
         .clk_src = LCD_CLK_SRC_DEFAULT,                                     \
-        .timings = RGB_TIMING_CONFIG_DEFAULT(width, height),                \
+        .timings = RGB_8BIT_TIMING_CONFIG_DEFAULT(width, height),           \
         .data_width = 8,                                                    \
         .bits_per_pixel = 24,                                               \
         .num_fbs = 1,                                                       \
@@ -110,7 +110,7 @@
         .disp_gpio_num = disp_io,                                           \
         .data_gpio_nums = {                                                 \
             d0_io, d1_io, d2_io, d3_io, d4_io, d5_io, d6_io, d7_io,         \
-            d8_io, d9_io, d10_io, d11_io, d12_io, d13_io, d14_io, d15_io    \
+            -1, -1, -1, -1, -1, -1, -1, -1,                                 \
         },                                                                  \
         .flags = {                                                          \
             .fb_in_psram = 1,                                               \

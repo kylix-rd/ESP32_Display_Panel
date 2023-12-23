@@ -26,7 +26,7 @@ public:
     void writeCommandParameter(int lcd_cmd, const void *param, int param_size);
     void writeCommandColor(int lcd_cmd, const void *color, int color_size);
 
-    ESP_PanelBusType_t type(void);
+    ESP_PanelBusType_t getHostType(void);
     esp_lcd_panel_io_handle_t getHandle(void);
 
 protected:

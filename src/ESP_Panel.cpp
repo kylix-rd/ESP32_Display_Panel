@@ -3,15 +3,15 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include <iostream>
-#include <stdint.h>
-#include "driver/gpio.h"
-#include "esp_log.h"
-#include "ESP_PanelPrivate.h"
 #include "ESP_Panel_Conf_Internal.h"
-#include "ESP_Panel.h"
 
 #ifndef ESP_PANEL_CONF_IGNORE
+#include <iostream>
+#include "esp_log.h"
+#include "driver/gpio.h"
+#include "ESP_PanelPrivate.h"
+#include "ESP_Panel.h"
+
 static const char *TAG = "ESP_Panel";
 
 #define _CREATE_BUS_INIT_HOST(name, host_config, io_config, host_id)  ESP_PanelBus_##name(host_config, io_config, host_id)
@@ -87,19 +87,12 @@ void ESP_Panel::init(void)
         .lcd_cmd_bits = ESP_PANEL_LCD_SPI_CMD_BITS,
         .lcd_param_bits = ESP_PANEL_LCD_SPI_PARAM_BITS,
         .flags = {
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-            .dc_as_cmd_phase = 0,
-            .dc_low_on_data = 0,
-            .octal_mode = 0,
-            .lsb_first = 0,
-#else
             .dc_low_on_data = 0,
             .octal_mode = 0,
             .quad_mode = 0,
             .sio_mode = 0,
             .lsb_first = 0,
             .cs_high_active = 0,
-#endif
         },
     };
 #elif ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_I80
@@ -189,12 +182,8 @@ void ESP_Panel::init(void)
     // Panel device config
     esp_lcd_panel_dev_config_t lcd_config = {
         .reset_gpio_num = ESP_PANEL_LCD_IO_RST,
-#if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-        .color_space = (esp_lcd_color_space_t)ESP_PANEL_LCD_RGB_ORDER,
-#else
         .rgb_ele_order = (lcd_rgb_element_order_t)ESP_PANEL_LCD_RGB_ORDER,
         .data_endian = LCD_RGB_DATA_ENDIAN_BIG,
-#endif
         .bits_per_pixel = ESP_PANEL_LCD_COLOR_BITS,
         .flags = {
             .reset_active_high = ESP_PANEL_LCD_RST_LEVEL,
@@ -442,3 +431,4 @@ void ESP_Panel::runExtraBoardInit(void)
     usleep(100);
 #endif
 }
+#endif

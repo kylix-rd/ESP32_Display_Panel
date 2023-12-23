@@ -10,6 +10,8 @@
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_rgb.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #include "lcd/base/esp_lcd_custom_types.h"
 #include "ESP_PanelBus.h"
 
@@ -74,7 +76,7 @@ protected:
     ESP_PanelBus *bus;
     esp_lcd_panel_dev_config_t panel_config;
     esp_lcd_panel_vendor_config_t vendor_config;
-    esp_lcd_panel_handle_t panel_handle;
+    esp_lcd_panel_handle_t handle;
 
 private:
     static bool onDrawBitmapFinish(void *panel_io, void *edata, void *user_ctx);

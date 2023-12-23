@@ -16,6 +16,10 @@
 extern "C" {
 #endif
 
+#define ESP_LCD_ILI9341_VER_MAJOR    (2)
+#define ESP_LCD_ILI9341_VER_MINOR    (0)
+#define ESP_LCD_ILI9341_VER_PATCH    (1)
+
 /**
  * @brief Create LCD panel for model ILI9341
  *

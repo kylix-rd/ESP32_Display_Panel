@@ -14,15 +14,6 @@
 extern "C" {
 #endif
 
-/* Refer to `hal/spi_ll.h` in SDK */
-#ifdef CONFIG_IDF_TARGET_ESP32
-#define SPI_MAX_TRANSFER_SIZE   ((1 << 24) >> 3)
-#elif CONFIG_IDF_TARGET_ESP32S2
-#define SPI_MAX_TRANSFER_SIZE   ((1 << 23) >> 3)
-#elif CONFIG_IDF_TARGET_ESP32S3 || CONFIG_IDF_TARGET_ESP32C3 || CONFIG_IDF_TARGET_ESP32C6 || CONFIG_IDF_TARGET_ESP32H2
-#define SPI_MAX_TRANSFER_SIZE   ((1 << 18) >> 3)
-#endif
-
 /**
  * @brief LCD panel initialization commands.
  *
