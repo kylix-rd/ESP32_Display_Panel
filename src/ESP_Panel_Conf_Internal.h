@@ -989,6 +989,15 @@
         #endif
     #endif /* ESP_PANEL_LCD_BL_USE_PWM */
 #endif /* ESP_PANEL_USE_BL */
+
+#ifndef ESP_PANEL_ENABLE_DEBUG_LOG
+    #ifdef CONFIG_ESP_PANEL_ENABLE_DEBUG_LOG
+        #define ESP_PANEL_ENABLE_DEBUG_LOG    CONFIG_ESP_PANEL_ENABLE_DEBUG_LOG
+    #else
+        #define ESP_PANEL_ENABLE_DEBUG_LOG    (0)
+    #endif
+#endif
+
 // *INDENT-OFF*
 
 #endif /* ESP_PANEL_CONF_IGNORE */

@@ -7,8 +7,19 @@
 
 #include <assert.h>
 #include "esp_check.h"
-#include "esp_log.h"
 #include "ESP_Panel_Conf_Internal.h"
+#if ESP_PANEL_ENABLE_DEBUG_LOG
+#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
+#endif
+#include "esp_log.h"
+
+#if ESP_PANEL_ENABLE_DEBUG_LOG
+#define ENABLE_TAG_PRINT_DEBUG_LOG(tag) do {   \
+        esp_log_level_set(tag, ESP_LOG_DEBUG); \
+    } while(0)
+#else
+#define ENABLE_TAG_PRINT_DEBUG_LOG(tag)
+#endif
 
 #if ESP_PANEL_CHECK_RESULT_ASSERT
 #define CHECK_NULL_RETURN(x)                assert(x)

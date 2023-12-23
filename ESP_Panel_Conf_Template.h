@@ -7,8 +7,14 @@
 #pragma once
 
 // *INDENT-OFF*
+/* Set to 1 if assert on error. Otherwise print error message and jump */
+#define ESP_PANEL_CHECK_RESULT_ASSERT       (0)         // 0/1
+
+/* Set to 1 if print debug message */
+#define ESP_PANEL_ENABLE_DEBUG_LOG          (0)         // 0/1
+
 /* Set to 0 if use a custom board */
-#define ESP_PANEL_USE_SUPPORTED_BOARD   (1)     // 0/1
+#define ESP_PANEL_USE_SUPPORTED_BOARD       (1)         // 0/1
 
 #if ESP_PANEL_USE_SUPPORTED_BOARD
 /*
@@ -274,11 +280,6 @@
     #define ESP_PANEL_LCD_BL_PWM_FREQ_HZ        (5000)
 #endif /* ESP_PANEL_LCD_BL_USE_PWM */
 #endif /* ESP_PANEL_USE_BL */
-
-/*-------------------------------- Others --------------------------------*/
-/* Set to 1 if assert on error. Otherwise return error code */
-#define ESP_PANEL_CHECK_RESULT_ASSERT       (0)         // 0/1
-
 #endif /* ESP_PANEL_USE_SUPPORTED_BOARD */
 // *INDENT-OFF*
 

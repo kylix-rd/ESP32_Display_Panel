@@ -62,13 +62,14 @@ public:
     ESP_PanelHost();
     ~ESP_PanelHost();
 
+    void init();
+    bool begin(void);
+
     bool addHostI2C(const i2c_config_t &host_config, i2c_port_t host_id);
     bool addHostI2C(int scl_io, int sda_io, i2c_port_t host_id);
 
     bool addHostSPI(const spi_bus_config_t &host_config, spi_host_device_t host_id);
     bool addHostSPI(int sck_io, int sda_io, spi_host_device_t host_id);
-
-    bool begin(void);
 
 private:
     std::map<i2c_port_t, i2c_config_t> _i2c_host_config_map;
