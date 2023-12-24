@@ -402,14 +402,6 @@ void ESP_Panel::del(void)
     }
 }
 
-bool ESP_Panel::addIOExpander(ESP_IOExpander *expander)
-{
-    CHECK_NULL_RET(expander, false, "Invalid IO expander");
-    this->expander = expander;
-
-    return true;
-}
-
 ESP_PanelLcd *ESP_Panel::getLcd(void)
 {
     return lcd;
@@ -429,6 +421,16 @@ ESP_IOExpander *ESP_Panel::getExpander(void)
 {
     return expander;
 }
+
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
+bool ESP_Panel::addIOExpander(ESP_IOExpander *expander)
+{
+    CHECK_NULL_RET(expander, false, "Invalid IO expander");
+    this->expander = expander;
+
+    return true;
+}
+#endif
 
 void ESP_Panel::runExtraBoardInit(void)
 {
