@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
 #include "ESP_Panel_Conf_Internal.h"
 
 #ifndef ESP_PANEL_CONF_IGNORE
@@ -48,19 +49,33 @@ static const char *TAG = "ESP_Panel";
 #define _CREATE_LCD_TOUCH(name, bus, cfg) ESP_PanelLcdTouch_##name(bus, cfg)
 #define CREATE_LCD_TOUCH(name, bus, cfg)  _CREATE_LCD_TOUCH(name, bus, cfg)
 
+#define _CREATE_EXPANDER(name, host_id, address) ESP_IOExpander_##name(host_id, address)
+#define CREATE_EXPANDER(name, host_id, address)  _CREATE_EXPANDER(name, host_id, address)
+
 /**
  * Macros for adding host of bus
  *
  */
-#define _ADD_BUS_HOST(name, host, config, id) host.addHost##name(config, id)
-#define ADD_BUS_HOST(name, host, config, id)  _ADD_BUS_HOST(name, host, config, id)
+#define _ADD_HOST(name, host, config, id) host.addHost##name(config, id)
+#define ADD_HOST(name, host, config, id)  _ADD_HOST(name, host, config, id)
 
-ESP_Panel::ESP_Panel(void):
-    lcd(NULL),
-    lcd_touch(NULL),
-    backlight(NULL),
-    expander(NULL)
+ESP_Panel::ESP_Panel(void)
 {
+#if ESP_PANEL_USE_LCD
+    lcd = NULL;
+#endif
+
+#if ESP_PANEL_USE_LCD_TOUCH
+    lcd_touch = NULL;
+#endif
+
+#if ESP_PANEL_USE_BL
+    backlight = NULL;
+#endif
+
+#if ESP_PANEL_USE_EXPANDER
+    expander = NULL;
+#endif
 }
 
 ESP_Panel::~ESP_Panel(void)
@@ -287,6 +302,20 @@ void ESP_Panel::init(void)
     };
 #endif /* ESP_PANEL_USE_BL */
 
+#if ESP_PANEL_USE_EXPANDER && !ESP_PANEL_EXPANDER_SKIP_INIT_HOST
+    i2c_config_t expander_host_config = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = ESP_PANEL_LCD_TOUCH_I2C_IO_SDA,
+        .scl_io_num = ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
+        .sda_pullup_en = ESP_PANEL_LCD_TOUCH_I2C_SDA_PULLUP,
+        .scl_pullup_en = ESP_PANEL_LCD_TOUCH_I2C_SCL_PULLUP,
+        .master = {
+            .clk_speed = ESP_PANEL_LCD_TOUCH_I2C_CLK_HZ,
+        },
+        .clk_flags = I2C_SCLK_SRC_FLAG_FOR_NOMAL,
+    };
+#endif
+
     ESP_PanelHost host;
     host.init();
 
@@ -297,15 +326,13 @@ void ESP_Panel::init(void)
 #if ESP_PANEL_USE_LCD
 #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
 #if ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
+    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, rgb_config, ESP_PANEL_LCD_BUS_HOST);
 #else
     lcd_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_bus_host_config, rgb_config,
                                        ESP_PANEL_LCD_BUS_HOST);
 #endif
-#else
-#if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-    ADD_BUS_HOST(ESP_PANEL_LCD_BUS_NAME, host, lcd_bus_host_config, ESP_PANEL_LCD_BUS_HOST);
-#endif
+#elif !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+    ADD_HOST(ESP_PANEL_LCD_BUS_NAME, host, lcd_bus_host_config, ESP_PANEL_LCD_BUS_HOST);
 #endif
     CHECK_NULL_GOTO(lcd_bus, err);
 
@@ -317,7 +344,7 @@ void ESP_Panel::init(void)
     // Create LCD Touch bus
 #if ESP_PANEL_USE_LCD_TOUCH
 #if !ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST
-    ADD_BUS_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, host, lcd_touch_host_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
+    ADD_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, host, lcd_touch_host_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
 #endif /* ESP_PANEL_LCD_TOUCH_BUS_SKIP_INIT_HOST */
 
     lcd_touch_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_TOUCH_BUS_NAME, lcd_touch_panel_io_config,
@@ -335,35 +362,43 @@ void ESP_Panel::init(void)
     CHECK_NULL_GOTO(backlight, err);
 #endif /* ESP_PANEL_LCD_IO_BL */
 
+    // Create IO expander
+#if ESP_PANEL_USE_EXPANDER
+    if (expander == NULL) {
+#if !ESP_PANEL_EXPANDER_SKIP_INIT_HOST
+        ADD_HOST(I2C, host, expander_host_config, ESP_PANEL_LCD_TOUCH_BUS_HOST);
+#endif
+        expander = new CREATE_EXPANDER(ESP_PANEL_EXPANDER_NAME, ESP_PANEL_EXPANDER_HOST, ESP_PANEL_EXPANDER_ADDRESS);
+    }
+#endif
+
     host.begin();
 
     return;
 
 err:
-    delete lcd_bus;
+    // delete lcd_bus;
     delete lcd;
-    delete lcd_touch_bus;
-    delete lcd_touch;
-    delete backlight;
+    // delete lcd_touch_bus;
+    // delete lcd_touch;
+    // delete backlight;
 }
 
 void ESP_Panel::begin(void)
 {
+#if ESP_PANEL_USE_EXPANDER
+    expander->begin();
+#endif
+
     runExtraBoardInit();
 
-    if (lcd->getBus()) {
-        lcd->getBus()->begin();
-    }
-    if (lcd) {
-        lcd->init();
-    }
-    if (lcd_touch->getBus()) {
-        lcd_touch->getBus()->begin();
-    }
-    if (backlight) {
-        backlight->init();
-    }
-
+#if ESP_PANEL_USE_LCD
+#if ESP_PANEL_USE_EXPANDER && ((ESP_PANEL_LCD_3WIRE_SPI_CS_USE_EXPNADER) || (ESP_PANEL_LCD_3WIRE_SPI_SCL_USE_EXPNADER) || \
+                               (ESP_PANEL_LCD_3WIRE_SPI_SDA_USE_EXPNADER))
+    static_cast<ESP_PanelBus_RGB *>(lcd->getBus())->setSpiExpander(expander);
+#endif
+    lcd->getBus()->begin();
+    lcd->init();
     if (lcd) {
         lcd->reset();
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
@@ -376,36 +411,43 @@ void ESP_Panel::begin(void)
         lcd->displayOn();
 #endif
     }
-    if (lcd_touch) {
-        lcd_touch->begin();
-    }
-    if (backlight) {
-        backlight->on();
-    }
+#endif
+
+#if ESP_PANEL_USE_LCD_TOUCH
+    lcd_touch->getBus()->begin();
+    lcd_touch->begin();
+#endif
+
+#if ESP_PANEL_BACKLIGHT
+    backlight->init();
+    backlight->on();
+#endif
 }
 
 void ESP_Panel::del(void)
 {
-    if (lcd) {
-        delete lcd->getBus();
-        delete lcd;
-        lcd = NULL;
-    }
-    if (lcd_touch) {
-        delete lcd_touch->getBus();
-        delete lcd_touch;
-        lcd_touch = NULL;
-    }
-    if (backlight) {
-        delete backlight;
-        backlight = NULL;
-    }
+    // if (lcd) {
+    //     delete lcd->getBus();
+    //     delete lcd;
+    //     lcd = NULL;
+    // }
+    // if (lcd_touch) {
+    //     delete lcd_touch->getBus();
+    //     delete lcd_touch;
+    //     lcd_touch = NULL;
+    // }
+    // if (backlight) {
+    //     delete backlight;
+    //     backlight = NULL;
+    // }
 }
 
+#if ESP_PANEL_USE_LCD
 ESP_PanelLcd *ESP_Panel::getLcd(void)
 {
     return lcd;
 }
+#endif
 
 ESP_PanelLcdTouch *ESP_Panel::getLcdTouch(void)
 {
@@ -422,7 +464,6 @@ ESP_IOExpander *ESP_Panel::getExpander(void)
     return expander;
 }
 
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
 bool ESP_Panel::addIOExpander(ESP_IOExpander *expander)
 {
     CHECK_NULL_RET(expander, false, "Invalid IO expander");
@@ -430,7 +471,6 @@ bool ESP_Panel::addIOExpander(ESP_IOExpander *expander)
 
     return true;
 }
-#endif
 
 void ESP_Panel::runExtraBoardInit(void)
 {

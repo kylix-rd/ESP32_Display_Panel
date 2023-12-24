@@ -19,7 +19,9 @@
         esp_log_level_set(TAG, ESP_LOG_DEBUG); \
     } while(0)
 #else
-#define ENABLE_TAG_PRINT_DEBUG_LOG()
+#define ENABLE_TAG_PRINT_DEBUG_LOG() do {        \
+        esp_log_level_set(TAG, ESP_LOG_WARNING); \
+    } while(0)
 #endif
 
 #if ESP_PANEL_CHECK_RESULT_ASSERT

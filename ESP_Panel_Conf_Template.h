@@ -292,7 +292,6 @@
 /*===================================== IO Expander Related =====================================*/
 /* Set to 0 if not using IO Expander */
 #define ESP_PANEL_USE_EXPANDER              (0)         // 0/1
-
 #if ESP_PANEL_USE_EXPANDER
 /**
  * IO expander IC name. Choose one of the following:
@@ -308,7 +307,6 @@
 
 //  If set to 1, the driver will skip to initialize the corresponding host. Users need to initialize the host in advance.
 #define ESP_PANEL_EXPANDER_SKIP_INIT_HOST       (0)     // 0/1
-
 // Host parameters
 #if !ESP_PANEL_EXPANDER_SKIP_INIT_HOST
     #define ESP_PANEL_EXPANDER_HOST_ID          (0)
@@ -318,6 +316,7 @@
     #define ESP_PANEL_EXPANDER_I2C_IO_SCL       (18)
     #define ESP_PANEL_EXPANDER_I2C_IO_SDA       (8)
 #endif
+#endif /* ESP_PANEL_USE_EXPANDER */
 
 #endif /* ESP_PANEL_USE_SUPPORTED_BOARD */
 // *INDENT-OFF*

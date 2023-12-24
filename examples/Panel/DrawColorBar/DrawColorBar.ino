@@ -41,27 +41,27 @@ void setup()
 
     panel = new ESP_Panel();
 
-#if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
-    /**
-     * These development boards require the use of an IO expander to configure the screen,
-     * so it needs to be initialized in advance and registered with the panel for use.
-     *
-     */
-    Serial.println("Initialize IO expander");
-    /* Initialize IO expander */
-    ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST,
-                                                               ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000,
-                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
-                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
-    expander->init();
-    expander->begin();
-#endif
+// #if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
+//     /**
+//      * These development boards require the use of an IO expander to configure the screen,
+//      * so it needs to be initialized in advance and registered with the panel for use.
+//      *
+//      */
+//     Serial.println("Initialize IO expander");
+//     /* Initialize IO expander */
+//     ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST,
+//                                                                ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000,
+//                                                                ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
+//                                                                ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
+//     expander->init();
+//     expander->begin();
+// #endif
 
     Serial.println("Initialize panel");
     /* Initialize bus and device of panel */
     panel->init();
 
-    static_cast<ESP_PanelBus_RGB *>(panel->getLcd()->getBus())->setSpiExpander(expander);
+    // static_cast<ESP_PanelBus_RGB *>(panel->getLcd()->getBus())->setSpiExpander(expander);
 
     /* Start panel */
     panel->begin();

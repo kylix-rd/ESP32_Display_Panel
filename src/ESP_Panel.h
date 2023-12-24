@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "ESP_IOExpander.h"
+#include "ESP_IOExpander_Library.h"
 #include "ESP_PanelBacklight.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
@@ -22,23 +22,39 @@ public:
     void begin(void);
     void del(void);
 
+#if ESP_PANEL_USE_LCD
     ESP_PanelLcd *getLcd(void);
-    ESP_PanelLcdTouch *getLcdTouch(void);
-    ESP_PanelBacklight *getBacklight(void);
+#endif
 
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
-    bool addIOExpander(ESP_IOExpander *expander);
+#if ESP_PANEL_USE_LCD_TOUCH
+    ESP_PanelLcdTouch *getLcdTouch(void);
+#endif
+
+#if ESP_PANEL_USE_BL
+    ESP_PanelBacklight *getBacklight(void);
+#endif
+
+#if ESP_PANEL_USE_EXPANDER
+    void addIOExpander(ESP_IOExpander *expander);
     ESP_IOExpander *getExpander(void);
 #endif
 
 private:
     void runExtraBoardInit(void);
 
+#if ESP_PANEL_USE_LCD
     ESP_PanelLcd *lcd;
-    ESP_PanelLcdTouch *lcd_touch;
-    ESP_PanelBacklight *backlight;
+#endif
 
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
+#if ESP_PANEL_USE_LCD_TOUCH
+    ESP_PanelLcdTouch *lcd_touch;
+#endif
+
+#if ESP_PANEL_USE_BL
+    ESP_PanelBacklight *backlight;
+#endif
+
+#if ESP_PANEL_USE_EXPANDER
     ESP_IOExpander *expander;
 #endif
 };
