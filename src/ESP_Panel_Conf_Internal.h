@@ -47,8 +47,8 @@
 #endif
 
 #ifndef ESP_PANEL_CONF_IGNORE
+#include "esp_idf_version.h"
 #include "soc/soc_caps.h"
-
 #include "ESP_PanelBus.h"
 
 #ifndef ESP_PANEL_USE_SUPPORTED_BOARD
@@ -256,7 +256,7 @@
         #endif
 
         #if ESP_IDF_VERSION < ESP_IDF_VERSION_VAL(5, 0, 0)
-            #error "LCD RGB bus here is only supported in arduino-esp32 v3.x.x (ESP-IDF v5.0), please update the SDK."
+            #error "LCD RGB bus here is only supported in arduino-esp32 v3.x.x (ESP-IDF v5.1), please update the SDK."
         #endif
 
         #define ESP_PANEL_LCD_BUS_NAME      RGB

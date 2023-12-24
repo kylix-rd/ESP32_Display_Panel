@@ -53,7 +53,7 @@ public:
 #endif
 
     virtual void init(void) = 0;
-    void begin(void);
+    bool begin(void);
     void reset(void);
     void del(void);
     void drawBitmap(int x_start, int y_start, int x_end, int y_end, const void *color_data);

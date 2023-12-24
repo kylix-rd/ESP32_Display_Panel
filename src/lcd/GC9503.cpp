@@ -33,6 +33,8 @@ ESP_PanelLcd_GC9503::~ESP_PanelLcd_GC9503()
 
 void ESP_PanelLcd_GC9503::init(void)
 {
+    ENABLE_TAG_PRINT_DEBUG_LOG();
+
     CHECK_NULL_RETURN(bus);
     CHECK_ERROR_RETURN(esp_lcd_new_panel_gc9503(bus->getHandle(), &panel_config, &handle));
 }

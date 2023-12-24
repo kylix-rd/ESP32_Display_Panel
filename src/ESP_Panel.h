@@ -25,7 +25,11 @@ public:
     ESP_PanelLcd *getLcd(void);
     ESP_PanelLcdTouch *getLcdTouch(void);
     ESP_PanelBacklight *getBacklight(void);
+
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
+    bool addIOExpander(ESP_IOExpander *expander);
     ESP_IOExpander *getExpander(void);
+#endif
 
 private:
     void runExtraBoardInit(void);
@@ -33,7 +37,10 @@ private:
     ESP_PanelLcd *lcd;
     ESP_PanelLcdTouch *lcd_touch;
     ESP_PanelBacklight *backlight;
+
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
     ESP_IOExpander *expander;
+#endif
 };
 
 #endif

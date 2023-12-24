@@ -167,6 +167,7 @@ public:
     ~ESP_PanelBus_RGB() override;
 
     void configSpiLine(bool cs_use_expaneer, bool scl_use_expander, bool sda_use_expander, ESP_IOExpander *io_expander);
+    void setSpiExpander(ESP_IOExpander *io_expander);
 
     void setRgbPclkFrequency(int hz);
     void setRgbResolution(int width, int height);

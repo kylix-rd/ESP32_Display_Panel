@@ -10,9 +10,9 @@
 #include "freertos/semphr.h"
 #include "driver/spi_master.h"
 #include "soc/soc_caps.h"
+#include "bus/RGB.h"
 #include "ESP_PanelPrivate.h"
 #include "ESP_PanelBus.h"
-#include "bus/RGB.h"
 #include "ESP_PanelLcd.h"
 
 #define CALLBACK_DATA_DEFAULT()             \
@@ -34,6 +34,7 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, uint8_t color_bits, int rst_io,
     callback_data(CALLBACK_DATA_DEFAULT())
 {
 #if SOC_LCD_RGB_SUPPORTED
+    /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
     if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
         const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
         vendor_config.rgb_config = rgb_config;
@@ -50,10 +51,19 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &
     sem_draw_bitmap_finish(NULL),
     callback_data(CALLBACK_DATA_DEFAULT())
 {
+    /* Save vendor configuration to local and register the local one into panel configuration */
     if (panel_config.vendor_config != NULL) {
         vendor_config = *(esp_lcd_panel_vendor_config_t *)panel_config.vendor_config;
     }
     this->panel_config.vendor_config = &vendor_config;
+
+#if SOC_LCD_RGB_SUPPORTED
+    /* Retrieve RGB configuration from the bus and register it into the vendor configuration */
+    if (bus->getType() == ESP_PANEL_BUS_TYPE_RGB) {
+        const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
+        vendor_config.rgb_config = rgb_config;
+    }
+#endif
 }
 
 void ESP_PanelLcd::setColorBits(int bits_per_pixel)
@@ -88,34 +98,45 @@ void ESP_PanelLcd::enableAutoReleaseBus(void)
 }
 #endif
 
-void ESP_PanelLcd::begin(void)
+bool ESP_PanelLcd::begin(void)
 {
-    CHECK_NULL_RETURN(handle);
-    CHECK_ERROR_RETURN(esp_lcd_panel_init(handle));
+    CHECK_NULL_RET(handle, false, "Invalid handle");
+    CHECK_NULL_RET(bus, false, "Invalid bus");
 
+    /* Initialize LCD panel */
+    CHECK_ERR_RET(esp_lcd_panel_init(handle), false, "Init panel failed");
+
+    /* For non-RGB interface, create Semaphore for using API `drawBitmapWaitUntilFinish()` */
     if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
         sem_draw_bitmap_finish = xSemaphoreCreateBinary();
-        CHECK_NULL_RETURN(sem_draw_bitmap_finish);
+        CHECK_NULL_RET(sem_draw_bitmap_finish, false, "Create semaphore failed");
     }
 
+    /* Register transimit done callback for non-RGB interface and RGB interface */
     if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
         esp_lcd_panel_io_callbacks_t io_cb = {
             .on_color_trans_done = (esp_lcd_panel_io_color_trans_done_cb_t)onDrawBitmapFinish,
         };
-        esp_lcd_panel_io_register_event_callbacks(bus->getHandle(), &io_cb, &callback_data);
+        CHECK_ERR_RET(esp_lcd_panel_io_register_event_callbacks(bus->getHandle(), &io_cb, &callback_data), false,
+                      "Register IO callback failed");
     }
 #if SOC_LCD_RGB_SUPPORTED
     else {
         const esp_lcd_rgb_panel_config_t *rgb_config = static_cast<ESP_PanelBus_RGB *>(bus)->rgbConfig();
         esp_lcd_rgb_panel_event_callbacks_t rgb_event_cb = { NULL };
         if (rgb_config->bounce_buffer_size_px == 0) {
+            // When bounce buffer is disabled, use `on_vsync` callback to notify draw bitmap finish
             rgb_event_cb.on_vsync = (esp_lcd_rgb_panel_vsync_cb_t)onDrawBitmapFinish;
         } else {
+            // When bounce buffer is enabled, use `on_bounce_frame_finish` callback to notify draw bitmap finish
             rgb_event_cb.on_bounce_frame_finish = (esp_lcd_rgb_panel_bounce_buf_finish_cb_t)onDrawBitmapFinish;
         }
-        CHECK_ERROR_RETURN(esp_lcd_rgb_panel_register_event_callbacks(handle, &rgb_event_cb, &callback_data));
+        CHECK_ERR_RET(esp_lcd_rgb_panel_register_event_callbacks(handle, &rgb_event_cb, &callback_data),
+                      false, "Register RGB callback failed");
     }
 #endif
+
+    return true;
 }
 
 void ESP_PanelLcd::reset(void)

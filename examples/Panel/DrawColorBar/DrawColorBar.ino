@@ -55,15 +55,13 @@ void setup()
                                                                ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
     expander->init();
     expander->begin();
-    /* Add into panel */
-    panel->addIOExpander(expander);
 #endif
 
     Serial.println("Initialize panel");
     /* Initialize bus and device of panel */
     panel->init();
 
-    panel->getLcd()->setInitCommands(NULL, 0);
+    static_cast<ESP_PanelBus_RGB *>(panel->getLcd()->getBus())->setSpiExpander(expander);
 
     /* Start panel */
     panel->begin();

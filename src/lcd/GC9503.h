@@ -8,8 +8,9 @@
 #include "soc/soc_caps.h"
 
 #if SOC_LCD_RGB_SUPPORTED
-#include "ESP_PanelLcd.h"
 #include "base/esp_lcd_custom_types.h"
+#include "base/esp_lcd_gc9503.h"
+#include "ESP_PanelLcd.h"
 
 class ESP_PanelLcd_GC9503: public ESP_PanelLcd {
 public:

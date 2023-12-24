@@ -30,10 +30,10 @@
  * LCD bus type. Choose one of the following:
  *      - 0: I2C (not supported yet)
  *      - 1: SPI
- *      - 2: I80 (not supported yet)
- *      - 3: RGB
+ *      - 2: RGB
+ *      - 3: I80 (not supported yet)
  */
-#define ESP_PANEL_LCD_BUS_TYPE      (3)
+#define ESP_PANEL_LCD_BUS_TYPE      (2)
 /**
  * LCD bus parameters.
  *

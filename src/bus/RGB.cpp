@@ -109,6 +109,12 @@ void ESP_PanelBus_RGB::configSpiLine(bool cs_use_expaneer, bool scl_use_expander
     }
 }
 
+void ESP_PanelBus_RGB::setSpiExpander(ESP_IOExpander *io_expander)
+{
+    CHECK_NULL_RETURN(io_expander);
+    spi_config.line_config.io_expander = io_expander->getHandle();
+}
+
 void ESP_PanelBus_RGB::setRgbPclkFrequency(int hz)
 {
     CHECK_FALSE_RETURN(hz > 0);
@@ -177,6 +183,8 @@ bool ESP_PanelBus_RGB::begin(void)
         CHECK_ERR_RET(esp_lcd_new_panel_io_3wire_spi(&spi_config, &handle), false, "Create panel io failed");
         ESP_LOGD(TAG, "Create panel io @%p", handle);
     }
+
+    return true;
 }
 
 #endif /* SOC_LCD_RGB_SUPPORTED */

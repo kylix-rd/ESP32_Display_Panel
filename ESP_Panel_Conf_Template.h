@@ -71,8 +71,9 @@
  * LCD bus type. Choose one of the following:
  *      - 0: I2C (not supported yet)
  *      - 1: SPI
- *      - 2: I80 (not supported yet)
- *      - 3: RGB (only supported for ESP32-S3 and only available when using arduino-esp32 v3.x.x)
+ *      - 2: RGB (only supported for ESP32-S3)
+ *      - 3: I80 (not supported yet)
+ *      - 4: QSPI (not supported yet)
  */
 #define ESP_PANEL_LCD_BUS_TYPE      (1)
 /**
