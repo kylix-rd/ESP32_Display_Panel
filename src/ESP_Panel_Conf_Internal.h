@@ -14,6 +14,9 @@
     #ifdef CONFIG_ESP_PANEL_CONF_SKIP
         #define ESP_PANEL_CONF_SKIP
     #endif
+    #ifdef CONFIG_ESP_PANEL_BOARD_SKIP
+        #define ESP_PANEL_BOARD_SKIP
+    #endif
 #endif
 
 /* If "ESP_Panel_Conf.h" is available from here, try to use it later */
@@ -46,6 +49,36 @@
     #endif
 #endif
 
+/* If "ESP_Panel_Board.h" is available from here, try to use it later */
+#ifdef __has_include
+    #if __has_include("ESP_Panel_Board.h")
+        #ifndef ESP_PANEL_BOARD_INCLUDE_SIMPLE
+            #define ESP_PANEL_BOARD_INCLUDE_SIMPLE
+        #endif
+    #elif __has_include("../../ESP_Panel_Board.h")
+        #ifndef ESP_PANEL_BOARD_INCLUDE_OUTSIDE
+            #define ESP_PANEL_BOARD_INCLUDE_OUTSIDE
+        #endif
+    #endif
+#endif
+
+/* If "ESP_Panel_Board.h" is not skipped, include it */
+#ifndef ESP_PANEL_BOARD_SKIP
+    #ifdef ESP_PANEL_BOARD_PATH                           /* If there is a path defined for "ESP_Panel_Board.h" use it */
+        #define __TO_STR_AUX(x) #x
+        #define __TO_STR(x) __TO_STR_AUX(x)
+        #include __TO_STR(ESP_PANEL_BOARD_PATH)
+        #undef __TO_STR_AUX
+        #undef __TO_STR
+    #elif defined(ESP_PANEL_BOARD_INCLUDE_SIMPLE)         /* Or simply include if "ESP_Panel_Board.h" is available */
+        #include "ESP_Panel_Board.h"
+    #elif defined(ESP_PANEL_BOARD_INCLUDE_OUTSIDE)
+        #include "../../ESP_Panel_Board.h"                /* Or include if "../../ESP_Panel_Board.h" is available */
+    #else
+        #define ESP_PANEL_BOARD_IGNORE                    /* Or ignore all configurations if none of the above is available */
+    #endif
+#endif
+
 #ifndef ESP_PANEL_CHECK_RESULT_ASSERT
     #ifdef CONFIG_ESP_PANEL_CHECK_RESULT_ASSERT
         #define ESP_PANEL_CHECK_RESULT_ASSERT    CONFIG_ESP_PANEL_CHECK_RESULT_ASSERT
@@ -54,11 +87,11 @@
     #endif
 #endif
 
-#ifndef ESP_PANEL_ENABLE_DEBUG_LOG
-    #ifdef CONFIG_ESP_PANEL_ENABLE_DEBUG_LOG
-        #define ESP_PANEL_ENABLE_DEBUG_LOG    CONFIG_ESP_PANEL_ENABLE_DEBUG_LOG
+#ifndef ESP_PANEL_ENABLE_LOG
+    #ifdef CONFIG_ESP_PANEL_ENABLE_LOG
+        #define ESP_PANEL_ENABLE_LOG    CONFIG_ESP_PANEL_ENABLE_LOG
     #else
-        #define ESP_PANEL_ENABLE_DEBUG_LOG    (0)
+        #define ESP_PANEL_ENABLE_LOG    (0)
     #endif
 #endif
 

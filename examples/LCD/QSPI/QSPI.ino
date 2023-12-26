@@ -69,7 +69,6 @@ void setup()
     //                          sizeof(example_init_cmd) / sizeof(esp_lcd_panel_vendor_init_cmd_t));
     lcd->init();
     lcd->reset();
-    lcd->mirror(0, 1);
     lcd->begin();
     lcd->displayOn();
 

@@ -141,11 +141,4 @@
 #define ESP_PANEL_LCD_BL_PWM_RESOLUTION     (10)
 #define ESP_PANEL_LCD_BL_PWM_FREQ_HZ        (5000)
 
-/*-------------------------------- Others --------------------------------*/
-/* Assert on error. Otherwise return error code */
-#define ESP_PANEL_CHECK_RESULT_ASSERT       (0)
-
-/* Print debug message */
-#define ESP_PANEL_ENABLE_DEBUG_LOG          (1)
-
 #endif

@@ -6,7 +6,7 @@
 
 #include "ESP_Panel_Conf_Internal.h"
 
-#ifndef ESP_PANEL_CONF_IGNORE
+#ifndef ESP_PANEL_BOARD_IGNORE
 #include <iostream>
 #include "esp_log.h"
 #include "driver/gpio.h"
