@@ -65,8 +65,18 @@ public:
     void invertColor(bool en);
     void displayOn(void);
     void displayOff(void);
-    void drawColorBar(int width, int height);
     void attachDrawBitmapFinishCallback(std::function<bool (void *)> callback, void *user_data = NULL);
+
+    /**
+     * @brief Draw color bar from top to bottom, the order is B - G - R. This function is used for testing.
+     *
+     * @note  Every bar indicate 1 bit. For example, if the `bits_per_pixel` is `16`, there will be `16` bars.
+     *        If the `height` can't be divided by `bits_per_pixel`, the reset area will be filled with white color.
+     *
+     * @param width
+     * @param height
+     */
+    void drawColorBar(int width, int height);
 
     uint8_t getPixelColorBits(void);
     esp_lcd_panel_handle_t getHandle(void);

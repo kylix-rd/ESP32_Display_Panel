@@ -3,6 +3,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
+#include "esp_heap_caps.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_rgb.h"
@@ -210,21 +212,35 @@ void ESP_PanelLcd::drawColorBar(int width, int height)
     int bits_per_piexl = getPixelColorBits();
     int bytes_per_piexl = bits_per_piexl / 8;
     int line_per_bar = height / bits_per_piexl;
+    int line_count = 0;
     uint8_t *color = (uint8_t *)calloc(1, line_per_bar * width * bytes_per_piexl);
     CHECK_NULL_RETURN(color);
 
+    // Draw color bar from top to bottom, the order is B - G - R
     for (int j = 0; j < bits_per_piexl; j++) {
         for (int i = 0; i < line_per_bar * width; i++) {
             for (int k = 0; k < bytes_per_piexl; k++) {
-                if (bus->getType() != ESP_PANEL_BUS_TYPE_RGB) {
+                if ((bus->getType() == ESP_PANEL_BUS_TYPE_SPI) || (bus->getType() == ESP_PANEL_BUS_TYPE_QSPI)) {
+                    // For SPI interface, the data should be swapped since the data is sent by LSB first
                     color[i * bytes_per_piexl + k] = SPI_SWAP_DATA_TX(BIT(j), bits_per_piexl) >> (k * 8);
                 } else {
                     color[i * bytes_per_piexl + k] = BIT(j) >> (k * 8);
                 }
             }
         }
+        line_count += line_per_bar;
         drawBitmapWaitUntilFinish(0, j * line_per_bar, width, (j + 1) * line_per_bar, color);
     }
+
+    if (line_count < height) {
+        for (int i = 0; i < (height - line_count) * width; i++) {
+            for (int k = 0; k < bytes_per_piexl; k++) {
+                color[i * bytes_per_piexl + k] = 0xff;
+            }
+        }
+        drawBitmapWaitUntilFinish(0, line_count, width, height, color);
+    }
+
     free(color);
 }
 
