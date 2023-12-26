@@ -660,19 +660,10 @@
         #error "Unkonw LCD bus type selected, please refer to the README for supported bus types."
     #endif /* ESP_PANEL_LCD_BUS_TYPE */
 
-    /* ESP_PANEL_LCD_INIT_CMD_SIZE */
-    #ifndef ESP_PANEL_LCD_INIT_CMD_SIZE
-        #define ESP_PANEL_LCD_INIT_CMD_SIZE     (0)
-    #endif
-
-    /* ESP_PANEL_LCD_INIT_CMD */
-    #ifndef ESP_PANEL_LCD_INIT_CMD
-        #define ESP_PANEL_LCD_INIT_CMD          (NULL)
-        #if ESP_PANEL_LCD_INIT_CMD_SIZE > 0
-            #undef ESP_PANEL_LCD_INIT_CMD_SIZE
-            #define ESP_PANEL_LCD_INIT_CMD_SIZE     (0)
-        #endif
-    #endif
+    // /* ESP_PANEL_LCD_INIT_CMD */
+    // #ifndef ESP_PANEL_LCD_INIT_CMD
+    //     #define ESP_PANEL_LCD_INIT_CMD          (NULL)
+    // #endif
 
     /* LCD Color Settings */
     /* LCD color depth in bits */
@@ -984,11 +975,11 @@
 
     /* If the backlight is on when high level, set to 1; otherwise to 0 */
     #if ESP_PANEL_LCD_IO_BL >= 0
-        #ifndef ESP_PANEL_LCD_BL_LEVEL
+        #ifndef ESP_PANEL_LCD_BL_ON_LEVEL
             #ifdef CONFIG_ESP_PANEL_LCD_BL_LEVEL
-                #define ESP_PANEL_LCD_BL_LEVEL  CONFIG_ESP_PANEL_LCD_BL_LEVEL
+                #define ESP_PANEL_LCD_BL_ON_LEVEL  CONFIG_ESP_PANEL_LCD_BL_LEVEL
             #else
-                #define ESP_PANEL_LCD_BL_LEVEL  (0)
+                #define ESP_PANEL_LCD_BL_ON_LEVEL  (0)
             #endif
         #endif
     #endif

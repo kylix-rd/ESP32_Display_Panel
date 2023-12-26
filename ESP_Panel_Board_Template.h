@@ -100,11 +100,7 @@
     #define ESP_PANEL_LCD_SPI_IO_MISO           (-1)
 #endif /* ESP_PANEL_LCD_BUS_SKIP_INIT_HOST */
 
-#elif ESP_PANEL_LCD_BUS_TYPE == 2       // I80 related parameters
-
-#error "This function is not implemented and will be implemented in the future."
-
-#elif ESP_PANEL_LCD_BUS_TYPE == 3       // RGB related parameters
+#elif ESP_PANEL_LCD_BUS_TYPE == 2       // RGB related parameters
 
     #define ESP_PANEL_LCD_RGB_CLK_HZ            (16 * 1000 * 1000)
     #define ESP_PANEL_LCD_RGB_HPW               (10)
@@ -155,6 +151,10 @@
     #define ESP_PANEL_LCD_3WIRE_SPI_IO_SDA              (2)
 #endif /* ESP_PANEL_LCD_BUS_SKIP_INIT_HOST */
 
+#elif ESP_PANEL_LCD_BUS_TYPE == 3       // I80 related parameters
+
+#error "This function is not implemented and will be implemented in the future."
+
 #endif /* ESP_PANEL_LCD_BUS_TYPE */
 
 /**
@@ -164,9 +164,9 @@
  * initialization sequence code. Please uncomment the following macro definitions and change them in the same format
  * if needed. Otherwise, the LCD driver will use the default initialization sequence code.
  *
+ * Command Format: {command, (uint8_t []){ data0, data1, ... }, data_size, delay_ms}
+ *
  */
-// #define ESP_PANEL_LCD_INIT_CMD_SIZE          (3)     // Number of commands
-// //      {cmd, { data }, data_size, delay_ms}
 // #define ESP_PANEL_LCD_INIT_CMD                                      \
 //     {                                                               \
 //         {0xf0, (uint8_t []){0x55, 0xaa, 0x52, 0x08, 0x00}, 5, 0},   \

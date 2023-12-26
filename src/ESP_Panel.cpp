@@ -16,6 +16,14 @@
 
 static const char *TAG = "ESP_Panel";
 
+#if ESP_PANEL_USE_LCD
+#ifdef ESP_PANEL_LCD_INIT_CMD
+static const esp_lcd_panel_vendor_init_cmd_t lcd_init_cmds[] = ESP_PANEL_LCD_INIT_CMD;
+#else
+static const esp_lcd_panel_vendor_init_cmd_t *lcd_init_cmds = NULL;
+#endif
+#endif
+
 /**
  * Macros for configuration of panel IO
  *
@@ -135,11 +143,11 @@ void ESP_Panel::init(void)
 #if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
     spi_line_config_t line_config = {
         .cs_io_type = (panel_io_type_t)ESP_PANEL_LCD_3WIRE_SPI_CS_USE_EXPNADER,
-        .cs_gpio_num = BIT64(ESP_PANEL_LCD_3WIRE_SPI_IO_CS),
+        .cs_gpio_num = ESP_PANEL_LCD_3WIRE_SPI_IO_CS,
         .scl_io_type = (panel_io_type_t)ESP_PANEL_LCD_3WIRE_SPI_SCL_USE_EXPNADER,
-        .scl_gpio_num = BIT64( ESP_PANEL_LCD_3WIRE_SPI_IO_SCL),
+        .scl_gpio_num =  ESP_PANEL_LCD_3WIRE_SPI_IO_SCL,
         .sda_io_type = (panel_io_type_t)ESP_PANEL_LCD_3WIRE_SPI_SDA_USE_EXPNADER,
-        .sda_gpio_num = BIT64(ESP_PANEL_LCD_3WIRE_SPI_IO_SDA),
+        .sda_gpio_num = ESP_PANEL_LCD_3WIRE_SPI_IO_SDA,
         .io_expander = NULL,
     };
     esp_lcd_panel_io_3wire_spi_config_t lcd_bus_host_config =
@@ -204,8 +212,8 @@ void ESP_Panel::init(void)
 
     // Panel vendor config
     esp_lcd_panel_vendor_config_t lcd_vendor_config = {
-        .init_cmds = ESP_PANEL_LCD_INIT_CMD,
-        .init_cmds_size = ESP_PANEL_LCD_INIT_CMD_SIZE,
+        .init_cmds = lcd_init_cmds,
+        .init_cmds_size = (lcd_init_cmds == NULL) ? 0 : sizeof(lcd_init_cmds) / sizeof(esp_lcd_panel_vendor_init_cmd_t),
 #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB && !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
         .rgb_config = &rgb_config,
         .flags = {
@@ -399,26 +407,24 @@ void ESP_Panel::begin(void)
 #endif
     lcd->getBus()->begin();
     lcd->init();
-    if (lcd) {
-        lcd->reset();
+    lcd->reset();
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
-        lcd->swapAxes(ESP_PANEL_LCD_SWAP_XY);
-        lcd->mirror(ESP_PANEL_LCD_MIRROR_X, ESP_PANEL_LCD_MIRROR_Y);
+    lcd->swapAxes(ESP_PANEL_LCD_SWAP_XY);
+    lcd->mirror(ESP_PANEL_LCD_MIRROR_X, ESP_PANEL_LCD_MIRROR_Y);
 #endif
-        lcd->invertColor(ESP_PANEL_LCD_INEVRT_COLOR);
-        lcd->begin();
+    lcd->invertColor(ESP_PANEL_LCD_INEVRT_COLOR);
+    lcd->begin();
 #if (ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB) || (ESP_PANEL_LCD_RGB_IO_DISP != -1)
-        lcd->displayOn();
+    lcd->displayOn();
 #endif
-    }
-#endif
+#endif /* ESP_PANEL_USE_LCD */
 
 #if ESP_PANEL_USE_LCD_TOUCH
     lcd_touch->getBus()->begin();
     lcd_touch->begin();
 #endif
 
-#if ESP_PANEL_BACKLIGHT
+#if ESP_PANEL_USE_BL
     backlight->init();
     backlight->on();
 #endif
