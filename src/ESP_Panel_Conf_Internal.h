@@ -95,7 +95,7 @@
     #endif
 #endif
 
-#ifndef ESP_PANEL_CONF_IGNORE
+#ifndef ESP_PANEL_BOARD_IGNORE
 #include "esp_idf_version.h"
 #include "soc/soc_caps.h"
 #include "ESP_PanelBus.h"
