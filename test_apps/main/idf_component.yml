@@ -1,5 +1,6 @@
 ## IDF Component Manager Manifest File
 dependencies:
-  idf: "==4.4.5"
+  idf: ">=5.1"
   esp-arduino-libs/esp-io-expander:
+    version: master
     git: https://github.com/esp-arduino-libs/ESP32_IO_Expander.git

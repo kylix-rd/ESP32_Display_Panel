@@ -385,8 +385,9 @@ void ESP_Panel::init(void)
     return;
 
 err:
+    return;
     // delete lcd_bus;
-    delete lcd;
+    // delete lcd;
     // delete lcd_touch_bus;
     // delete lcd_touch;
     // delete backlight;

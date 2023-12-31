@@ -8,11 +8,8 @@
 #include "ESP_Panel_Board_Conf_Internal.h"
 
 #ifndef ESP_PANEL_BOARD_CONFIG_IGNORE
-#include "ESP_IOExpander_Library.h"
-#include "ESP_PanelBacklight.h"
-#include "ESP_PanelBus.h"
-#include "ESP_PanelLcd.h"
-#include "ESP_PanelLcdTouch.h"
+// #include "ESP_IOExpander_Library.h"
+#include "ESP_Panel_Library.h"
 
 class ESP_Panel {
 public:

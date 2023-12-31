@@ -7,10 +7,12 @@
 
 #include "ESP_Panel_Driver_Conf_Internal.h"
 #include "ESP_Panel_Board_Conf_Internal.h"
-#include "ESP_Panel.h"
-#include "ESP_PanelBacklight.h"
+#include "ESP_PanelHost.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
+#include "ESP_PanelLcdTouch.h"
+#include "ESP_PanelBacklight.h"
+#include "ESP_Panel.h"
 
 /* Bus */
 #include "bus/I2C.h"

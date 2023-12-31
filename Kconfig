@@ -1,22 +1,23 @@
 menu "ESP Display Panel Configuration"
-    config ESP_PANEL_CONF_SKIP
+    config ESP_PANEL_DRIVER_CONF_SKIP
         bool "Unckeck this to use custom `ESP_Panel_Conf.h`"
         default y
 
-    config ESP_PANEL_BOARD_SKIP
+    config ESP_PANEL_BOARD_CONFIG_SKIP
         bool "Unckeck this to use custom `ESP_Panel_Board.h`"
         default y
 
     menu "Driver"
-        depends on !ESP_PANEL_CONF_SKIP
+        depends on ESP_PANEL_DRIVER_CONF_SKIP
         config ESP_PANEL_CHECK_RESULT_ASSERT
             bool "Assert on error"
             default n
             help
                 If enabled, the driver will assert on error. Otherwise, the driver will return error code on error.
+    endmenu
 
     menu "Board"
-        depends on !ESP_PANEL_BOARD_SKIP
+        depends on ESP_PANEL_BOARD_CONFIG_SKIP
 
         choice
             prompt "Select Board"
