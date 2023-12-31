@@ -153,31 +153,6 @@
 
 /*===================================== IO Expander Related =====================================*/
 /* Set to 0 if not using IO Expander */
-#define ESP_PANEL_USE_EXPANDER              (1)         // 0/1
-#if ESP_PANEL_USE_EXPANDER
-/**
- * IO expander IC name. Choose one of the following:
- *      - HT8574
- *      - TCA95xx_8bit
- *      - TCA95xx_16bit
- */
-#define ESP_PANEL_EXPANDER_NAME                 TCA95xx_8bit
-
-/* IO expander & host Settings */
-// Device parameters
-#define ESP_PANEL_EXPANDER_ADDRESS              (0x20)
-
-//  If set to 1, the driver will skip to initialize the corresponding host. Users need to initialize the host in advance.
-#define ESP_PANEL_EXPANDER_SKIP_INIT_HOST       (0)     // 0/1
-// Host parameters
-#if !ESP_PANEL_EXPANDER_SKIP_INIT_HOST
-#define ESP_PANEL_EXPANDER_HOST_ID          (0)
-#define ESP_PANEL_EXPANDER_I2C_CLK_HZ       (400 * 1000)
-#define ESP_PANEL_EXPANDER_I2C_SCL_PULLUP   (0)     // 0/1
-#define ESP_PANEL_EXPANDER_I2C_SDA_PULLUP   (0)     // 0/1
-#define ESP_PANEL_EXPANDER_I2C_IO_SCL       (18)
-#define ESP_PANEL_EXPANDER_I2C_IO_SDA       (8)
-#endif
-#endif /* ESP_PANEL_USE_EXPANDER */
+#define ESP_PANEL_USE_EXPANDER              (0)         // 0/1
 
 #endif

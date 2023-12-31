@@ -214,8 +214,8 @@ void ESP_Panel::init(void)
     esp_lcd_panel_vendor_config_t lcd_vendor_config = {
         .init_cmds = lcd_init_cmds,
         .init_cmds_size = (lcd_init_cmds == NULL) ? 0 : sizeof(lcd_init_cmds) / sizeof(esp_lcd_panel_vendor_init_cmd_t),
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB && !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-        .lcd_panel_io_config = &lcd_panel_io_config,
+#if (ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB) && !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+        .rgb_config = &lcd_panel_io_config,
         .flags = {
             .auto_del_panel_io = ESP_PANEL_LCD_3WIRE_SPI_AUTO_DEL_PANEL_IO,
         },
@@ -409,11 +409,15 @@ void ESP_Panel::begin(void)
     lcd->getBus()->begin();
     lcd->init();
     lcd->reset();
-#if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
+#if ESP_PANEL_LCD_SWAP_XY
     lcd->swapAxes(ESP_PANEL_LCD_SWAP_XY);
+#endif
+#if ESP_PANEL_LCD_MIRROR_X || ESP_PANEL_LCD_MIRROR_Y
     lcd->mirror(ESP_PANEL_LCD_MIRROR_X, ESP_PANEL_LCD_MIRROR_Y);
 #endif
+#if ESP_PANEL_LCD_INEVRT_COLOR
     lcd->invertColor(ESP_PANEL_LCD_INEVRT_COLOR);
+#endif
     lcd->begin();
 #if (ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB) || (ESP_PANEL_LCD_RGB_IO_DISP != -1)
     lcd->displayOn();

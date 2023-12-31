@@ -3,12 +3,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-#include "driver/gpio.h"
 
 #include "ESP_PanelPrivate.h"
+
+#include "driver/gpio.h"
 #include "ESP_PanelLcdTouch.h"
 
-static const char *TAG = "LcdTouch";
+static const char *TAG = "TP_CPP";
 
 #define LCD_TOUCH_CONFIG_DEFAULT(width, height) \
     {                                           \
@@ -29,28 +30,36 @@ static const char *TAG = "LcdTouch";
         .interrupt_callback = NULL,             \
     }
 
-TouchPoint::TouchPoint(void):
+ESP_PanelTouchPoint::ESP_PanelTouchPoint(void):
     x(0),
     y(0),
-    z(0)
+    strength(0)
 {
 }
 
-TouchPoint::TouchPoint(uint16_t x, uint16_t y, uint16_t z):
+ESP_PanelTouchPoint::ESP_PanelTouchPoint(uint16_t x, uint16_t y, uint16_t strength):
     x(x),
     y(y),
-    z(z)
+    strength(strength)
 {
 }
 
-bool TouchPoint::operator==(TouchPoint p)
+bool ESP_PanelTouchPoint::operator==(ESP_PanelTouchPoint p)
 {
-    return ((p.x == x) && (p.y == y) && (p.z == z));
+    return ((p.x == x) && (p.y == y) && (p.strength == strength));
 }
 
-bool TouchPoint::operator!=(TouchPoint p)
+bool ESP_PanelTouchPoint::operator!=(ESP_PanelTouchPoint p)
 {
-    return ((p.x != x) || (p.y != y) || (p.z != z));
+    return ((p.x != x) || (p.y != y) || (p.strength != strength));
+}
+
+ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height):
+    bus(bus),
+    config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height)),
+    handle(NULL),
+    touch_state(false)
+{
 }
 
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config):
@@ -61,12 +70,9 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_conf
 {
 }
 
-ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height):
-    bus(bus),
-    config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height)),
-    handle(NULL),
-    touch_state(false)
+void ESP_PanelLcdTouch::init(void)
 {
+    ENABLE_TAG_PRINT_DEBUG_LOG();
 }
 
 void ESP_PanelLcdTouch::del(void)
@@ -78,7 +84,7 @@ void ESP_PanelLcdTouch::del(void)
 void ESP_PanelLcdTouch::readData(void)
 {
     CHECK_ERROR_RETURN(esp_lcd_touch_read_data(handle));
-    touch_state = esp_lcd_touch_get_coordinates(handle, x, y, z, &num_points, LCD_TOUCH_MAX_POINTS);
+    touch_state = esp_lcd_touch_get_coordinates(handle, x, y, strength, &num_points, LCD_TOUCH_MAX_POINTS);
 }
 
 bool ESP_PanelLcdTouch::getLcdTouchState(void)
@@ -94,14 +100,14 @@ err:
     return false;
 }
 
-TouchPoint ESP_PanelLcdTouch::getPoint(uint8_t n)
+ESP_PanelTouchPoint ESP_PanelLcdTouch::getPoint(uint8_t n)
 {
-    TouchPoint point(0, 0, 0);
+    ESP_PanelTouchPoint point(0, 0, 0);
     CHECK_FALSE_GOTO(n < num_points, err);
 
     point.x = x[n];
     point.y = y[n];
-    point.z = z[n];
+    point.strength = strength[n];
 
 err:
     return point;

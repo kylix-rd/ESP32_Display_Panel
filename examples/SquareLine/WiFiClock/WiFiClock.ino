@@ -206,7 +206,7 @@ void lvgl_port_tp_read(lv_indev_drv_t * indev, lv_indev_data_t * data)
     if(!touched) {
         data->state = LV_INDEV_STATE_REL;
     } else {
-        TouchPoint point = panel->getLcdTouch()->getPoint();
+        ESP_PanelTouchPoint point = panel->getLcdTouch()->getPoint();
 
         data->state = LV_INDEV_STATE_PR;
         /*Set the coordinates*/

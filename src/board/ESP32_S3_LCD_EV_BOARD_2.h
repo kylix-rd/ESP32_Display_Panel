@@ -33,7 +33,7 @@
  *      - 2: I80 (not supported yet)
  *      - 3: RGB
  */
-#define ESP_PANEL_LCD_BUS_TYPE      (3)
+#define ESP_PANEL_LCD_BUS_TYPE      (2)
 /**
  * LCD bus parameters.
  *
@@ -140,7 +140,8 @@
 /*-------------------------------- Backlight Related --------------------------------*/
 #define ESP_PANEL_USE_BL                    (0)
 
-/*-------------------------------- Others --------------------------------*/
-/* Assert on error. Otherwise return error code */
-#define ESP_PANEL_CHECK_RESULT_ASSERT       (0)
+/*===================================== IO Expander Related =====================================*/
+/* Set to 0 if not using IO Expander */
+#define ESP_PANEL_USE_EXPANDER              (0)
+
 #endif

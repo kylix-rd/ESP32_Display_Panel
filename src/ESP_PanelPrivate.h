@@ -104,7 +104,4 @@
         }                                   \
     } while(0)
 
-namespace esp_panel {
-const char *path_to_file_name(const char *path);
-}
 #endif

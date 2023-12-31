@@ -110,7 +110,7 @@ Here are some examples of using ESP32_Display_Panel. To access them in the Ardui
 #### Panel
 
   * [Draw Color Bar](examples/Panel/DrawColorBar/): This example demonstrates how to draw simple color bar.
-  * [Read Touch Point](examples/Panel/ReadTouchPoint/): This example demonstrates how to read touch point.
+  * [Read Touch Point](examples/Panel/ReadESP_PanelTouchPoint/): This example demonstrates how to read touch point.
 
 #### LVGL
 
@@ -336,7 +336,7 @@ panel->getLcd()->drawBitmap(0, 0, width, height, color);
 panel>getLcdTouch()>readData();
 bool touched = panel>getLcdTouch()>getLcdTouchState();
 if(touched) {
-    TouchPoint point = panel>getLcdTouch()>getPoint();
+    ESP_PanelTouchPoint point = panel>getLcdTouch()>getPoint();
     Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);
 }
 

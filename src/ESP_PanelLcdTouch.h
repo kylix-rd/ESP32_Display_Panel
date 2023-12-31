@@ -9,37 +9,38 @@
 #include "lcd_touch/base/esp_lcd_touch.h"
 #include "ESP_PanelBus.h"
 
-class TouchPoint {
+class ESP_PanelTouchPoint {
 public:
-    TouchPoint(void);
-    TouchPoint(uint16_t x, uint16_t y, uint16_t z);
+    ESP_PanelTouchPoint(void);
+    ESP_PanelTouchPoint(uint16_t x, uint16_t y, uint16_t strength);
 
-    bool operator==(TouchPoint p);
-    bool operator!=(TouchPoint p);
+    bool operator==(ESP_PanelTouchPoint p);
+    bool operator!=(ESP_PanelTouchPoint p);
 
     uint16_t x;
     uint16_t y;
-    uint16_t z;
+    uint16_t strength;
 };
 
 class ESP_PanelLcdTouch {
 public:
-    ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config);
     ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height);
+    ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config);
     virtual ~ESP_PanelLcdTouch() = default;
 
-    void del(void);
-    void readData(void);
+    void init(void);
+    virtual bool begin(void) = 0;
+    bool del(void);
+    bool readData(void);
+    bool swapAxes(bool en);
+    bool mirrorX(bool en);
+    bool mirrorY(bool en);
     bool getLcdTouchState(void);
-    TouchPoint getPoint(uint8_t n = 0);
+    bool getPoint(ESP_PanelTouchPoint &point, uint8_t n = 0);
     bool getButtonState(uint8_t n = 0);
-    void swapAxes(bool en);
-    void mirrorX(bool en);
-    void mirrorY(bool en);
+
     esp_lcd_touch_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);
-
-    virtual void begin(void) = 0;
 
 protected:
     ESP_PanelBus *bus;
@@ -51,5 +52,5 @@ private:
     uint8_t num_points;
     uint16_t x[LCD_TOUCH_MAX_POINTS];
     uint16_t y[LCD_TOUCH_MAX_POINTS];
-    uint16_t z[LCD_TOUCH_MAX_POINTS];
+    uint16_t strength[LCD_TOUCH_MAX_POINTS];
 };

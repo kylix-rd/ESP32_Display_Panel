@@ -110,7 +110,7 @@ ESP32_Display_Panel 的功能框图如下所示，主要包含了以下功能：
 #### Panel
 
 * [Draw Color Bar](examples/Panel/DrawColorBar/): 此示例演示如何绘制简单的彩条。
-* [Read Touch Point](examples/Panel/ReadTouchPoint/): 此示例演示如何读取触摸点。
+* [Read Touch Point](examples/Panel/ReadESP_PanelTouchPoint/): 此示例演示如何读取触摸点。
 
 #### LVGL
 
@@ -336,7 +336,7 @@ panel->getLcd()->drawBitmap(0, 0, width, height, color);
 panel->getLcdTouch()->readData();
 bool touched = panel->getLcdTouch()->getLcdTouchState();
 if(touched) {
-    TouchPoint point = panel->getLcdTouch()->getPoint();
+    ESP_PanelTouchPoint point = panel->getLcdTouch()->getPoint();
     Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);
 }
 

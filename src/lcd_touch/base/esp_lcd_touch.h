@@ -1,24 +1,34 @@
 /*
- * SPDX-FileCopyrightText: 2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2022-2023 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+
+/**
+ * @file
+ * @brief ESP LCD touch
+ */
+
 #pragma once
 
 #include <stdbool.h>
-
+#include "sdkconfig.h"
 #include "esp_err.h"
 #include "driver/gpio.h"
 #include "esp_lcd_panel_io.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
-#define LCD_TOUCH_MAX_POINTS    (10)
-#define LCD_TOUCH_MAX_BUTTONS   (10)
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define ESP_LCD_TOUCH_VER_MAJOR    (1)
+#define ESP_LCD_TOUCH_VER_MINOR    (1)
+#define ESP_LCD_TOUCH_VER_PATCH    (1)
+
+#define CONFIG_ESP_LCD_TOUCH_MAX_POINTS     (5)
+#define CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS    (1)
 
 /**
  * @brief Touch controller type
@@ -59,6 +69,8 @@ typedef struct {
     void (*process_coordinates)(esp_lcd_touch_handle_t tp, uint16_t *x, uint16_t *y, uint16_t *strength, uint8_t *point_num, uint8_t max_point_num);
     /*!< User callback called after the touch interrupt occured */
     esp_lcd_touch_interrupt_callback_t interrupt_callback;
+    /*!< User data passed to callback */
+    void *user_data;
 } esp_lcd_touch_config_t;
 
 typedef struct {
@@ -68,13 +80,15 @@ typedef struct {
         uint16_t x; /*!< X coordinate */
         uint16_t y; /*!< Y coordinate */
         uint16_t strength; /*!< Strength */
-    } coords[LCD_TOUCH_MAX_POINTS];
+    } coords[CONFIG_ESP_LCD_TOUCH_MAX_POINTS];
 
+#if (CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS > 0)
     uint8_t buttons; /*!< Count of buttons states saved */
 
     struct {
         uint8_t status; /*!< Status of button */
-    } button[LCD_TOUCH_MAX_BUTTONS];
+    } button[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS];
+#endif
 
     portMUX_TYPE lock; /*!< Lock for read/write */
 } esp_lcd_touch_data_t;
@@ -84,6 +98,30 @@ typedef struct {
  *
  */
 struct esp_lcd_touch_s {
+
+    /**
+     * @brief set touch controller into sleep mode
+     *
+     * @note This function is usually blocking.
+     *
+     * @param tp: Touch handler
+     *
+     * @return
+     *      - ESP_OK on success, otherwise returns ESP_ERR_xxx
+     */
+    esp_err_t (*enter_sleep)(esp_lcd_touch_handle_t tp);
+
+    /**
+     * @brief set touch controller into normal mode
+     *
+     * @note This function is usually blocking.
+     *
+     * @param tp: Touch handler
+     *
+     * @return
+     *      - ESP_OK on success, otherwise returns ESP_ERR_xxx
+     */
+    esp_err_t (*exit_sleep)(esp_lcd_touch_handle_t tp);
 
     /**
      * @brief Read data from touch controller (mandatory)
@@ -112,6 +150,8 @@ struct esp_lcd_touch_s {
      */
     bool (*get_xy)(esp_lcd_touch_handle_t tp, uint16_t *x, uint16_t *y, uint16_t *strength, uint8_t *point_num, uint8_t max_point_num);
 
+
+#if (CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS > 0)
     /**
      * @brief Get button state (optional)
      *
@@ -123,6 +163,7 @@ struct esp_lcd_touch_s {
      *      - Returns true, when touched and coordinates readed. Otherwise returns false.
      */
     esp_err_t (*get_button_state)(esp_lcd_touch_handle_t tp, uint8_t n, uint8_t *state);
+#endif
 
     /**
      * @brief Swap X and Y after read coordinates (optional)
@@ -250,6 +291,8 @@ esp_err_t esp_lcd_touch_read_data(esp_lcd_touch_handle_t tp);
  */
 bool esp_lcd_touch_get_coordinates(esp_lcd_touch_handle_t tp, uint16_t *x, uint16_t *y, uint16_t *strength, uint8_t *point_num, uint8_t max_point_num);
 
+
+#if (CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS > 0)
 /**
  * @brief Get button state
  *
@@ -263,6 +306,7 @@ bool esp_lcd_touch_get_coordinates(esp_lcd_touch_handle_t tp, uint16_t *x, uint1
  *      - ESP_ERR_INVALID_ARG       if bad button index
  */
 esp_err_t esp_lcd_touch_get_button_state(esp_lcd_touch_handle_t tp, uint8_t n, uint8_t *state);
+#endif
 
 /**
  * @brief Swap X and Y after read coordinates
@@ -350,6 +394,40 @@ esp_err_t esp_lcd_touch_del(esp_lcd_touch_handle_t tp);
  *      - ESP_OK on success
  */
 esp_err_t esp_lcd_touch_register_interrupt_callback(esp_lcd_touch_handle_t tp, esp_lcd_touch_interrupt_callback_t callback);
+
+/**
+ * @brief Register user callback called after the touch interrupt occured with user data
+ *
+ * @param tp: Touch handler
+ * @param callback: Interrupt callback
+ * @param user_data: User data passed to callback
+ *
+ * @return
+ *      - ESP_OK on success
+ */
+esp_err_t esp_lcd_touch_register_interrupt_callback_with_data(esp_lcd_touch_handle_t tp, esp_lcd_touch_interrupt_callback_t callback, void *user_data);
+
+/**
+ * @brief Enter sleep mode
+ *
+ * @param tp: Touch handler
+ *
+ * @return
+ *      - ESP_OK on success
+ *      - ESP_ERR_INVALID_ARG if parameter is invalid
+ */
+esp_err_t esp_lcd_touch_enter_sleep(esp_lcd_touch_handle_t tp);
+
+/**
+ * @brief Exit sleep mode
+ *
+ * @param tp: Touch handler
+ *
+ * @return
+ *      - ESP_OK on success
+ *      - ESP_ERR_INVALID_ARG if parameter is invalid
+ */
+esp_err_t esp_lcd_touch_exit_sleep(esp_lcd_touch_handle_t tp);
 
 #ifdef __cplusplus
 }
