@@ -28,7 +28,6 @@
 
 #include <Arduino.h>
 #include <ESP_Panel_Library.h>
-#include <ESP_IOExpander_Library.h>
 
 ESP_Panel *panel = nullptr;
 

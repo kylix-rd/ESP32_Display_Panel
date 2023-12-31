@@ -8,7 +8,7 @@
 #include <assert.h>
 #include "esp_err.h"
 #include "esp_check.h"
-#include "ESP_Panel_Conf_Internal.h"
+#include "ESP_Panel_Driver_Conf_Internal.h"
 #if ESP_PANEL_ENABLE_LOG
 #define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
 #endif

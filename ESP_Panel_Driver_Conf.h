@@ -8,7 +8,7 @@
 
 // *INDENT-OFF*
 
-/* Set to 1 if assert on error. Otherwise print error message and jump */
+/* Set to 1 if assert on error. Otherwise print error message */
 #define ESP_PANEL_CHECK_RESULT_ASSERT       (0)         // 0/1
 
 /* Set to 1 if print log message */

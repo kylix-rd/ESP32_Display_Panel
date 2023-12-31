@@ -5,11 +5,12 @@
  */
 #pragma once
 
+#include "ESP_Panel_Driver_Conf_Internal.h"
+#include "ESP_Panel_Board_Conf_Internal.h"
 #include "ESP_Panel.h"
 #include "ESP_PanelBacklight.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
-#include "ESP_Panel_Conf_Internal.h"
 
 /* Bus */
 #include "bus/I2C.h"
