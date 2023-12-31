@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ESP_Panel_Board_Conf_Internal.h"
+#include "ESP_Panel_Conf_Internal.h"
 
-#ifndef ESP_PANEL_BOARD_CONFIG_IGNORE
+#ifndef ESP_PANEL_CONFIG_IGNORE
 #include <iostream>
 #include "esp_log.h"
 #include "driver/gpio.h"
@@ -155,7 +155,7 @@ void ESP_Panel::init(void)
 #endif /* ESP_PANEL_LCD_BUS_SKIP_INIT_HOST */
 
     // RGB panel
-    esp_lcd_rgb_panel_config_t rgb_config = {
+    esp_lcd_rgb_panel_config_t lcd_panel_io_config = {
         .clk_src = LCD_CLK_SRC_DEFAULT,
         .timings =  {
             .pclk_hz = ESP_PANEL_LCD_RGB_CLK_HZ,
@@ -215,7 +215,7 @@ void ESP_Panel::init(void)
         .init_cmds = lcd_init_cmds,
         .init_cmds_size = (lcd_init_cmds == NULL) ? 0 : sizeof(lcd_init_cmds) / sizeof(esp_lcd_panel_vendor_init_cmd_t),
 #if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB && !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-        .rgb_config = &rgb_config,
+        .lcd_panel_io_config = &lcd_panel_io_config,
         .flags = {
             .auto_del_panel_io = ESP_PANEL_LCD_3WIRE_SPI_AUTO_DEL_PANEL_IO,
         },
@@ -332,15 +332,15 @@ void ESP_Panel::init(void)
 
     // Create LCD bus
 #if ESP_PANEL_USE_LCD
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
-#if ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
-    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, rgb_config, ESP_PANEL_LCD_BUS_HOST);
-#else
-    lcd_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_bus_host_config, rgb_config,
+#if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+    lcd_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_bus_host_config, lcd_panel_io_config,
                                        ESP_PANEL_LCD_BUS_HOST);
-#endif
-#elif !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+#else
+#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
+    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
+#else
     ADD_HOST(ESP_PANEL_LCD_BUS_NAME, host, lcd_bus_host_config, ESP_PANEL_LCD_BUS_HOST);
+#endif
 #endif
     CHECK_NULL_GOTO(lcd_bus, err);
 

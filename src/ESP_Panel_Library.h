@@ -5,8 +5,7 @@
  */
 #pragma once
 
-#include "ESP_Panel_Driver_Conf_Internal.h"
-#include "ESP_Panel_Board_Conf_Internal.h"
+#include "ESP_Panel_Conf_Internal.h"
 #include "ESP_PanelHost.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
