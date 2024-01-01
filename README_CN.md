@@ -334,7 +334,7 @@ panel->getLcd()->drawBitmap(0, 0, width, height, color);
 
 // Get the LCD touch object and operate it
 panel->getLcdTouch()->readData();
-bool touched = panel->getLcdTouch()->getLcdTouchState();
+bool touched = panel->getLcdTouch()->isTouched();
 if(touched) {
     ESP_PanelTouchPoint point = panel->getLcdTouch()->getPoint();
     Serial.printf("Touch point: x %d, y %d\n", point.x, point.y);

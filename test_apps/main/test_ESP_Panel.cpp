@@ -162,7 +162,7 @@ TEST_CASE("test read touch", "[panel][touch]")
     int cnt = 0;
     while (cnt++ < 100) {
         panel->getLcdTouch()->readData();
-        bool touched = panel->getLcdTouch()->getLcdTouchState();
+        bool touched = panel->getLcdTouch()->isTouched();
         if (touched) {
             ESP_PanelTouchPoint point = panel->getLcdTouch()->getPoint();
             ESP_LOGI(TAG, "Touch point: x %d, y %d\n", point.x, point.y);

@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2023-2024 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -31,12 +31,11 @@ public:
     void init(void);
     virtual bool begin(void) = 0;
     bool del(void);
-    bool readData(void);
     bool swapAxes(bool en);
     bool mirrorX(bool en);
     bool mirrorY(bool en);
-    bool getLcdTouchState(void);
-    bool getPoint(ESP_PanelTouchPoint &point, uint8_t n = 0);
+    bool readRawData(void);
+    uint8_t getPoints(ESP_PanelTouchPoint points[], uint8_t num = 1);
     bool getButtonState(uint8_t n = 0);
 
     esp_lcd_touch_handle_t getHandle(void);
@@ -48,9 +47,7 @@ protected:
     esp_lcd_touch_handle_t handle;
 
 private:
-    uint8_t touch_state;
-    uint8_t num_points;
-    uint16_t x[LCD_TOUCH_MAX_POINTS];
-    uint16_t y[LCD_TOUCH_MAX_POINTS];
-    uint16_t strength[LCD_TOUCH_MAX_POINTS];
+    uint8_t _tp_points_num;
+    uint8_t _tp_buttons_state[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS];
+    ESP_PanelTouchPoint _tp_points[CONFIG_ESP_LCD_TOUCH_MAX_POINTS];
 };

@@ -78,7 +78,7 @@ void lvgl_port_tp_read(lv_indev_drv_t * indev, lv_indev_data_t * data)
 {
     panel->getLcdTouch()->readData();
 
-    bool touched = panel->getLcdTouch()->getLcdTouchState();
+    bool touched = panel->getLcdTouch()->isTouched();
     if(!touched) {
         data->state = LV_INDEV_STATE_REL;
     } else {
