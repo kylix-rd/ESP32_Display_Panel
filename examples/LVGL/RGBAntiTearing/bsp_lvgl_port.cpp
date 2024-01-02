@@ -18,14 +18,13 @@
 #define CONFIG_BSP_DISPLAY_LVGL_TASK_STACK_SIZE_KB  (4)
 #define CONFIG_BSP_DISPLAY_LVGL_TASK_PRIORITY       (2)
 #define CONFIG_BSP_DISPLAY_LVGL_TASK_CORE_ID        (-1)
-#define LVGL_BUF_SIZE           (ESP_PANEL_LCD_H_RES * 20)
 
 #define RGB_LVGL_AVOID_TEARING_MODE_NONE    (0)
 #define RGB_LVGL_AVOID_TEARING_MODE_0       (1)
 #define RGB_LVGL_AVOID_TEARING_MODE_1       (2)
 #define RGB_LVGL_AVOID_TEARING_MODE_2       (3)
 
-#define RGB_LVGL_AVOID_TEARING_MODE         (RGB_LVGL_AVOID_TEARING_MODE_0)
+#define RGB_LVGL_AVOID_TEARING_MODE         (RGB_LVGL_AVOID_TEARING_MODE_1)
 
 #if RGB_LVGL_AVOID_TEARING_MODE == RGB_LVGL_AVOID_TEARING_MODE_NONE
     #define CONFIG_BSP_LCD_RGB_BUFFER_NUMS            (1)
@@ -159,9 +158,9 @@ typedef enum {
  */
 static lv_port_flush_probe_t flush_copy_probe(lv_disp_drv_t *drv)
 {
-    static lv_port_flush_status_t prev_status = FLUSH_PROBE_PART_COPY;
+    static lv_port_flush_status_t prev_status = FLUSH_STATUS_PART;
     lv_port_flush_status_t cur_status;
-    uint8_t probe_result;
+    lv_port_flush_probe_t probe_result;
     lv_disp_t *disp_refr = _lv_refr_get_disp_refreshing();
 
     uint32_t flush_ver = 0;
@@ -240,7 +239,6 @@ static void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t
             rotate_copy_pixel((uint16_t *)color_map, next_fb, offsetx1, offsety1, offsetx2, offsety2, LV_HOR_RES, LV_VER_RES, CONFIG_BSP_DISPLAY_LVGL_ROTATION_DEGREE);
 
             /* Switch the current RGB frame buffer to `next_fb` */
-            // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
             panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
 
             /* Waiting for the current frame buffer to complete transmission */
@@ -271,7 +269,6 @@ static void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t
                 flush_dirty_copy(next_fb, color_map, &dirty_area);
 
                 /* Switch the current RGB frame buffer to `next_fb` */
-                // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
                 panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
 
                 /* Waiting for the current frame buffer to complete transmission */
@@ -320,8 +317,8 @@ static void flush_dirty_copy(void *dst, void *src, lv_port_dirty_area_t *dirty_a
             y_end = dirty_area->inv_areas[i].y2 + 1;
 
             copy_bytes_per_line = (x_end - x_start) * 2;
-            from = src + (y_start * h_res + x_start) * 2;
-            to = dst + (y_start * h_res + x_start) * 2;
+            from = (uint8_t *)src + (y_start * h_res + x_start) * 2;
+            to = (uint8_t *)dst + (y_start * h_res + x_start) * 2;
             for (int y = y_start; y < y_end; y++) {
                 memcpy(to, from, copy_bytes_per_line);
                 from += bytes_per_line;
@@ -348,7 +345,6 @@ static void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t
             drv->full_refresh = 0;
 
             /* Switch the current RGB frame buffer to `color_map` */
-            // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
             panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
 
             /* Waiting for the last frame buffer to complete transmission */
@@ -374,7 +370,6 @@ static void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t
                 lv_refr_now(_lv_refr_get_disp_refreshing());
             } else {
                 /* Switch the current RGB frame buffer to `color_map` */
-                // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
                 panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
 
                 /* Waiting for the last frame buffer to complete transmission */
@@ -405,7 +400,6 @@ static void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t
     const int offsety2 = area->y2;
 
     /* Switch the current RGB frame buffer to `color_map` */
-    // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
     panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
 
     /* Waiting for the last frame buffer to complete transmission */
@@ -438,7 +432,6 @@ void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color
     rotate_copy_pixel((uint16_t *)color_map, next_fb, offsetx1, offsety1, offsetx2, offsety2, LV_HOR_RES, LV_VER_RES, CONFIG_BSP_DISPLAY_LVGL_ROTATION_DEGREE);
 
     /* Switch the current RGB frame buffer to `next_fb` */
-    // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
     panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, next_fb);
 #else
     drv->draw_buf->buf1 = color_map;
@@ -446,7 +439,6 @@ void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color
     lvgl_port_flush_next_buf = color_map;
 
     /* Switch the current RGB frame buffer to `color_map` */
-    // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
     panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
 
     lvgl_port_rgb_next_buf = color_map;
@@ -482,7 +474,6 @@ void flush_callback(lv_disp_drv_t *drv, const lv_area_t *area, lv_color_t *color
     const int offsety2 = area->y2;
 
     /* Just copy data from the color map to the RGB frame buffer */
-    // esp_lcd_panel_draw_bitmap(panel_handle, offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
     panel.getLcd()->drawBitmap(offsetx1, offsety1, offsetx2 + 1, offsety2 + 1, color_map);
 
     lv_disp_flush_ready(drv);
@@ -545,18 +536,21 @@ static lv_disp_t *display_init(void)
     buffer_size = BSP_LCD_H_RES * BSP_LCD_V_RES;
 #if (CONFIG_BSP_LCD_RGB_BUFFER_NUMS == 3) && (CONFIG_BSP_DISPLAY_LVGL_ROTATION_DEGREE == 0) && CONFIG_BSP_DISPLAY_LVGL_FULL_REFRESH
     // With the usage of three buffers and full-refresh, we always have one buffer available for rendering, eliminating the need to wait for the RGB's sync signal
-    BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_rgb_panel_get_frame_buffer(lcd, 3, &lvgl_port_rgb_last_buf, &buf1, &buf2));
+    lvgl_port_rgb_last_buf = panel.getLcd()->getRgbBufferByIndex(0);
+    buf1 = panel.getLcd()->getRgbBufferByIndex(1);
+    buf2 = panel.getLcd()->getRgbBufferByIndex(2);
     lvgl_port_rgb_next_buf = lvgl_port_rgb_last_buf;
     lvgl_port_flush_next_buf = buf2;
 #elif (CONFIG_BSP_LCD_RGB_BUFFER_NUMS == 3) && (CONFIG_BSP_DISPLAY_LVGL_ROTATION_DEGREE != 0)
     // Here we are using three frame buffers, one for LVGL rendering, and the other two for RGB driver (one of them is used for rotation)
     void *fbs[3];
-    BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_rgb_panel_get_frame_buffer(lcd, 3, &fbs[0], &fbs[1], &fbs[2]));
+    fbs[0] = panel.getLcd()->getRgbBufferByIndex(0);
+    fbs[1] = panel.getLcd()->getRgbBufferByIndex(1);
+    fbs[2] = panel.getLcd()->getRgbBufferByIndex(2);
     buf1 = fbs[2];
 #else
     buf1 = panel.getLcd()->getRgbBufferByIndex(0);
     buf2 = panel.getLcd()->getRgbBufferByIndex(1);
-    // BSP_ERROR_CHECK_RETURN_NULL(esp_lcd_rgb_panel_get_frame_buffer(lcd, 2, &buf1, &buf2));
 #endif
 #endif /* CONFIG_BSP_DISPLAY_LVGL_AVOID_TEAR */
 
