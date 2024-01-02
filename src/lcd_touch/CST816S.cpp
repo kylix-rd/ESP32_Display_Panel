@@ -14,7 +14,8 @@ ESP_PanelLcdTouch_CST816S::ESP_PanelLcdTouch_CST816S(ESP_PanelBus *bus, uint16_t
 {
 }
 
-ESP_PanelLcdTouch_CST816S::ESP_PanelLcdTouch_CST816S(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config)
+ESP_PanelLcdTouch_CST816S::ESP_PanelLcdTouch_CST816S(ESP_PanelBus *bus, const esp_lcd_touch_config_t &config):
+    ESP_PanelLcdTouch(bus, config)
 {
 }
 
@@ -23,9 +24,15 @@ ESP_PanelLcdTouch_CST816S::~ESP_PanelLcdTouch_CST816S()
     if (handle) {
         del();
     }
+    ESP_LOGD(TAG, "Destory");
 }
 
-void ESP_PanelLcdTouch_CST816S::begin(void)
+bool ESP_PanelLcdTouch_CST816S::begin(void)
 {
-    CHECK_ERROR_RETURN(esp_lcd_touch_new_i2c_cst816s(bus->getHandle(), &config, &handle));
+    ENABLE_TAG_PRINT_DEBUG_LOG();
+
+    CHECK_ERR_RET(esp_lcd_touch_new_i2c_cst816s(bus->getHandle(), &config, &handle), false, "New driver failed");
+    ESP_LOGD(TAG, "Touch panel @%p begin", handle);
+
+    return true;
 }

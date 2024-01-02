@@ -58,7 +58,6 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t
     bus(bus),
     config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height)),
     handle(NULL),
-    _tp_touched(false),
     _tp_points_num(0),
     _tp_buttons_state{0}
 {
@@ -68,7 +67,6 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_conf
     bus(bus),
     config(config),
     handle(NULL),
-    _tp_touched(false),
     _tp_points_num(0),
     _tp_buttons_state{0}
 {
@@ -122,10 +120,11 @@ bool ESP_PanelLcdTouch::readRawData(void)
     uint16_t x[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS] = {0};
     uint16_t y[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS] = {0};
     uint16_t strength[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS] = {0};
+
     _tp_points_num = 0;
     esp_lcd_touch_get_coordinates(handle, x, y, strength, &_tp_points_num, CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS);
-    if (_tp_points_num == 0) {
-        goto end;
+    if (_tp_points_num != 0) {
+        ESP_LOGD(TAG, "Touch panel @%p touched", handle);
     }
 
     for (int i = 0; i < _tp_points_num; i++) {
@@ -133,40 +132,45 @@ bool ESP_PanelLcdTouch::readRawData(void)
         _tp_points[i].y = y[i];
         _tp_points[i].strength = strength[i];
     }
-    ESP_LOGD(TAG, "Touch panel @%p touched", handle);
 
-end:
     return true;
 }
 
-uint8_t ESP_PanelLcdTouch::getPoints(ESP_PanelLcdTouch points[], uint8_t num)
+int ESP_PanelLcdTouch::getPoints(ESP_PanelTouchPoint points[], uint8_t num)
 {
-    CHECK_NULL_RET(handle, 0, "Invalid handle");
-    CHECK_FALSE_RET((num == 0) || (points != NULL), 0, "Invalid points or num");
+    CHECK_NULL_RET(handle, -1, "Invalid handle");
+    CHECK_FALSE_RET((num == 0) || (points != NULL), -1, "Invalid points or num");
 
     int i = 0;
-
-    if (_tp_points_num == 0) {
-        goto end;
-    }
-
     for (; (i < num) && (i < _tp_points_num); i++) {
         points[i] = _tp_points[i];
     }
 
-end:
     return i;
 }
 
-bool ESP_PanelLcdTouch::getButtonState(uint8_t n)
+int ESP_PanelLcdTouch::getIndexButtonState(uint8_t n)
 {
-    uint8_t button_state[LCD_TOUCH_MAX_BUTTONS] = {0};
-    CHECK_ERROR_GOTO(esp_lcd_touch_get_button_state(handle, n, &button_state[n]), err);
-    return button_state[n];
+    uint8_t button_state = 0;
+    CHECK_ERR_RET(esp_lcd_touch_get_button_state(handle, n, &button_state), -1, "Get button state failed");
 
-err:
-    return false;
+    return button_state;
 }
+
+int ESP_PanelLcdTouch::readPoints(ESP_PanelTouchPoint points[], uint8_t num)
+{
+    CHECK_FALSE_RET(readRawData(), -1, "Read raw data failed");
+
+    return getPoints(points, num);
+}
+
+int ESP_PanelLcdTouch::readIndexButtonState(uint8_t n)
+{
+    CHECK_FALSE_RET(readRawData(), -1, "Read raw data failed");
+
+    return getIndexButtonState(n);
+}
+
 esp_lcd_touch_handle_t ESP_PanelLcdTouch::getHandle(void)
 {
     CHECK_NULL_GOTO(handle, err);

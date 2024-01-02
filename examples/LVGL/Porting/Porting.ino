@@ -26,11 +26,9 @@
  * ```
  */
 
-#include <unistd.h>
 #include <Arduino.h>
 #include <lvgl.h>
 #include <ESP_Panel_Library.h>
-#include <ESP_IOExpander_Library.h>
 
 /**
 /* To use the built-in examples and demos of LVGL uncomment the includes below respectively.
@@ -76,14 +74,11 @@ bool notify_lvgl_flush_ready(void *user_ctx)
 /* Read the touchpad */
 void lvgl_port_tp_read(lv_indev_drv_t * indev, lv_indev_data_t * data)
 {
-    panel->getLcdTouch()->readData();
+    ESP_PanelTouchPoint point;
 
-    bool touched = panel->getLcdTouch()->isTouched();
-    if(!touched) {
+    if(panel->getLcdTouch()->readPoints(&point, 1) > 0) {
         data->state = LV_INDEV_STATE_REL;
     } else {
-        ESP_PanelTouchPoint point = panel->getLcdTouch()->getPoint();
-
         data->state = LV_INDEV_STATE_PR;
         /*Set the coordinates*/
         data->point.x = point.x;
@@ -129,6 +124,8 @@ void setup()
 {
     Serial.begin(115200); /* prepare for possible serial debug */
 
+    delay(2000);
+
     String LVGL_Arduino = "Hello LVGL! ";
     LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
 
@@ -173,30 +170,12 @@ void setup()
     lv_indev_drv_register(&indev_drv);
 #endif
 
-#if defined(ESP_PANEL_BOARD_ESP32_S3_LCD_EV_BOARD) || defined(ESP_PANEL_BOARD_ESP32_S3_KORVO_2)
-    /**
-     * These development boards require the use of an IO expander to configure the screen,
-     * so it needs to be initialized in advance and registered with the panel for use.
-     *
-     */
-    Serial.println("Initialize IO expander");
-    /* Initialize IO expander */
-    ESP_IOExpander *expander = new ESP_IOExpander_TCA95xx_8bit(ESP_PANEL_LCD_TOUCH_BUS_HOST,
-                                                               ESP_IO_EXPANDER_I2C_TCA9554_ADDRESS_000,
-                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SCL,
-                                                               ESP_PANEL_LCD_TOUCH_I2C_IO_SDA);
-    expander->init();
-    expander->begin();
-    /* Add into panel */
-    panel->addIOExpander(expander);
-#endif
-
     /* Initialize bus and device of panel */
     panel->init();
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
-    /* Register a function to notify LVGL when the panel is ready to flush */
+    /* Attach a callback function to notify LVGL when the panel is ready to flush */
     /* This is useful for refreshing the screen using DMA transfers */
-    panel->getLcd()->attachFrameEndCallback(notify_lvgl_flush_ready, &disp_drv);
+    panel->getLcd()->attachDrawBitmapFinishCallback(notify_lvgl_flush_ready, &disp_drv);
 #endif
     /* Start panel */
     panel->begin();
@@ -237,6 +216,6 @@ void setup()
 
 void loop()
 {
-    Serial.println("Loop");
-    sleep(1);
+    Serial.println("IDLE loop");
+    delay(1000);
 }

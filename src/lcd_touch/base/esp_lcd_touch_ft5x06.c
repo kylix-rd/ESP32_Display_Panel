@@ -19,6 +19,8 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 
+#include "esp_lcd_touch_ft5x06.h"
+
 static const char *TAG = "FT5x06";
 
 /* Registers */
@@ -169,7 +171,6 @@ err:
 
     *out_touch = esp_lcd_touch_ft5x06;
 
-    ESP_LOGD(TAG, "New " TAG " panel @%p", *out_touch);
     ESP_LOGI(TAG, "LCD touch panel create success, version: %d.%d.%d", ESP_LCD_TOUCH_FT5X06_VER_MAJOR, ESP_LCD_TOUCH_FT5X06_VER_MINOR,
              ESP_LCD_TOUCH_FT5X06_VER_PATCH);
 

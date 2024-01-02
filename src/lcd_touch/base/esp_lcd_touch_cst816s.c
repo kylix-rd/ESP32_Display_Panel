@@ -20,6 +20,8 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 
+#include "esp_lcd_touch_cst816s.h"
+
 #define POINT_NUM_MAX       (1)
 
 #define DATA_START_REG      (0x02)
@@ -88,7 +90,6 @@ esp_err_t esp_lcd_touch_new_i2c_cst816s(const esp_lcd_panel_io_handle_t io, cons
     ESP_GOTO_ON_ERROR(read_id(cst816s), err, TAG, "Read version failed");
     *tp = cst816s;
 
-    ESP_LOGD(TAG, "New " TAG " panel @%p", cst816s);
     ESP_LOGI(TAG, "LCD touch panel create success, version: %d.%d.%d", ESP_LCD_TOUCH_CST816S_VER_MAJOR, ESP_LCD_TOUCH_CST816S_VER_MINOR,
              ESP_LCD_TOUCH_CST816S_VER_PATCH);
 

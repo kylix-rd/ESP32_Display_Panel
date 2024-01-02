@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#include "ESP_Panel_Conf_Internal.h"
+#include "ESP_Panel_Board_Conf.h"
 
 #ifndef ESP_PANEL_CONFIG_IGNORE
 #include <iostream>
@@ -332,17 +332,17 @@ void ESP_Panel::init(void)
 
     // Create LCD bus
 #if ESP_PANEL_USE_LCD
-#if !ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
+#if ESP_PANEL_LCD_BUS_SKIP_INIT_HOST
     lcd_bus = new CREATE_BUS_INIT_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_bus_host_config, lcd_panel_io_config,
                                        ESP_PANEL_LCD_BUS_HOST);
+    CHECK_NULL_GOTO(lcd_bus, err);
 #else
-#if ESP_PANEL_LCD_BUS_TYPE == ESP_PANEL_BUS_TYPE_RGB
-    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
-#else
+#if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
     ADD_HOST(ESP_PANEL_LCD_BUS_NAME, host, lcd_bus_host_config, ESP_PANEL_LCD_BUS_HOST);
 #endif
-#endif
+    lcd_bus = new CREATE_BUS_SKIP_HOST(ESP_PANEL_LCD_BUS_NAME, lcd_panel_io_config, ESP_PANEL_LCD_BUS_HOST);
     CHECK_NULL_GOTO(lcd_bus, err);
+#endif
 
     // Create and initialize LCD
     lcd = new CREATE_LCD(ESP_PANEL_LCD_NAME, lcd_bus, lcd_config);

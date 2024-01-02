@@ -21,6 +21,8 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_touch.h"
 
+#include "esp_lcd_touch_gt1151.h"
+
 static const char *TAG = "gt1151";
 
 #define READ_XY_REG        (0x814E)
@@ -93,7 +95,6 @@ esp_err_t esp_lcd_touch_new_i2c_gt1151(const esp_lcd_panel_io_handle_t io, const
     ESP_GOTO_ON_ERROR(read_product_id(gt1151), err, TAG, "Read product id failed");
     *tp = gt1151;
 
-    ESP_LOGD(TAG, "New " TAG " panel @%p", *tp);
     ESP_LOGI(TAG, "LCD touch panel create success, version: %d.%d.%d", ESP_LCD_TOUCH_GT1151_VER_MAJOR, ESP_LCD_TOUCH_GT1151_VER_MINOR,
              ESP_LCD_TOUCH_GT1151_VER_PATCH);
 

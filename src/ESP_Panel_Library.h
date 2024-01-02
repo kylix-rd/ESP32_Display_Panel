@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include "ESP_Panel_Conf_Internal.h"
+#include "ESP_Panel_Board_Conf.h"
 #include "ESP_PanelHost.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
@@ -33,8 +33,7 @@
 
 /* LCD Touch */
 #include "lcd_touch/CST816S.h"
-#include "lcd_touch/FT5x06.h"
-#include "lcd_touch/GT1151.h"
-#include "lcd_touch/GT911.h"
-#include "lcd_touch/STMPE610.h"
+// #include "lcd_touch/FT5x06.h"
+// #include "lcd_touch/GT1151.h"
+// #include "lcd_touch/GT911.h"
 #include "lcd_touch/TT21100.h"

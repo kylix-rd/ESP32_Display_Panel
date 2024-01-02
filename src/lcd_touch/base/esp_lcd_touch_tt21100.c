@@ -18,6 +18,8 @@
 #include "driver/i2c.h"
 #include "esp_lcd_touch.h"
 
+#include "esp_lcd_touch_tt21100.h"
+
 static const char *TAG = "TT21100";
 
 #define ESP_LCD_TOUCH_TT21100_MAX_DATA_LEN  (7+CONFIG_ESP_LCD_TOUCH_MAX_POINTS*10) /* 7 Header + (Points * 10 data bytes) */
@@ -124,7 +126,6 @@ err:
 
     *out_touch = esp_lcd_touch_tt21100;
 
-    ESP_LOGD(TAG, "New " TAG " panel @%p", *out_touch);
     ESP_LOGI(TAG, "LCD touch panel create success, version: %d.%d.%d", ESP_LCD_TOUCH_TT21100_VER_MAJOR, ESP_LCD_TOUCH_TT21100_VER_MINOR,
              ESP_LCD_TOUCH_TT21100_VER_PATCH);
 

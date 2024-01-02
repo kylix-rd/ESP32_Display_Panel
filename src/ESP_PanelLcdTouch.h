@@ -35,8 +35,10 @@ public:
     bool mirrorX(bool en);
     bool mirrorY(bool en);
     bool readRawData(void);
-    uint8_t getPoints(ESP_PanelTouchPoint points[], uint8_t num = 1);
-    bool getButtonState(uint8_t n = 0);
+    int getPoints(ESP_PanelTouchPoint points[], uint8_t num = 1);
+    int getIndexButtonState(uint8_t index = 0);
+    int readPoints(ESP_PanelTouchPoint points[], uint8_t num = 1);
+    int readIndexButtonState(uint8_t index = 0);
 
     esp_lcd_touch_handle_t getHandle(void);
     ESP_PanelBus *getBus(void);

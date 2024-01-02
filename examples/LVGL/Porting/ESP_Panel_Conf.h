@@ -8,8 +8,14 @@
 
 // *INDENT-OFF*
 
+/* Set to 1 if assert on error. Otherwise print error message and jump */
+#define ESP_PANEL_CHECK_RESULT_ASSERT       (0)         // 0/1
+
+/* Set to 1 if print log message */
+#define ESP_PANEL_ENABLE_LOG                (1)         // 0/1
+
 /* Set to 0 if use a custom board */
-#define ESP_PANEL_USE_SUPPORTED_BOARD       (0)         // 0/1
+#define ESP_PANEL_USE_SUPPORTED_BOARD       (1)         // 0/1
 
 #if ESP_PANEL_USE_SUPPORTED_BOARD   // For Supported Board
 /*
@@ -29,7 +35,7 @@
  *
  */
 // #define ESP_PANEL_BOARD_ESP32_C3_LCDKIT
-// #define ESP_PANEL_BOARD_ESP32_S3_BOX
+#define ESP_PANEL_BOARD_ESP32_S3_BOX
 // #define ESP_PANEL_BOARD_ESP32_S3_BOX_3
 // #define ESP_PANEL_BOARD_ESP32_S3_BOX_3_BETA
 // #define ESP_PANEL_BOARD_ESP32_S3_BOX_LITE

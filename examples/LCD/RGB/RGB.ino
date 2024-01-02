@@ -140,6 +140,6 @@ void setup()
 
 void loop()
 {
-    Serial.println("Idle loop");
+    Serial.println("IDLE loop");
     delay(1000);
 }
