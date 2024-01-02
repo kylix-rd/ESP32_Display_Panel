@@ -35,7 +35,7 @@
  * You also need to copy `lvgl/examples` to `lvgl/src/examples`. Similarly for the demos `lvgl/demos` to `lvgl/src/demos`.
  */
 // #include <demos/lv_demos.h>
-// #include <examples/lv_examples.h>
+#include <examples/lv_examples.h>
 
 /* LVGL porting configurations */
 #define LVGL_TICK_PERIOD_MS     (2)
@@ -76,7 +76,7 @@ void lvgl_port_tp_read(lv_indev_drv_t * indev, lv_indev_data_t * data)
 {
     ESP_PanelTouchPoint point;
 
-    if(panel->getLcdTouch()->readPoints(&point, 1) > 0) {
+    if(panel->getLcdTouch()->readPoints(&point, 1) == 0) {
         data->state = LV_INDEV_STATE_REL;
     } else {
         data->state = LV_INDEV_STATE_PR;
@@ -117,6 +117,7 @@ void lvgl_port_task(void *arg)
             task_delay_ms = LVGL_TASK_MIN_DELAY_MS;
         }
         vTaskDelay(pdMS_TO_TICKS(task_delay_ms));
+        ESP_LOGE("LVGL", "Loop");
     }
 }
 
@@ -131,8 +132,6 @@ void setup()
 
     Serial.println(LVGL_Arduino);
     Serial.println("I am ESP32_Display_Panel");
-
-    panel = new ESP_Panel();
 
     /* Initialize LVGL core */
     lv_init();
@@ -170,6 +169,7 @@ void setup()
     lv_indev_drv_register(&indev_drv);
 #endif
 
+    panel = new ESP_Panel();
     /* Initialize bus and device of panel */
     panel->init();
 #if ESP_PANEL_LCD_BUS_TYPE != ESP_PANEL_BUS_TYPE_RGB
@@ -187,17 +187,17 @@ void setup()
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
     lvgl_port_lock(-1);
 
-    /* Create simple label */
-    lv_obj_t *label = lv_label_create(lv_scr_act());
-    lv_label_set_text(label, LVGL_Arduino.c_str());
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+    /* Create a simple label */
+    // lv_obj_t *label = lv_label_create(lv_scr_act());
+    // lv_label_set_text(label, LVGL_Arduino.c_str());
+    // lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
     /**
      * Try an example. Don't forget to uncomment header.
      * See all the examples online: https://docs.lvgl.io/master/examples.html
      * source codes: https://github.com/lvgl/lvgl/tree/e7f88efa5853128bf871dde335c0ca8da9eb7731/examples
      */
-    //  lv_example_btn_1();
+     lv_example_btn_1();
 
     /**
      * Or try out a demo.

@@ -307,11 +307,11 @@ bool ESP_PanelLcd::onDrawBitmapFinish(void *panel_io, void *edata, void *user_ct
     }
 
     BaseType_t need_yield = pdFALSE;
-    if (lcd_ptr->sem_draw_bitmap_finish != NULL) {
-        xSemaphoreGiveFromISR(lcd_ptr->sem_draw_bitmap_finish, &need_yield);
-    }
     if (lcd_ptr->onDrawBitmapFinishCallback != NULL) {
         need_yield = lcd_ptr->onDrawBitmapFinishCallback(callback_data->user_data) ? pdTRUE : need_yield;
+    }
+    if (lcd_ptr->sem_draw_bitmap_finish != NULL) {
+        xSemaphoreGiveFromISR(lcd_ptr->sem_draw_bitmap_finish, &need_yield);
     }
 
     return (need_yield == pdTRUE);

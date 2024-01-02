@@ -426,6 +426,7 @@ void ESP_Panel::begin(void)
 
 #if ESP_PANEL_USE_LCD_TOUCH
     lcd_touch->getBus()->begin();
+    lcd_touch->init();
     lcd_touch->begin();
 #endif
 

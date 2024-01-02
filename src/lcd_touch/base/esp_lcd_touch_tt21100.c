@@ -226,9 +226,9 @@ static esp_err_t esp_lcd_touch_tt21100_read_data(esp_lcd_touch_handle_t tp)
                 tp->data.button[i].status = p_btn_data->btn_signal[i];
             }
 
-            ESP_LOGD(TAG, "Len : %04Xh. ID : %02Xh. Time : %5u. Val : [%u] - [%04X][%04X][%04X][%04X]",
-                     p_btn_data->length, p_btn_data->report_id, p_btn_data->time_stamp, p_btn_data->btn_val,
-                     p_btn_data->btn_signal[0], p_btn_data->btn_signal[1], p_btn_data->btn_signal[2], p_btn_data->btn_signal[3]);
+            // ESP_LOGD(TAG, "Len : %04Xh. ID : %02Xh. Time : %5u. Val : [%u] - [%04X][%04X][%04X][%04X]",
+            //          p_btn_data->length, p_btn_data->report_id, p_btn_data->time_stamp, p_btn_data->btn_val,
+            //          p_btn_data->btn_signal[0], p_btn_data->btn_signal[1], p_btn_data->btn_signal[2], p_btn_data->btn_signal[3]);
 #endif
         } else if (data_len >= 7) {
             /* Touch point event */
@@ -247,7 +247,7 @@ static esp_err_t esp_lcd_touch_tt21100_read_data(esp_lcd_touch_handle_t tp)
                 tp->data.coords[i].y = p_touch_data->y;
                 tp->data.coords[i].strength = p_touch_data->pressure;
 
-                ESP_LOGD(TAG, "(%zu) [%3u][%3u]", i, p_touch_data->x, p_touch_data->y);
+                // ESP_LOGD(TAG, "(%zu) [%3u][%3u]", i, p_touch_data->x, p_touch_data->y);
             }
         }
 
