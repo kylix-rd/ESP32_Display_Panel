@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include "ESP_PanelPrivate.h"
 #include "esp_heap_caps.h"
 #include "esp_lcd_panel_ops.h"
 #include "esp_lcd_panel_io.h"
@@ -13,7 +14,6 @@
 #include "driver/spi_master.h"
 #include "soc/soc_caps.h"
 #include "bus/RGB.h"
-#include "ESP_PanelPrivate.h"
 #include "ESP_PanelBus.h"
 #include "ESP_PanelLcd.h"
 
@@ -74,20 +74,6 @@ ESP_PanelLcd::ESP_PanelLcd(ESP_PanelBus *bus, const esp_lcd_panel_dev_config_t &
 #endif
 }
 
-void ESP_PanelLcd::setColorBits(int bits_per_pixel)
-{
-    // Only allow to set init commands before `begin()`.
-    CHECK_FALSE_RETURN(handle == NULL);
-    CHECK_FALSE_RETURN(bits_per_pixel > 0);
-    panel_config.bits_per_pixel = bits_per_pixel;
-}
-
-void ESP_PanelLcd::setResetPin(int rst_io)
-{
-    CHECK_FALSE_RETURN(handle == NULL);
-    panel_config.reset_gpio_num = rst_io;
-}
-
 void ESP_PanelLcd::setInitCommands(const esp_lcd_panel_vendor_init_cmd_t init_cmd[], int init_cmd_size)
 {
     // Only allow to set init commands before `begin()`.
@@ -97,13 +83,11 @@ void ESP_PanelLcd::setInitCommands(const esp_lcd_panel_vendor_init_cmd_t init_cm
     vendor_config.init_cmds_size = init_cmd_size;
 }
 
-#if SOC_LCD_RGB_SUPPORTED
-void ESP_PanelLcd::enableAutoReleaseBus(void)
+void ESP_PanelLcd::configAutoReleaseBus(void)
 {
     CHECK_FALSE_RETURN(handle == NULL);
     vendor_config.flags.auto_del_panel_io = 1;
 }
-#endif
 
 bool ESP_PanelLcd::begin(void)
 {
@@ -181,7 +165,7 @@ void ESP_PanelLcd::mirror(bool mirror_x, bool mirror_y)
     CHECK_ERROR_RETURN(esp_lcd_panel_mirror(handle, mirror_x, mirror_y));
 }
 
-void ESP_PanelLcd::swapAxes(bool en)
+void ESP_PanelLcd::swapXY(bool en)
 {
     CHECK_ERROR_RETURN(esp_lcd_panel_swap_xy(handle, en));
 }

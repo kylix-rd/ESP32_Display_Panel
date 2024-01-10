@@ -410,7 +410,7 @@ void ESP_Panel::begin(void)
     lcd->init();
     lcd->reset();
 #if ESP_PANEL_LCD_SWAP_XY
-    lcd->swapAxes(ESP_PANEL_LCD_SWAP_XY);
+    lcd->swapXY(ESP_PANEL_LCD_SWAP_XY);
 #endif
 #if ESP_PANEL_LCD_MIRROR_X || ESP_PANEL_LCD_MIRROR_Y
     lcd->mirror(ESP_PANEL_LCD_MIRROR_X, ESP_PANEL_LCD_MIRROR_Y);

@@ -5,7 +5,6 @@
  */
 
 #include "ESP_PanelPrivate.h"
-
 #include "driver/gpio.h"
 #include "ESP_PanelLcdTouch.h"
 
@@ -114,7 +113,7 @@ bool ESP_PanelLcdTouch::del(void)
     return true;
 }
 
-bool ESP_PanelLcdTouch::swapAxes(bool en)
+bool ESP_PanelLcdTouch::swapXY(bool en)
 {
     CHECK_NULL_RET(handle, false, "Invalid handle");
     CHECK_ERR_RET(esp_lcd_touch_set_swap_xy(handle, en), false, "Swap axes failed");

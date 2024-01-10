@@ -32,7 +32,7 @@ public:
     bool init(void);
     virtual bool begin(void) = 0;
     bool del(void);
-    bool swapAxes(bool en);
+    bool swapXY(bool en);
     bool mirrorX(bool en);
     bool mirrorY(bool en);
     bool readRawData(int timeout_ms = 0);

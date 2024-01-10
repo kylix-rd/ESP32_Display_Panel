@@ -37,7 +37,7 @@
 #define TEST_LCD_PIN_NUM_SPI_CS          (0)
 #endif
 #define TEST_LCD_PIN_NUM_SPI_SCL         (TEST_LCD_PIN_NUM_RGB_DATA14)    // `SDA` and `SCL` can share the same pin with RGB, then
-#define TEST_LCD_PIN_NUM_SPI_SDA         (TEST_LCD_PIN_NUM_RGB_DATA15)    // should call `enableAutoReleaseBus()` to release the bus
+#define TEST_LCD_PIN_NUM_SPI_SDA         (TEST_LCD_PIN_NUM_RGB_DATA15)    // should call `configAutoReleaseBus()` to release the bus
 #define TEST_LCD_PIN_NUM_RST             (-1)
 
 #define TEST_EXPANDER_I2C_HOST      ((i2c_port_t)0)
@@ -126,7 +126,7 @@ void setup()
     Serial.println("Create LCD");
     lcd = new ESP_PanelLcd_ST7701(lcd_bus, TEST_LCD_BIT_PER_PIXEL, TEST_LCD_PIN_NUM_RST, example_init_cmd,
                                   sizeof(example_init_cmd) / sizeof(esp_lcd_panel_vendor_init_cmd_t));
-    lcd->enableAutoReleaseBus();    // This function is used for the case that the SPI shares pins with RGB,
+    lcd->configAutoReleaseBus();    // This function is used for the case that the SPI shares pins with RGB,
                                     // and the bus will be released after calling `begin()`
     lcd->init();
     lcd->reset();

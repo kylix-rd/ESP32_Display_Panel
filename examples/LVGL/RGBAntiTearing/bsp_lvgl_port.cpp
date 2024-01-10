@@ -490,25 +490,25 @@ static void update_callback(lv_disp_drv_t *drv)
     case LV_DISP_ROT_NONE:
         // esp_lcd_panel_swap_xy(panel_handle, false);
         // esp_lcd_panel_mirror(panel_handle, false, false);
-        panel.getLcd()->swapAxes(false);
+        panel.getLcd()->swapXY(false);
         panel.getLcd()->mirror(false, false);
         break;
     case LV_DISP_ROT_90:
         // esp_lcd_panel_swap_xy(panel_handle, true);
         // esp_lcd_panel_mirror(panel_handle, false, true);
-        panel.getLcd()->swapAxes(true);
+        panel.getLcd()->swapXY(true);
         panel.getLcd()->mirror(false, true);
         break;
     case LV_DISP_ROT_180:
         // esp_lcd_panel_swap_xy(panel_handle, false);
         // esp_lcd_panel_mirror(panel_handle, true, true);
-        panel.getLcd()->swapAxes(false);
+        panel.getLcd()->swapXY(false);
         panel.getLcd()->mirror(true, true);
         break;
     case LV_DISP_ROT_270:
         // esp_lcd_panel_swap_xy(panel_handle, true);
         // esp_lcd_panel_mirror(panel_handle, true, false);
-        panel.getLcd()->swapAxes(true);
+        panel.getLcd()->swapXY(true);
         panel.getLcd()->mirror(true, false);
         break;
     }
@@ -665,13 +665,13 @@ esp_err_t bsp_lvgl_port_init(lv_disp_t **disp_dev, lv_indev_t **input_dev)
     BSP_NULL_CHECK(indev = indev_init(), ESP_FAIL);
 
 #if CONFIG_BSP_DISPLAY_LVGL_ROTATION_90
-    panel.getLcdTouch()->swapAxes(true);
+    panel.getLcdTouch()->swapXY(true);
     panel.getLcdTouch()->mirrorX(true);
 #elif CONFIG_BSP_DISPLAY_LVGL_ROTATION_180
     panel.getLcdTouch()->mirrorX(true);
     panel.getLcdTouch()->mirrorY(true);
 #elif CONFIG_BSP_DISPLAY_LVGL_ROTATION_270
-    panel.getLcdTouch()->swapAxes(true);
+    panel.getLcdTouch()->swapXY(true);
     panel.getLcdTouch()->mirrorY(true);
 #endif
 
