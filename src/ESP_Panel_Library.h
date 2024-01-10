@@ -33,7 +33,7 @@
 
 /* LCD Touch */
 #include "lcd_touch/CST816S.h"
-// #include "lcd_touch/FT5x06.h"
-// #include "lcd_touch/GT1151.h"
-// #include "lcd_touch/GT911.h"
+#include "lcd_touch/FT5x06.h"
+#include "lcd_touch/GT1151.h"
+#include "lcd_touch/GT911.h"
 #include "lcd_touch/TT21100.h"

@@ -9,7 +9,7 @@
 #include "driver/gpio.h"
 #include "ESP_PanelLcdTouch.h"
 
-static const char *TAG = "TP_CPP";
+static const char *TAG = "ESP_PanelLcdTouch";
 
 #define LCD_TOUCH_CONFIG_DEFAULT(width, height, int_io, callback, callback_data) \
     {                                           \
@@ -53,22 +53,22 @@ ESP_PanelTouchPoint::ESP_PanelTouchPoint(uint16_t x, uint16_t y, uint16_t streng
 
 bool ESP_PanelTouchPoint::operator==(ESP_PanelTouchPoint p)
 {
-    return ((p.x == x) && (p.y == y) && (p.strength == strength));
+    return ((p.x == x) && (p.y == y));
 }
 
 bool ESP_PanelTouchPoint::operator!=(ESP_PanelTouchPoint p)
 {
-    return ((p.x != x) || (p.y != y) || (p.strength != strength));
+    return ((p.x != x) || (p.y != y));
 }
 
 ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, uint16_t width, uint16_t height, int int_io):
     bus(bus),
-    config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height, int_io, onInterruptPend, &callback_data)),
+    config((esp_lcd_touch_config_t)LCD_TOUCH_CONFIG_DEFAULT(width, height, int_io, onInterrupt, &callback_data)),
     handle(NULL),
     _tp_points_num(0),
     _tp_buttons_state{0},
     onInterruptPendCallback(NULL),
-    sem_interrupt_pend(NULL),
+    _isr_sem(NULL),
     callback_data(CALLBACK_DATA_DEFAULT())
 {
 }
@@ -80,11 +80,11 @@ ESP_PanelLcdTouch::ESP_PanelLcdTouch(ESP_PanelBus *bus, const esp_lcd_touch_conf
     _tp_points_num(0),
     _tp_buttons_state{0},
     onInterruptPendCallback(NULL),
-    sem_interrupt_pend(NULL),
+    _isr_sem(NULL),
     callback_data(CALLBACK_DATA_DEFAULT())
 {
     if ((config.int_gpio_num != GPIO_NUM_NC) && (config.interrupt_callback == NULL) && (config.user_data == NULL)) {
-        this->config.interrupt_callback = onInterruptPend;
+        this->config.interrupt_callback = onInterrupt;
         this->config.user_data = &callback_data;
     }
 }
@@ -93,9 +93,9 @@ bool ESP_PanelLcdTouch::init(void)
 {
     ENABLE_TAG_PRINT_DEBUG_LOG();
 
-    if (config.interrupt_callback == onInterruptPend) {
-        sem_interrupt_pend = xSemaphoreCreateBinary();
-        CHECK_NULL_RET(sem_interrupt_pend, false, "Create semaphore failed");
+    if (config.interrupt_callback == onInterrupt) {
+        _isr_sem = xSemaphoreCreateBinary();
+        CHECK_NULL_RET(_isr_sem, false, "Create semaphore failed");
 
         ESP_LOGD(TAG, "Touch panel @%p enable interruption", handle);
     }
@@ -147,9 +147,10 @@ bool ESP_PanelLcdTouch::readRawData(int timeout_ms)
     uint16_t strength[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS] = {0};
     _tp_points_num = 0;
 
-    if (sem_interrupt_pend != NULL) {
+    if (_isr_sem != NULL) {
         BaseType_t timeout_ticks = (timeout_ms < 0) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
-        if (xSemaphoreTake(sem_interrupt_pend, timeout_ticks) != pdTRUE) {
+        if (xSemaphoreTake(_isr_sem, timeout_ticks) != pdTRUE) {
+            ESP_LOGD(TAG, "Touch panel @%p wait for isr timeout", handle);
             return true;
         }
     }
@@ -223,7 +224,7 @@ ESP_PanelBus *ESP_PanelLcdTouch::getBus(void)
     return bus;
 }
 
-void ESP_PanelLcdTouch::onInterruptPend(esp_lcd_touch_handle_t tp)
+void ESP_PanelLcdTouch::onInterrupt(esp_lcd_touch_handle_t tp)
 {
     if ((tp == NULL) || (tp->config.user_data == NULL)) {
         return;
@@ -238,8 +239,8 @@ void ESP_PanelLcdTouch::onInterruptPend(esp_lcd_touch_handle_t tp)
     if (panel->onInterruptPendCallback != NULL) {
         need_yield = panel->onInterruptPendCallback(panel->callback_data.user_data) ? pdTRUE : need_yield;
     }
-    if (panel->sem_interrupt_pend != NULL) {
-        xSemaphoreGiveFromISR(panel->sem_interrupt_pend, &need_yield);
+    if (panel->_isr_sem != NULL) {
+        xSemaphoreGiveFromISR(panel->_isr_sem, &need_yield);
     }
     if (need_yield == pdTRUE) {
         portYIELD_FROM_ISR();

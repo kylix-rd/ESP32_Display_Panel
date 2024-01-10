@@ -51,14 +51,14 @@ protected:
     esp_lcd_touch_handle_t handle;
 
 private:
-    static void onInterruptPend(esp_lcd_touch_handle_t tp);
+    static void onInterrupt(esp_lcd_touch_handle_t tp);
 
     uint8_t _tp_points_num;
     uint8_t _tp_buttons_state[CONFIG_ESP_LCD_TOUCH_MAX_BUTTONS];
     ESP_PanelTouchPoint _tp_points[CONFIG_ESP_LCD_TOUCH_MAX_POINTS];
 
     std::function<bool (void *)> onInterruptPendCallback;
-    SemaphoreHandle_t sem_interrupt_pend;
+    SemaphoreHandle_t _isr_sem;
     typedef struct {
         void *tp_ptr;
         void *user_data;
